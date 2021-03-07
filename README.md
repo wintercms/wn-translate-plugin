@@ -346,7 +346,7 @@ Users can switch between locales by clicking on the locale indicator on the righ
 
 ## Integration without jQuery and Winter CMS Framework files
 
-It is possible to use the front-end language switcher without using jQuery or the Winter CMSCMS AJAX Framework by making the AJAX API request yourself manually. The following is an example of how to do that.
+It is possible to use the front-end language switcher without using jQuery or the Winter CMS AJAX Framework by making the AJAX API request yourself manually. The following is an example of how to do that.
 
     document.querySelector('#languageSelect').addEventListener('change', function () {
         const details = {
