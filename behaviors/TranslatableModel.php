@@ -1,9 +1,9 @@
-<?php namespace RainLab\Translate\Behaviors;
+<?php namespace Winter\Translate\Behaviors;
 
 use Db;
 use DbDongle;
-use RainLab\Translate\Classes\Translator;
-use RainLab\Translate\Classes\TranslatableBehavior;
+use Winter\Translate\Classes\Translator;
+use Winter\Translate\Classes\TranslatableBehavior;
 use ApplicationException;
 use Exception;
 
@@ -14,7 +14,7 @@ use Exception;
  *
  * In the model class definition:
  *
- *   public $implement = ['@RainLab.Translate.Behaviors.TranslatableModel'];
+ *   public $implement = ['@Winter.Translate.Behaviors.TranslatableModel'];
  *
  *   public $translatable = ['name', 'content'];
  *
@@ -26,7 +26,7 @@ class TranslatableModel extends TranslatableBehavior
         parent::__construct($model);
 
         $model->morphMany['translations'] = [
-            'RainLab\Translate\Models\Attribute',
+            'Winter\Translate\Models\Attribute',
             'name' => 'model'
         ];
     }
@@ -48,11 +48,11 @@ class TranslatableModel extends TranslatableBehavior
 
         // Separate query into two separate queries for improved performance
         // @see https://github.com/rainlab/translate-plugin/pull/623
-        $translateIndexes = Db::table('rainlab_translate_indexes')
-            ->where('rainlab_translate_indexes.model_type', '=', $this->getClass())
-            ->where('rainlab_translate_indexes.locale', '=', $locale)
-            ->where('rainlab_translate_indexes.item', $index)
-            ->where('rainlab_translate_indexes.value', $operator, $value)
+        $translateIndexes = Db::table('winter_translate_indexes')
+            ->where('winter_translate_indexes.model_type', '=', $this->getClass())
+            ->where('winter_translate_indexes.locale', '=', $locale)
+            ->where('winter_translate_indexes.item', $index)
+            ->where('winter_translate_indexes.value', $operator, $value)
             ->pluck('model_id');
 
         if ($translateIndexes->count()) {
@@ -77,7 +77,7 @@ class TranslatableModel extends TranslatableBehavior
         if (!$locale) {
             $locale = $this->translatableContext;
         }
-        $indexTableAlias = 'rainlab_translate_indexes_' . $index . '_' . $locale;
+        $indexTableAlias = 'winter_translate_indexes_' . $index . '_' . $locale;
 
         $query->select(
             $this->model->getTable().'.*',
@@ -100,7 +100,7 @@ class TranslatableModel extends TranslatableBehavior
      */
     protected function joinTranslateIndexesTable($query, $locale, $index, $indexTableAlias)
     {
-        $joinTableWithAlias = 'rainlab_translate_indexes as ' . $indexTableAlias;
+        $joinTableWithAlias = 'winter_translate_indexes as ' . $indexTableAlias;
         // check if table with same name and alias is already joined
         if (collect($query->getQuery()->joins)->contains('table', $joinTableWithAlias)) {
             return $query;
@@ -179,7 +179,7 @@ class TranslatableModel extends TranslatableBehavior
     {
         $data = json_encode($this->translatableAttributes[$locale], JSON_UNESCAPED_UNICODE);
 
-        $obj = Db::table('rainlab_translate_attributes')
+        $obj = Db::table('winter_translate_attributes')
             ->where('locale', $locale)
             ->where('model_id', $this->model->getKey())
             ->where('model_type', $this->getClass());
@@ -188,7 +188,7 @@ class TranslatableModel extends TranslatableBehavior
             $obj->update(['attribute_data' => $data]);
         }
         else {
-            Db::table('rainlab_translate_attributes')->insert([
+            Db::table('winter_translate_attributes')->insert([
                 'locale' => $locale,
                 'model_id' => $this->model->getKey(),
                 'model_type' => $this->getClass(),
@@ -218,7 +218,7 @@ class TranslatableModel extends TranslatableBehavior
 
             $value = array_get($data, $attribute);
 
-            $obj = Db::table('rainlab_translate_indexes')
+            $obj = Db::table('winter_translate_indexes')
                 ->where('locale', $locale)
                 ->where('model_id', $this->model->getKey())
                 ->where('model_type', $this->getClass())
@@ -237,7 +237,7 @@ class TranslatableModel extends TranslatableBehavior
                 $obj->update(['value' => $value]);
             }
             else {
-                Db::table('rainlab_translate_indexes')->insert([
+                Db::table('winter_translate_indexes')->insert([
                     'locale' => $locale,
                     'model_id' => $this->model->getKey(),
                     'model_type' => $this->getClass(),

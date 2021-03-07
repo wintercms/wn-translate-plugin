@@ -1,18 +1,18 @@
-<?php namespace RainLab\Translate\Components;
+<?php namespace Winter\Translate\Components;
 
 use Event;
 use Config;
 use Request;
 use Redirect;
-use RainLab\Translate\Models\Locale as LocaleModel;
-use RainLab\Translate\Classes\Translator;
-use October\Rain\Router\Router as RainRouter;
+use Winter\Translate\Models\Locale as LocaleModel;
+use Winter\Translate\Classes\Translator;
+use Winter\Storm\Router\Router as RainRouter;
 use Cms\Classes\ComponentBase;
 
 class LocalePicker extends ComponentBase
 {
     /**
-     * @var RainLab\Translate\Classes\Translator Translator object.
+     * @var Winter\Translate\Classes\Translator Translator object.
      */
     protected $translator;
 
@@ -39,8 +39,8 @@ class LocalePicker extends ComponentBase
     public function componentDetails()
     {
         return [
-            'name'        => 'rainlab.translate::lang.locale_picker.component_name',
-            'description' => 'rainlab.translate::lang.locale_picker.component_description',
+            'name'        => 'winter.translate::lang.locale_picker.component_name',
+            'description' => 'winter.translate::lang.locale_picker.component_description',
         ];
     }
 
@@ -101,7 +101,7 @@ class LocalePicker extends ComponentBase
             return;
         }
 
-        $prefixDefaultLocale = Config::get('rainlab.translate::prefixDefaultLocale');
+        $prefixDefaultLocale = Config::get('winter.translate::prefixDefaultLocale');
         $locale = $this->translator->getLocale(false)
             ?: $this->translator->getDefaultLocale();
 

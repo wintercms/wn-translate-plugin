@@ -1,7 +1,7 @@
 {
-    "name": "rainlab/translate-plugin",
-    "type": "october-plugin",
-    "description": "Translate plugin for October CMS",
+    "name": "winter/translate-plugin",
+    "type": "winter-plugin",
+    "description": "Translate plugin for Winter CMS",
     "homepage": "https://octobercms.com/plugin/rainlab-translate",
     "keywords": ["october", "octobercms", "translate"],
     "license": "MIT",

@@ -1,21 +1,21 @@
-<?php namespace RainLab\Translate\Classes;
+<?php namespace Winter\Translate\Classes;
 
 use Str;
-use RainLab\Translate\Classes\Translator;
-use October\Rain\Extension\ExtensionBase;
-use October\Rain\Html\Helper as HtmlHelper;
+use Winter\Translate\Classes\Translator;
+use Winter\Storm\Extension\ExtensionBase;
+use Winter\Storm\Html\Helper as HtmlHelper;
 
 /**
  * Base class for model behaviors.
  *
- * @package october\translate
+ * @package winter\translate
  * @author Alexey Bobkov, Samuel Georges
  */
 abstract class TranslatableBehavior extends ExtensionBase
 {
 
     /**
-     * @var \October\Rain\Database\Model Reference to the extended model.
+     * @var \Winter\Storm\Database\Model Reference to the extended model.
      */
     protected $model;
 
@@ -51,7 +51,7 @@ abstract class TranslatableBehavior extends ExtensionBase
 
     /**
      * Constructor
-     * @param \October\Rain\Database\Model $model The extended model.
+     * @param \Winter\Storm\Database\Model $model The extended model.
      */
     public function __construct($model)
     {

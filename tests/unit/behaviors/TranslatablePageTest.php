@@ -1,12 +1,12 @@
-<?php namespace RainLab\Translate\Tests\Unit\Behaviors;
+<?php namespace Winter\Translate\Tests\Unit\Behaviors;
 
 use File;
 use PluginTestCase;
-use October\Rain\Halcyon\Model;
-use October\Rain\Filesystem\Filesystem;
-use October\Rain\Halcyon\Datasource\FileDatasource;
-use October\Rain\Halcyon\Datasource\Resolver;
-use RainLab\Translate\Tests\Fixtures\Classes\TranslatablePage;
+use Winter\Storm\Halcyon\Model;
+use Winter\Storm\Filesystem\Filesystem;
+use Winter\Storm\Halcyon\Datasource\FileDatasource;
+use Winter\Storm\Halcyon\Datasource\Resolver;
+use Winter\Translate\Tests\Fixtures\Classes\TranslatablePage;
 
 class TranslatablePageTest extends PluginTestCase
 {
@@ -24,9 +24,9 @@ class TranslatablePageTest extends PluginTestCase
         Model::setDatasourceResolver($resolver);
 
         TranslatablePage::extend(function($page) {
-            if (!$page->isClassExtendedWith('RainLab\Translate\Behaviors\TranslatablePage')) {
+            if (!$page->isClassExtendedWith('Winter\Translate\Behaviors\TranslatablePage')) {
                 $page->addDynamicProperty('translatable', ['title']);
-                $page->extendClassWith('RainLab\Translate\Behaviors\TranslatablePage');
+                $page->extendClassWith('Winter\Translate\Behaviors\TranslatablePage');
             }
         });
 

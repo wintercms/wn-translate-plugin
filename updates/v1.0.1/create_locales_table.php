@@ -1,7 +1,7 @@
-<?php namespace RainLab\Translate\Updates;
+<?php namespace Winter\Translate\Updates;
 
 use Schema;
-use October\Rain\Database\Updates\Migration;
+use Winter\Storm\Database\Updates\Migration;
 
 class CreateLocalesTable extends Migration
 {

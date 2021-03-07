@@ -1,4 +1,4 @@
-<?php namespace RainLab\Translate\Tests\Fixtures\Classes;
+<?php namespace Winter\Translate\Tests\Fixtures\Classes;
 
 use Cms\Classes\Page;
 

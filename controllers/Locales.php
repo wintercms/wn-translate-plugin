@@ -1,9 +1,9 @@
-<?php namespace Rainlab\Translate\Controllers;
+<?php namespace Winter\Translate\Controllers;
 
 use BackendMenu;
 use Backend\Classes\Controller;
 use System\Classes\SettingsManager;
-use RainLab\Translate\Models\Locale as LocaleModel;
+use Winter\Translate\Models\Locale as LocaleModel;
 
 /**
  * Locales Back-end Controller
@@ -20,16 +20,16 @@ class Locales extends Controller
     public $formConfig = 'config_form.yaml';
     public $reorderConfig = 'config_reorder.yaml';
 
-    public $requiredPermissions = ['rainlab.translate.manage_locales'];
+    public $requiredPermissions = ['winter.translate.manage_locales'];
 
     public function __construct()
     {
         parent::__construct();
 
-        BackendMenu::setContext('October.System', 'system', 'settings');
-        SettingsManager::setContext('RainLab.Translate', 'locales');
+        BackendMenu::setContext('Winter CMS.System', 'system', 'settings');
+        SettingsManager::setContext('Winter.Translate', 'locales');
 
-        $this->addJs('/plugins/rainlab/translate/assets/js/locales.js');
+        $this->addJs('/plugins/winter/translate/assets/js/locales.js');
     }
 
     /**

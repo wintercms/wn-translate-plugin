@@ -1,15 +1,15 @@
-<?php namespace RainLab\Translate\Controllers;
+<?php namespace Winter\Translate\Controllers;
 
 use Backend\Behaviors\ImportExportController;
 use Lang;
 use Flash;
-use RainLab\Translate\Models\MessageExport;
+use Winter\Translate\Models\MessageExport;
 use Request;
 use BackendMenu;
 use Backend\Classes\Controller;
-use RainLab\Translate\Models\Message;
-use RainLab\Translate\Models\Locale;
-use RainLab\Translate\Classes\ThemeScanner;
+use Winter\Translate\Models\Message;
+use Winter\Translate\Models\Locale;
+use Winter\Translate\Classes\ThemeScanner;
 use System\Helpers\Cache as CacheHelper;
 use System\Classes\SettingsManager;
 
@@ -24,7 +24,7 @@ class Messages extends Controller
 
     public $importExportConfig = 'config_import_export.yaml';
 
-    public $requiredPermissions = ['rainlab.translate.manage_messages'];
+    public $requiredPermissions = ['winter.translate.manage_messages'];
 
     protected $hideTranslated = false;
 
@@ -32,11 +32,11 @@ class Messages extends Controller
     {
         parent::__construct();
 
-        BackendMenu::setContext('October.System', 'system', 'settings');
-        SettingsManager::setContext('RainLab.Translate', 'messages');
+        BackendMenu::setContext('Winter CMS.System', 'system', 'settings');
+        SettingsManager::setContext('Winter.Translate', 'messages');
 
-        $this->addJs('/plugins/rainlab/translate/assets/js/messages.js');
-        $this->addCss('/plugins/rainlab/translate/assets/css/messages.css');
+        $this->addJs('/plugins/winter/translate/assets/js/messages.js');
+        $this->addCss('/plugins/winter/translate/assets/css/messages.css');
 
         $this->importColumns = MessageExport::getColumns();
         $this->exportColumns = MessageExport::getColumns();
@@ -45,7 +45,7 @@ class Messages extends Controller
     public function index()
     {
         $this->bodyClass = 'slim-container breadcrumb-flush';
-        $this->pageTitle = 'rainlab.translate::lang.messages.title';
+        $this->pageTitle = 'winter.translate::lang.messages.title';
         $this->prepareTable();
     }
 
@@ -59,7 +59,7 @@ class Messages extends Controller
     {
         CacheHelper::clear();
 
-        Flash::success(Lang::get('rainlab.translate::lang.messages.clear_cache_success'));
+        Flash::success(Lang::get('winter.translate::lang.messages.clear_cache_success'));
     }
 
     public function onLoadScanMessagesForm()
@@ -79,7 +79,7 @@ class Messages extends Controller
             Message::where('found', 0)->delete();
         }
 
-        Flash::success(Lang::get('rainlab.translate::lang.messages.scan_messages_success'));
+        Flash::success(Lang::get('winter.translate::lang.messages.scan_messages_success'));
 
         return $this->onRefresh();
     }
@@ -203,7 +203,7 @@ class Messages extends Controller
                 'code' => $message->code,
                 'from' => $message->forLocale($fromCode),
                 'to' => $toContent,
-                'found' => $message->found ? '' : Lang::get('rainlab.translate::lang.messages.not_found'),
+                'found' => $message->found ? '' : Lang::get('winter.translate::lang.messages.not_found'),
             ];
         }
 

@@ -1,9 +1,9 @@
-<?php namespace Rainlab\Translate\Console;
+<?php namespace Winter\Translate\Console;
 
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
-use RainLab\Translate\Classes\ThemeScanner;
-use RainLab\Translate\Models\Message;
+use Winter\Translate\Classes\ThemeScanner;
+use Winter\Translate\Models\Message;
 
 class ScanCommand extends Command
 {

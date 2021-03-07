@@ -1,13 +1,13 @@
-<?php namespace RainLab\Translate\Tests\Unit\Behaviors;
+<?php namespace Winter\Translate\Tests\Unit\Behaviors;
 
 use File;
 use PluginTestCase;
-use October\Rain\Halcyon\Model;
-use October\Rain\Filesystem\Filesystem;
-use October\Rain\Halcyon\Datasource\FileDatasource;
-use October\Rain\Halcyon\Datasource\Resolver;
-use RainLab\Translate\Tests\Fixtures\Classes\Feature as FeatureModel;
-use RainLab\Translate\Models\Locale as LocaleModel;
+use Winter\Storm\Halcyon\Model;
+use Winter\Storm\Filesystem\Filesystem;
+use Winter\Storm\Halcyon\Datasource\FileDatasource;
+use Winter\Storm\Halcyon\Datasource\Resolver;
+use Winter\Translate\Tests\Fixtures\Classes\Feature as FeatureModel;
+use Winter\Translate\Models\Locale as LocaleModel;
 
 class TranslatableCmsObjectTest extends PluginTestCase
 {
