@@ -13,7 +13,7 @@
  */
 
 +function($) { "use strict";
-    var Base = $.oc.foundation.base,
+    var Base = $.wn.foundation.base,
         BaseProto = Base.prototype
 
     // MLMEDIAFINDER CLASS DEFINITION
@@ -25,7 +25,7 @@
         this.$mediafinder = $('[data-control=mediafinder]', this.$el)
         this.$findValue = $('[data-find-value]', this.$el)
 
-        $.oc.foundation.controlUtils.markDisposable(element)
+        $.wn.foundation.controlUtils.markDisposable(element)
         Base.call(this)
         this.init()
     }
