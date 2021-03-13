@@ -31,7 +31,8 @@ class Plugin extends PluginBase
             'description' => 'winter.translate::lang.plugin.description',
             'author'      => 'Alexey Bobkov, Samuel Georges',
             'icon'        => 'icon-language',
-            'homepage'    => 'https://github.com/rainlab/translate-plugin'
+            'homepage'    => 'https://github.com/wintercms/wn-translate-plugin',
+            'replaces'    => 'RainLab.Translate'
         ];
     }
 
