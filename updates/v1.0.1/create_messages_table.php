@@ -8,7 +8,7 @@ class CreateMessagesTable extends Migration
 
     public function up()
     {
-        Schema::create('rainlab_translate_messages', function($table)
+        Schema::create('winter_translate_messages', function($table)
         {
             $table->engine = 'InnoDB';
             $table->increments('id');
@@ -19,7 +19,7 @@ class CreateMessagesTable extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('rainlab_translate_messages');
+        Schema::dropIfExists('winter_translate_messages');
     }
 
 }

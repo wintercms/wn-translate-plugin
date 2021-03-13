@@ -8,7 +8,7 @@ class CreateAttributesTable extends Migration
 
     public function up()
     {
-        Schema::create('rainlab_translate_attributes', function($table)
+        Schema::create('winter_translate_attributes', function($table)
         {
             $table->engine = 'InnoDB';
             $table->increments('id');
@@ -21,7 +21,7 @@ class CreateAttributesTable extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('rainlab_translate_attributes');
+        Schema::dropIfExists('winter_translate_attributes');
     }
 
 }

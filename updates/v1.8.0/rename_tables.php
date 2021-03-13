@@ -1,7 +1,6 @@
 <?php namespace Winter\Translate\Updates;
 
 use Schema;
-use Winter\Translate\Models\Locale;
 use Winter\Storm\Database\Updates\Migration;
 
 class RenameTables extends Migration

@@ -14,7 +14,7 @@ use Winter\Translate\Models\Attribute;
  */
 class MigrateMorphedIndexes extends Migration
 {
-    protected $table = 'rainlab_translate_indexes';
+    protected $table = 'winter_translate_indexes';
 
     public function up()
     {

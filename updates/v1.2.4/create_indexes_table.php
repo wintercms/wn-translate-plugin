@@ -8,7 +8,7 @@ class CreateIndexesTable extends Migration
 
     public function up()
     {
-        Schema::create('rainlab_translate_indexes', function($table)
+        Schema::create('winter_translate_indexes', function($table)
         {
             $table->engine = 'InnoDB';
             $table->increments('id');
@@ -22,7 +22,7 @@ class CreateIndexesTable extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('rainlab_translate_indexes');
+        Schema::dropIfExists('winter_translate_indexes');
     }
 
 }
