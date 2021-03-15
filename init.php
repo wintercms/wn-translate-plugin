@@ -1,7 +1,9 @@
 <?php
 
 # use reverse class_alias for external references to RainLab plugins
-class_alias(RainLab\Pages\Classes\Page::class, Winter\Pages\Classes\Page::class);
+if (!class_exists(Winter\Pages\Classes\Page::class)) {
+    class_alias(RainLab\Pages\Classes\Page::class, Winter\Pages\Classes\Page::class);
+}
 
 
 if (!class_exists(RainLab\Translate\Plugin::class)) {
