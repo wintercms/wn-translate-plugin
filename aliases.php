@@ -8,7 +8,7 @@ use Winter\Storm\Support\ClassLoader;
  */
 $aliases = [
     // Reverse alias to fix issue on PHP 7.2, see https://github.com/wintercms/wn-user-plugin/runs/2122181184
-    'RainLab\Pages\Classes\Page'                                    => Winter\Pages\Classes\Page::class,
+    RainLab\Pages\Classes\Page::class                               => Winter\Pages\Classes\Page::class,
 
     // Regular aliases
     Winter\Translate\Plugin::class                                  => RainLab\Translate\Plugin::class,
