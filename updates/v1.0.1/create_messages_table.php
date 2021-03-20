@@ -1,14 +1,14 @@
-<?php namespace RainLab\Translate\Updates;
+<?php namespace Winter\Translate\Updates;
 
 use Schema;
-use October\Rain\Database\Updates\Migration;
+use Winter\Storm\Database\Updates\Migration;
 
 class CreateMessagesTable extends Migration
 {
 
     public function up()
     {
-        Schema::create('rainlab_translate_messages', function($table)
+        Schema::create('winter_translate_messages', function($table)
         {
             $table->engine = 'InnoDB';
             $table->increments('id');
@@ -19,7 +19,7 @@ class CreateMessagesTable extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('rainlab_translate_messages');
+        Schema::dropIfExists('winter_translate_messages');
     }
 
 }

@@ -1,13 +1,13 @@
 <?php
 
-use RainLab\Translate\Models\Message;
-use RainLab\Translate\Classes\Translator;
+use Winter\Translate\Models\Message;
+use Winter\Translate\Classes\Translator;
 
 /*
  * Adds a custom route to check for the locale prefix.
  */
 App::before(function ($request) {
-    if (Config::get('rainlab.translate::disableLocalePrefixRoutes', false)) {
+    if (Config::get('winter.translate::disableLocalePrefixRoutes', false)) {
         return;
     }
 
@@ -49,7 +49,7 @@ App::before(function ($request) {
  * Save any used messages to the contextual cache.
  */
 App::after(function ($request) {
-    if (class_exists('RainLab\Translate\Models\Message')) {
+    if (class_exists('Winter\Translate\Models\Message')) {
         Message::saveToCache();
     }
 });

@@ -1,4 +1,4 @@
-<?php namespace RainLab\Translate\Models;
+<?php namespace Winter\Translate\Models;
 
 use Lang;
 use File;
@@ -13,13 +13,13 @@ use ValidationException;
  */
 class Locale extends Model
 {
-    use \October\Rain\Database\Traits\Validation;
-    use \October\Rain\Database\Traits\Sortable;
+    use \Winter\Storm\Database\Traits\Validation;
+    use \Winter\Storm\Database\Traits\Sortable;
 
     /**
      * @var string The database table used by the model.
      */
-    public $table = 'rainlab_translate_locales';
+    public $table = 'winter_translate_locales';
 
     /**
      * @var array Validation rules
@@ -61,7 +61,7 @@ class Locale extends Model
     public function beforeDelete()
     {
         if ($this->is_default) {
-            throw new ApplicationException(Lang::get('rainlab.translate::lang.locale.delete_default', ['locale'=>$this->name]));
+            throw new ApplicationException(Lang::get('winter.translate::lang.locale.delete_default', ['locale'=>$this->name]));
         }
     }
 
@@ -71,7 +71,7 @@ class Locale extends Model
             $this->makeDefault();
 
             if (!$this->is_default) {
-                throw new ValidationException(['is_default' => Lang::get('rainlab.translate::lang.locale.unset_default', ['locale'=>$this->name])]);
+                throw new ValidationException(['is_default' => Lang::get('winter.translate::lang.locale.unset_default', ['locale'=>$this->name])]);
             }
         }
     }
@@ -83,7 +83,7 @@ class Locale extends Model
     public function makeDefault()
     {
         if (!$this->is_enabled) {
-            throw new ValidationException(['is_enabled' => Lang::get('rainlab.translate::lang.locale.disabled_default', ['locale'=>$this->name])]);
+            throw new ValidationException(['is_enabled' => Lang::get('winter.translate::lang.locale.disabled_default', ['locale'=>$this->name])]);
         }
 
         $this->newQuery()->where('id', $this->id)->update(['is_default' => true]);
@@ -101,7 +101,7 @@ class Locale extends Model
         }
 
         return self::$defaultLocale = self::where('is_default', true)
-            ->remember(1440, 'rainlab.translate.defaultLocale')
+            ->remember(1440, 'winter.translate.defaultLocale')
             ->first()
         ;
     }
@@ -182,7 +182,7 @@ class Locale extends Model
         }
 
         $expiresAt = now()->addMinutes(1440);
-        $isEnabled = Cache::remember('rainlab.translate.locales', $expiresAt, function() {
+        $isEnabled = Cache::remember('winter.translate.locales', $expiresAt, function() {
             return self::isEnabled()->order()->pluck('name', 'code')->all();
         });
 
@@ -206,7 +206,7 @@ class Locale extends Model
      */
     public static function clearCache()
     {
-        Cache::forget('rainlab.translate.locales');
-        Cache::forget('rainlab.translate.defaultLocale');
+        Cache::forget('winter.translate.locales');
+        Cache::forget('winter.translate.defaultLocale');
     }
 }

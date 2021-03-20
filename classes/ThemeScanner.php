@@ -1,18 +1,18 @@
-<?php namespace RainLab\Translate\Classes;
+<?php namespace Winter\Translate\Classes;
 
 use Cms\Classes\Page;
 use Cms\Classes\Theme;
 use Cms\Classes\Layout;
 use Cms\Classes\Partial;
-use RainLab\Translate\Models\Message;
-use RainLab\Translate\Classes\Translator;
+use Winter\Translate\Models\Message;
+use Winter\Translate\Classes\Translator;
 use System\Models\MailTemplate;
 use Event;
 
 /**
  * Theme scanner class
  *
- * @package rainlab\translate
+ * @package winter\translate
  * @author Alexey Bobkov, Samuel Georges
  */
 class ThemeScanner
@@ -28,17 +28,17 @@ class ThemeScanner
         $obj->scanForMessages();
 
         /**
-         * @event rainlab.translate.themeScanner.afterScan
+         * @event winter.translate.themeScanner.afterScan
          * Fires after theme scanning.
          *
          * Example usage:
          *
-         *     Event::listen('rainlab.translate.themeScanner.afterScan', function (ThemeScanner $scanner) {
+         *     Event::listen('winter.translate.themeScanner.afterScan', function (ThemeScanner $scanner) {
          *         // added an extra scan. Add generation files...
          *     });
          *
          */
-        Event::fire('rainlab.translate.themeScanner.afterScan', [$obj]);
+        Event::fire('winter.translate.themeScanner.afterScan', [$obj]);
     }
 
     /**

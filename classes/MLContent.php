@@ -1,9 +1,9 @@
-<?php namespace RainLab\Translate\Classes;
+<?php namespace Winter\Translate\Classes;
 
 /**
  * Represents a multi-lingual Static Content object.
  *
- * @package rainlab\translate
+ * @package winter\translate
  * @author Alexey Bobkov, Samuel Georges
  */
 class MLContent extends MLCmsObject

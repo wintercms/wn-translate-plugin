@@ -1,12 +1,12 @@
-<?php namespace RainLab\Translate\Classes;
+<?php namespace Winter\Translate\Classes;
 
 use Cms\Classes\CmsCompoundObject;
-use RainLab\Pages\Classes\Page as PageBase;
+use Winter\Pages\Classes\Page as PageBase;
 
 /**
  * Represents a multi-lingual CMS compound object.
  *
- * @package rainlab\translate
+ * @package winter\translate
  * @author Alexey Bobkov, Samuel Georges
  */
 class MLCmsObject extends CmsCompoundObject

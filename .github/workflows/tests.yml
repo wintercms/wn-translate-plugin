@@ -3,7 +3,7 @@ name: Tests
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
 
 jobs:
@@ -13,12 +13,12 @@ jobs:
     strategy:
       max-parallel: 6
       matrix:
-        phpVersions: ['7.2', '7.3', '7.4']
+        phpVersions: ['7.2', '7.3', '7.4', '8.0']
       fail-fast: false
     env:
       phpExtensions: mbstring, intl, gd, xml, sqlite
       cacheKey: ext-cache-v1
-      octoberCmsRelease: develop
+      winterCmsRelease: develop
     steps:
       - name: Checkout changes
         uses: actions/checkout@v2
@@ -48,16 +48,16 @@ jobs:
           tools: composer:v1
           coverage: none
 
-      - name: Install October CMS
+      - name: Install Winter CMS
         run: |
-          wget https://github.com/octobercms/october/archive/${{ env.octoberCmsRelease }}.zip
-          unzip ${{ env.octoberCmsRelease }}.zip
+          wget https://github.com/wintercms/winter/archive/${{ env.winterCmsRelease }}.zip
+          unzip ${{ env.winterCmsRelease }}.zip
           shopt -s dotglob
-          mv october-${{ env.octoberCmsRelease }}/* ./
+          mv winter-${{ env.winterCmsRelease }}/* ./
           shopt -u dotglob
           cp config/cms.php config/testing/cms.php
-          mkdir -p plugins/rainlab
-          mv translate-plugin plugins/rainlab/translate
+          mkdir -p plugins/winter
+          mv translate-plugin plugins/winter/translate
 
       - name: Get Composer cache directory
         id: composercache
@@ -74,9 +74,9 @@ jobs:
         run: composer install --no-interaction --no-progress --no-suggest
 
       - name: Run linting
-        run: ./vendor/bin/parallel-lint plugins/rainlab/translate
+        run: ./vendor/bin/parallel-lint plugins/winter/translate
 
       - name: Run unit tests
         run: |
-          cd plugins/rainlab/translate
+          cd plugins/winter/translate
           ../../../vendor/bin/phpunit

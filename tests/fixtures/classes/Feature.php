@@ -1,4 +1,4 @@
-<?php namespace RainLab\Translate\Tests\Fixtures\Classes;
+<?php namespace Winter\Translate\Tests\Fixtures\Classes;
 
 use Model;
 use Cms\Classes\CmsCompoundObject;
@@ -8,7 +8,7 @@ use Cms\Classes\CmsCompoundObject;
  */
 class Feature extends CmsCompoundObject
 {
-    public $implement = ['@RainLab.Translate.Behaviors.TranslatableCmsObject'];
+    public $implement = ['@Winter.Translate.Behaviors.TranslatableCmsObject'];
 
     /**
      * @var array Attributes that support translation, if available.

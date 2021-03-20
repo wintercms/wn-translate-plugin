@@ -1,4 +1,4 @@
-<?php namespace RainLab\Translate\Tests\Fixtures\Models;
+<?php namespace Winter\Translate\Tests\Fixtures\Models;
 
 use Model;
 
@@ -7,7 +7,7 @@ use Model;
  */
 class Country extends Model
 {
-    public $implement = ['@RainLab.Translate.Behaviors.TranslatableModel'];
+    public $implement = ['@Winter.Translate.Behaviors.TranslatableModel'];
 
     public $translatable = [['name', 'index' => true], 'states'];
 

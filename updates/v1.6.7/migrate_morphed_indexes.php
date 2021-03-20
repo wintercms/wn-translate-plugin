@@ -1,9 +1,9 @@
-<?php namespace RainLab\Translate\Updates;
+<?php namespace Winter\Translate\Updates;
 
 use Db;
-use October\Rain\Database\Relations\Relation;
-use October\Rain\Database\Updates\Migration;
-use RainLab\Translate\Models\Attribute;
+use Winter\Storm\Database\Relations\Relation;
+use Winter\Storm\Database\Updates\Migration;
+use Winter\Translate\Models\Attribute;
 
 /**
  * Because attributes are loaded using a proper morphMany relation starting from version 1.6.3,
@@ -14,7 +14,7 @@ use RainLab\Translate\Models\Attribute;
  */
 class MigrateMorphedIndexes extends Migration
 {
-    protected $table = 'rainlab_translate_indexes';
+    protected $table = 'winter_translate_indexes';
 
     public function up()
     {

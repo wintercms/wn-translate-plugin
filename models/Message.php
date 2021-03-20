@@ -1,4 +1,4 @@
-<?php namespace RainLab\Translate\Models;
+<?php namespace Winter\Translate\Models;
 
 use Lang;
 use Model;
@@ -15,7 +15,7 @@ class Message extends Model
     /**
      * @var string The database table used by the model.
      */
-    public $table = 'rainlab_translate_messages';
+    public $table = 'winter_translate_messages';
 
     /**
      * @var array Guarded fields
@@ -274,7 +274,7 @@ class Message extends Model
             return;
         }
 
-        $expiresAt = now()->addMinutes(Config::get('rainlab.translate::cacheTimeout', 1440));
+        $expiresAt = now()->addMinutes(Config::get('winter.translate::cacheTimeout', 1440));
         Cache::put(self::makeCacheKey(), self::$cache, $expiresAt);
     }
 
