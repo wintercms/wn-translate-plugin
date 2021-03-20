@@ -1,15 +1,15 @@
-<?php namespace RainLab\Translate\Traits;
+<?php namespace Winter\Translate\Traits;
 
 use Str;
-use RainLab\Translate\Models\Locale;
+use Winter\Translate\Models\Locale;
 use Backend\Classes\FormWidgetBase;
-use October\Rain\Html\Helper as HtmlHelper;
+use Winter\Storm\Html\Helper as HtmlHelper;
 
 /**
  * Generic ML Control
  * Renders a multi-lingual control.
  *
- * @package rainlab\translate
+ * @package winter\translate
  * @author Alexey Bobkov, Samuel Georges
  */
 trait MLControl
@@ -30,7 +30,7 @@ trait MLControl
     public $originalViewPath;
 
     /**
-     * @var RainLab\Translate\Models\Locale Object
+     * @var Winter\Translate\Models\Locale Object
      */
     protected $defaultLocale;
 
@@ -132,8 +132,8 @@ trait MLControl
      */
     public function loadLocaleAssets()
     {
-        $this->addJs('/plugins/rainlab/translate/assets/js/multilingual.js', 'RainLab.Translate');
-        $this->addCss('/plugins/rainlab/translate/assets/css/multilingual.css', 'RainLab.Translate');
+        $this->addJs('/plugins/winter/translate/assets/js/multilingual.js', 'Winter.Translate');
+        $this->addCss('/plugins/winter/translate/assets/css/multilingual.css', 'Winter.Translate');
     }
 
     /**

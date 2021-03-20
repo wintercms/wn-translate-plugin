@@ -1,12 +1,12 @@
 <?php
 
-namespace Rainlab\Translate\Components;
+namespace Winter\Translate\Components;
 
 use Cms\Classes\ComponentBase;
 use Event;
-use RainLab\Translate\Classes\Translator;
-use RainLab\Translate\Models\Locale as LocaleModel;
-use October\Rain\Router\Router as RainRouter;
+use Winter\Translate\Classes\Translator;
+use Winter\Translate\Models\Locale as LocaleModel;
+use Winter\Storm\Router\Router as RainRouter;
 
 class AlternateHrefLangElements extends ComponentBase
 {
@@ -15,8 +15,8 @@ class AlternateHrefLangElements extends ComponentBase
     public function componentDetails()
     {
         return [
-            'name'        => 'rainlab.translate::lang.alternate_hreflang.component_name',
-            'description' => 'rainlab.translate::lang.alternate_hreflang.component_description'
+            'name'        => 'winter.translate::lang.alternate_hreflang.component_name',
+            'description' => 'winter.translate::lang.alternate_hreflang.component_description'
         ];
     }
 

@@ -1,7 +1,7 @@
-<?php namespace RainLab\Translate\Updates;
+<?php namespace Winter\Translate\Updates;
 
-use October\Rain\Database\Updates\Seeder;
-use RainLab\Translate\Models\Locale;
+use Winter\Storm\Database\Updates\Seeder;
+use Winter\Translate\Models\Locale;
 
 class SeedAllTables extends Seeder
 {

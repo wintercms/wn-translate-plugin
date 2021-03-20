@@ -123,11 +123,11 @@ This plugin activates a feature in the CMS that allows content & mail template f
 
 ## Model translation
 
-Models can have their attributes translated by using the `RainLab.Translate.Behaviors.TranslatableModel` behavior and specifying which attributes to translate in the class.
+Models can have their attributes translated by using the `Winter.Translate.Behaviors.TranslatableModel` behavior and specifying which attributes to translate in the class.
 
     class User
     {
-        public $implement = ['RainLab.Translate.Behaviors.TranslatableModel'];
+        public $implement = ['Winter.Translate.Behaviors.TranslatableModel'];
 
         public $translatable = ['name'];
     }
@@ -276,7 +276,7 @@ For a possible implementation of the `YourModel::translateParams` method look at
 
 ## Extend theme scan
 
-      Event::listen('rainlab.translate.themeScanner.afterScan', function (ThemeScanner $scanner) {
+      Event::listen('winter.translate.themeScanner.afterScan', function (ThemeScanner $scanner) {
            ...
       });
 
@@ -303,7 +303,7 @@ It is possible to conditionally extend a plugin's models to support translation 
         /**
          * Softly implement the TranslatableModel behavior.
          */
-        public $implement = ['@RainLab.Translate.Behaviors.TranslatableModel'];
+        public $implement = ['@Winter.Translate.Behaviors.TranslatableModel'];
 
         /**
          * @var array Attributes that support translation, if available.
@@ -327,7 +327,7 @@ Since the Twig filter will not be available all the time, we can pipe them to th
     public function registerMarkupTags()
     {
         // Check the translate plugin is installed
-        if (!class_exists('RainLab\Translate\Behaviors\TranslatableModel'))
+        if (!class_exists('Winter\Translate\Behaviors\TranslatableModel'))
             return;
 
         return [
@@ -344,9 +344,9 @@ Since the Twig filter will not be available all the time, we can pipe them to th
 
 Users can switch between locales by clicking on the locale indicator on the right hand side of the Multi-language input. By holding the CMD / CTRL key all Multi-language Input fields will switch to the selected locale.
 
-## Integration without jQuery and October Framework files
+## Integration without jQuery and Winter CMS Framework files
 
-It is possible to use the front-end language switcher without using jQuery or the OctoberCMS AJAX Framework by making the AJAX API request yourself manually. The following is an example of how to do that.
+It is possible to use the front-end language switcher without using jQuery or the Winter CMS AJAX Framework by making the AJAX API request yourself manually. The following is an example of how to do that.
 
     document.querySelector('#languageSelect').addEventListener('change', function () {
         const details = {
@@ -370,13 +370,13 @@ It is possible to use the front-end language switcher without using jQuery or th
             body: formBody,
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-                'X-OCTOBER-REQUEST-HANDLER': 'onSwitchLocale',
-                'X-OCTOBER-REQUEST-PARTIALS': '',
+                'X-WINTER-REQUEST-HANDLER': 'onSwitchLocale',
+                'X-WINTER-REQUEST-PARTIALS': '',
                 'X-Requested-With': 'XMLHttpRequest'
             }
         })
         .then(res => res.json())
-        .then(res => window.location.replace(res.X_OCTOBER_REDIRECT))
+        .then(res => window.location.replace(res.X_WINTER_REDIRECT))
         .catch(err => console.log(err))
     })
 

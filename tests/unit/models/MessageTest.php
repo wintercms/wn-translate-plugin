@@ -1,7 +1,7 @@
-<?php namespace RainLab\Translate\Tests\Unit\Models;
+<?php namespace Winter\Translate\Tests\Unit\Models;
 
-use RainLab\Translate\Models\Locale;
-use RainLab\Translate\Models\Message;
+use Winter\Translate\Models\Locale;
+use Winter\Translate\Models\Message;
 use PluginTestCase;
 use Model;
 

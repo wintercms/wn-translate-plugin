@@ -1,11 +1,11 @@
-<?php namespace RainLab\Translate\Updates;
+<?php namespace Winter\Translate\Updates;
 
 use Schema;
-use October\Rain\Database\Updates\Migration;
+use Winter\Storm\Database\Updates\Migration;
 
 class UpdateMessagesTable extends Migration
 {
-    const TABLE_NAME = 'rainlab_translate_messages';
+    const TABLE_NAME = 'winter_translate_messages';
 
     public function up()
     {

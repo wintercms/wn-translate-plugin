@@ -11,7 +11,7 @@
 
 +function ($) { "use strict";
 
-    var Base = $.oc.foundation.base,
+    var Base = $.wn.foundation.base,
         BaseProto = Base.prototype
 
     // MLREPEATER CLASS DEFINITION
@@ -24,7 +24,7 @@
         this.$locale   = $('[data-repeater-active-locale]', this.$el)
         this.locale    = options.defaultLocale
 
-        $.oc.foundation.controlUtils.markDisposable(element)
+        $.wn.foundation.controlUtils.markDisposable(element)
         Base.call(this)
 
         // Init

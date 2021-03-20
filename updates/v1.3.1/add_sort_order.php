@@ -1,12 +1,12 @@
-<?php namespace RainLab\Translate\Updates;
+<?php namespace Winter\Translate\Updates;
 
-use RainLab\Translate\Models\Locale;
+use Winter\Translate\Models\Locale;
 use Schema;
-use October\Rain\Database\Updates\Migration;
+use Winter\Storm\Database\Updates\Migration;
 
-class BuilderTableUpdateRainlabTranslateLocales extends Migration
+class AddSortOrder extends Migration
 {
-    const TABLE_NAME = 'rainlab_translate_locales';
+    const TABLE_NAME = 'winter_translate_locales';
 
     public function up()
     {

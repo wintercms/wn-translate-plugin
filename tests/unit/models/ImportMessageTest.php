@@ -1,8 +1,8 @@
-<?php namespace RainLab\Translate\Tests\Unit\Models;
+<?php namespace Winter\Translate\Tests\Unit\Models;
 
 use PluginTestCase;
-use RainLab\Translate\Models\Message;
-use RainLab\Translate\Models\MessageImport;
+use Winter\Translate\Models\Message;
+use Winter\Translate\Models\MessageImport;
 
 class ImportMessageTest extends PluginTestCase
 {

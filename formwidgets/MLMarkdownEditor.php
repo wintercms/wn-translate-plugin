@@ -1,18 +1,18 @@
-<?php namespace RainLab\Translate\FormWidgets;
+<?php namespace Winter\Translate\FormWidgets;
 
 use Backend\FormWidgets\MarkdownEditor;
-use RainLab\Translate\Models\Locale;
+use Winter\Translate\Models\Locale;
 
 /**
  * ML Markdown Editor
  * Renders a multi-lingual Markdown editor.
  *
- * @package rainlab\translate
+ * @package winter\translate
  * @author Alexey Bobkov, Samuel Georges
  */
 class MLMarkdownEditor extends MarkdownEditor
 {
-    use \RainLab\Translate\Traits\MLControl;
+    use \Winter\Translate\Traits\MLControl;
 
     /**
      * {@inheritDoc}

@@ -3,13 +3,13 @@
 # ===================================
 
 # Reorder Title
-title: rainlab.translate::lang.locale.reorder_title
+title: winter.translate::lang.locale.reorder_title
 
 # Attribute name
 nameFrom: name
 
 # Model Class name
-modelClass: RainLab\Translate\Models\Locale
+modelClass: Winter\Translate\Models\Locale
 
 # Toolbar widget configuration
 toolbar:

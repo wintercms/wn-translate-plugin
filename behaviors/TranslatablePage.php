@@ -1,7 +1,7 @@
-<?php namespace RainLab\Translate\Behaviors;
+<?php namespace Winter\Translate\Behaviors;
 
 use App;
-use RainLab\Translate\Classes\TranslatableBehavior;
+use Winter\Translate\Classes\TranslatableBehavior;
 
 /**
  * Translatable page model extension
@@ -10,7 +10,7 @@ use RainLab\Translate\Classes\TranslatableBehavior;
  *
  * In the model class definition:
  *
- *   public $implement = ['@RainLab.Translate.Behaviors.TranslatablePage'];
+ *   public $implement = ['@Winter.Translate.Behaviors.TranslatablePage'];
  *
  *   public $translatable = ['title', 'description'];
  *

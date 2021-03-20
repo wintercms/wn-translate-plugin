@@ -1,8 +1,8 @@
-<?php namespace RainLab\Translate\FormWidgets;
+<?php namespace Winter\Translate\FormWidgets;
 
 use Backend\FormWidgets\Repeater;
-use RainLab\Translate\Models\Locale;
-use October\Rain\Html\Helper as HtmlHelper;
+use Winter\Translate\Models\Locale;
+use Winter\Storm\Html\Helper as HtmlHelper;
 use ApplicationException;
 use Request;
 
@@ -10,12 +10,12 @@ use Request;
  * ML Repeater
  * Renders a multi-lingual repeater field.
  *
- * @package rainlab\translate
+ * @package winter\translate
  * @author Alexey Bobkov, Samuel Georges
  */
 class MLRepeater extends Repeater
 {
-    use \RainLab\Translate\Traits\MLControl;
+    use \Winter\Translate\Traits\MLControl;
 
     /**
      * {@inheritDoc}

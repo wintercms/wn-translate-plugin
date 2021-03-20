@@ -1,4 +1,4 @@
-<?php namespace RainLab\Translate\Classes;
+<?php namespace Winter\Translate\Classes;
 
 use App;
 use Exception;
@@ -8,20 +8,20 @@ use Cms\Classes\Page;
 use Cms\Classes\Content;
 use System\Classes\MailManager;
 use System\Classes\PluginManager;
-use RainLab\Translate\Models\Message;
-use RainLab\Translate\Models\Locale as LocaleModel;
-use RainLab\Translate\Classes\Translator;
-use RainLab\Translate\Classes\ThemeScanner;
+use Winter\Translate\Models\Message;
+use Winter\Translate\Models\Locale as LocaleModel;
+use Winter\Translate\Classes\Translator;
+use Winter\Translate\Classes\ThemeScanner;
 
 /**
  * Registrant class for bootstrapping events
  *
- * @package october\system
+ * @package winter\system
  * @author Alexey Bobkov, Samuel Georges
  */
 class EventRegistry
 {
-    use \October\Rain\Support\Traits\Singleton;
+    use \Winter\Storm\Support\Traits\Singleton;
 
     //
     // Utility
@@ -35,21 +35,21 @@ class EventRegistry
         // Handle URL translations
         $this->registerPageUrlTranslation($widget);
 
-        // Handle RainLab.Pages MenuItem translations
-        if (PluginManager::instance()->exists('RainLab.Pages')) {
+        // Handle Winter.Pages MenuItem translations
+        if (PluginManager::instance()->exists('Winter.Pages')) {
             $this->registerMenuItemTranslation($widget);
         }
     }
 
     /**
-     * Translate RainLab.Pages MenuItem data
+     * Translate Winter.Pages MenuItem data
      *
      * @param Backend\Widgets\Form $widget
      * @return void
      */
     public function registerMenuItemTranslation($widget)
     {
-        if ($widget->model instanceof \RainLab\Pages\Classes\MenuItem) {
+        if ($widget->model instanceof \Winter\Pages\Classes\MenuItem) {
             $defaultLocale = LocaleModel::getDefault();
             $availableLocales = LocaleModel::listAvailable();
             $fieldsToTranslate = ['title', 'url'];
@@ -93,7 +93,7 @@ class EventRegistry
             $widget->fields['settings[url]']['type'] = 'mltext';
         }
         elseif (
-            $model instanceof \RainLab\Pages\Classes\Page &&
+            $model instanceof \Winter\Pages\Classes\Page &&
             isset($widget->fields['viewBag[url]'])
         ) {
             $widget->fields['viewBag[url]']['type'] = 'mltext';
@@ -118,9 +118,9 @@ class EventRegistry
         }
 
         if (
-            !$model->isClassExtendedWith('RainLab.Translate.Behaviors.TranslatableModel') &&
-            !$model->isClassExtendedWith('RainLab.Translate.Behaviors.TranslatablePage') &&
-            !$model->isClassExtendedWith('RainLab.Translate.Behaviors.TranslatableCmsObject')
+            !$model->isClassExtendedWith('Winter.Translate.Behaviors.TranslatableModel') &&
+            !$model->isClassExtendedWith('Winter.Translate.Behaviors.TranslatablePage') &&
+            !$model->isClassExtendedWith('Winter.Translate.Behaviors.TranslatableCmsObject')
         ) {
             return;
         }
@@ -244,8 +244,8 @@ class EventRegistry
 
     /**
      * Removes localized content files from templates collection
-     * @param \October\Rain\Database\Collection $templates
-     * @return \October\Rain\Database\Collection
+     * @param \Winter\Storm\Database\Collection $templates
+     * @return \Winter\Storm\Database\Collection
      */
     public function pruneTranslatedContentTemplates($templates)
     {
@@ -262,7 +262,7 @@ class EventRegistry
 
     /**
      * Adds language suffixes to mail view files.
-     * @param  \October\Rain\Mail\Mailer $mailer
+     * @param  \Winter\Storm\Mail\Mailer $mailer
      * @param  \Illuminate\Mail\Message $message
      * @param  string $view
      * @param  array $data
@@ -306,7 +306,7 @@ class EventRegistry
 
     /**
      * Search mail view files based on locale
-     * @param  \October\Rain\Mail\Mailer $mailer
+     * @param  \Winter\Storm\Mail\Mailer $mailer
      * @param  \Illuminate\Mail\Message $message
      * @param  string $code
      * @param  string $locale

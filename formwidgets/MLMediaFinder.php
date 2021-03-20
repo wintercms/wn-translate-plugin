@@ -1,19 +1,19 @@
-<?php namespace RainLab\Translate\FormWidgets;
+<?php namespace Winter\Translate\FormWidgets;
 
 use Backend\FormWidgets\MediaFinder;
-use RainLab\Translate\Models\Locale;
+use Winter\Translate\Models\Locale;
 use System\Classes\MediaLibrary;
 
 /**
  * ML MediaFinder Form Widget
  * Renders a multilingual media finder.
  *
- * @package rainlab\translate
+ * @package winter\translate
  * @author Sascha Aeppli
  */
 class MLMediaFinder extends MediaFinder
 {
-    use \RainLab\Translate\Traits\MLControl;
+    use \Winter\Translate\Traits\MLControl;
 
     /**
      * @inheritDoc
