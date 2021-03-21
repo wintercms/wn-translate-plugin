@@ -51,7 +51,7 @@
 "1.4.0": Add importer and exporter for messages
 "1.4.1": Updated Hungarian translation. Added Arabic translation. Fixed issue where default texts are overwritten by import. Fixed issue where the language switcher for repeater fields would overlap with the first repeater row.
 "1.4.2": Add multilingual MediaFinder
-"1.4.3": !!! Please update Winter CMS to Build 444 before updating this plugin. Added ability to translate CMS Pages fields (e.g. title, description, meta-title, meta-description)
+"1.4.3": "!!! Please update Winter CMS to Build 444 before updating this plugin. Added ability to translate CMS Pages fields (e.g. title, description, meta-title, meta-description)"
 "1.4.4": Minor improvements to compatibility with Laravel framework.
 "1.4.5": Fixed issue when using the language switcher
 "1.5.0": Compatibility fix with Build 451
@@ -77,7 +77,7 @@
     - Fix error with nested fields default locale value
     - Escape Message translate params value
 "1.7.0":
-    - !!! Breaking change for the Message::trans() method (params are now escaped)
+    - "!!! Breaking change for the Message::trans() method (params are now escaped)"
     - fix message translation documentation
     - fix string translation key for scan errors column header
 "1.7.1":
