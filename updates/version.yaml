@@ -100,7 +100,7 @@
     - Polish localization updates
     - Turkish localization updates
     - Add Greek language localization
-"1.8.0":
+"2.0.0":
     - Rebrand to Winter.Translate
-    - v1.8.0/rename_tables.php
+    - v2.0.0/rename_tables.php
 
