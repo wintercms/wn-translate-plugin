@@ -32,7 +32,7 @@ class Plugin extends PluginBase
             'author'      => 'Winter CMS',
             'icon'        => 'icon-language',
             'homepage'    => 'https://github.com/wintercms/wn-translate-plugin',
-            'replaces'    => 'RainLab.Translate'
+            'replaces'    => ['RainLab.Translate' '<= 1.7.4'],
         ];
     }
 
