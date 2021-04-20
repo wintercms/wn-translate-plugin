@@ -8,6 +8,11 @@ class SeedAllTables extends Seeder
 
     public function run()
     {
+
+        Locale::extend(function ($model) {
+            $model->setTable('rainlab_translate_locales');
+        });
+
         if(Locale::count() === 0) {
             Locale::create([
                 'code' => 'en',
@@ -16,6 +21,11 @@ class SeedAllTables extends Seeder
                 'is_enabled' => true
             ]);
         }
+
+        Locale::extend(function ($model) {
+            $model->setTable('winter_translate_locales');
+        });
+
     }
 
 }

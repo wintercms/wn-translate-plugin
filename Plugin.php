@@ -29,16 +29,16 @@ class Plugin extends PluginBase
         return [
             'name'        => 'winter.translate::lang.plugin.name',
             'description' => 'winter.translate::lang.plugin.description',
-            'author'      => 'Alexey Bobkov, Samuel Georges',
+            'author'      => 'Winter CMS',
             'icon'        => 'icon-language',
             'homepage'    => 'https://github.com/wintercms/wn-translate-plugin',
-            'replaces'    => 'RainLab.Translate'
+            'replaces'    => ['RainLab.Translate' => '<= 1.7.4'],
         ];
     }
 
     public function register()
     {
-        /* 
+        /*
          * Load localized version of mail templates (akin to localized CMS content files)
          */
         Event::listen('mailer.beforeAddContent', function ($mailer, $message, $view, $data, $raw, $plain) {

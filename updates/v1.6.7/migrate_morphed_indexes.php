@@ -14,19 +14,19 @@ use Winter\Translate\Models\Attribute;
  */
 class MigrateMorphedIndexes extends Migration
 {
-    protected $table = 'winter_translate_indexes';
+    const TABLE_NAME = 'rainlab_translate_indexes';
 
     public function up()
     {
         foreach (Relation::$morphMap as $alias => $class) {
-            Db::table($this->table)->where('model_type', $class)->update(['model_type' => $alias]);
+            Db::table(self::TABLE_NAME)->where('model_type', $class)->update(['model_type' => $alias]);
         }
     }
 
     public function down()
     {
         foreach (Relation::$morphMap as $alias => $class) {
-            Db::table($this->table)->where('model_type', $alias)->update(['model_type' => $class]);
+            Db::table(self::TABLE_NAME)->where('model_type', $alias)->update(['model_type' => $class]);
         }
     }
 }

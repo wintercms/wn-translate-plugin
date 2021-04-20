@@ -14,19 +14,19 @@ use Winter\Translate\Models\Attribute;
  */
 class MigrateMorphedAttributes extends Migration
 {
+    const TABLE_NAME = 'rainlab_translate_attributes';
+
     public function up()
     {
-        $table = (new Attribute())->getTable();
         foreach (Relation::$morphMap as $alias => $class) {
-            Db::table($table)->where('model_type', $class)->update(['model_type' => $alias]);
+            Db::table(self::TABLE_NAME)->where('model_type', $class)->update(['model_type' => $alias]);
         }
     }
 
     public function down()
     {
-        $table = (new Attribute())->getTable();
         foreach (Relation::$morphMap as $alias => $class) {
-            Db::table($table)->where('model_type', $alias)->update(['model_type' => $class]);
+            Db::table(self::TABLE_NAME)->where('model_type', $alias)->update(['model_type' => $class]);
         }
     }
 }

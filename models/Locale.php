@@ -1,7 +1,6 @@
 <?php namespace Winter\Translate\Models;
 
 use Lang;
-use File;
 use Cache;
 use Model;
 use Config;
@@ -49,7 +48,7 @@ class Locale extends Model
     /**
      * @var self Default locale cache.
      */
-    private static $defaultLocale;
+    protected static $defaultLocale;
 
     public function afterCreate()
     {
@@ -98,6 +97,13 @@ class Locale extends Model
     {
         if (self::$defaultLocale !== null) {
             return self::$defaultLocale;
+        }
+
+        if ($forceDefault = Config::get('rainlab.translate::forceDefaultLocale')) {
+            $locale = new self;
+            $locale->name = $locale->code = $forceDefault;
+            $locale->is_default = $locale->is_enabled = true;
+            return self::$defaultLocale = $locale;
         }
 
         return self::$defaultLocale = self::where('is_default', true)
