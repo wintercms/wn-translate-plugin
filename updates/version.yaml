@@ -102,6 +102,7 @@
     - Add Greek language localization
 "2.0.0":
     - Rebrand to Winter.Translate
+    - Fix location for dropdown-to in css file
     - v2.0.0/rename_tables.php
 "2.1.0":
     - |
