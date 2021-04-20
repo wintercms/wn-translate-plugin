@@ -1,13 +1,13 @@
-<?php namespace RainLab\Translate\Updates;
+<?php namespace Winter\Translate\Updates;
 
 use Schema;
 use Str;
-use October\Rain\Database\Updates\Migration;
-use RainLab\Translate\Models\Message;
+use Winter\Storm\Database\Updates\Migration;
+use Winter\Translate\Models\Message;
 
 class MigrateMessageCode extends Migration
 {
-    const TABLE_NAME = 'rainlab_translate_messages';
+    const TABLE_NAME = 'winter_translate_messages';
 
     public function up()
     {
