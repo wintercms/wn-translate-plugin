@@ -107,4 +107,8 @@
     - Rebrand to Winter.Translate
     - Fix location for dropdown-to in css file
     - v2.0.0/rename_tables.php
-
+"2.1.0":
+    - |
+      "!!! Potential breaking change: Message codes are now MD5 hashed versions of the original string.
+         See https://github.com/wintercms/wn-translate-plugin/pull/2"
+    - v2.1.0/migrate_message_code.php
