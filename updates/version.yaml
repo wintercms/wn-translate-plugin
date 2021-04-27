@@ -109,4 +109,5 @@
     - v2.0.0/rename_tables.php
 "2.0.1":
     - Rebrand table indexes
+    - Remove deprecated methods (setTranslateAttribute/getTranslateAttribute)
     - v2.0.1/rename_indexes.php
