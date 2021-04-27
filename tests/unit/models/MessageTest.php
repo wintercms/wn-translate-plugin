@@ -23,7 +23,7 @@ class MessageTest extends PluginTestCase
         $baseMessageCode = Message::makeMessageCode($baseMessageId);
 
         // casing should lead to the same code
-        $this->assertEquals($baseMessageCode, Message::makeMessageCode(mb_strtolower($baseMessageId)));
+        $this->assertEquals($baseMessageCode, Message::makeMessageCode($baseMessageId));
 
         // heading/trailing spaces should be trimmed
         $this->assertEquals($baseMessageCode, Message::makeMessageCode(' ' . $baseMessageId));
