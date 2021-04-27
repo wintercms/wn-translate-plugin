@@ -107,4 +107,6 @@
     - Rebrand to Winter.Translate
     - Fix location for dropdown-to in css file
     - v2.0.0/rename_tables.php
-
+"2.0.1":
+    - Rebrand table indexes
+    - v2.0.1/rename_indexes.php
