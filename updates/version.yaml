@@ -100,12 +100,14 @@
     - Polish localization updates
     - Turkish localization updates
     - Add Greek language localization
+"1.8.0": Adds initial support for October v2.0
+"1.8.1": Minor bugfix
+"1.8.2": Fixes translated file models and theme data for v2.0. The parent model must implement translatable behavior for their related file models to be translated.
 "2.0.0":
     - Rebrand to Winter.Translate
     - Fix location for dropdown-to in css file
     - v2.0.0/rename_tables.php
-"2.1.0":
-    - |
-      "!!! Potential breaking change: Message codes are now MD5 hashed versions of the original string.
-         See https://github.com/wintercms/wn-translate-plugin/pull/2"
-    - v2.1.0/migrate_message_code.php
+"2.0.1":
+    - Rebrand table indexes
+    - Remove deprecated methods (setTranslateAttribute/getTranslateAttribute)
+    - v2.0.1/rename_indexes.php
