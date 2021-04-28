@@ -34,7 +34,9 @@ class RenameIndexes extends Migration
     {
         $sm = Schema::getConnection()->getDoctrineSchemaManager();
 
-        foreach ($sm->listTableIndexes($table) as $index) {
+        $table = $sm->listTableDetails($table);
+
+        foreach ($table->getIndexes() as $index) {
             if ($index->isPrimary()) {
                 continue;
             }
@@ -42,20 +44,7 @@ class RenameIndexes extends Migration
             $old = $index->getName();
             $new = str_replace($from, $to, $old);
 
-            $columns = $index->getColumns();
-            if ($index->isUnique()) {
-                $indexType = 'Unique';
-            } else {
-                $indexType = 'Index';
-            }
-
-            Schema::table($table, function ($table) use ($indexType, $columns, $old, $new) {
-                $dropFunction = 'drop'.$indexType;
-                $createFunction = strtolower($indexType);
-
-                $table->$dropFunction($old);
-                $table->$createFunction($columns, $new);
-            });
+            $table->renameIndex($old, $new);
         }
     }
 }
