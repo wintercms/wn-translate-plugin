@@ -324,8 +324,14 @@ class EventRegistry
         }
 
         foreach ($searchPaths as $path) {
-            $localizedView = sprintf('%s-%s', $code, $path);
+            // prefered way of separating lang files is with a period 
+            $localizedView = sprintf('%s.%s', $code, $path);            
+            if ($factory->exists($localizedView)) {
+                return $localizedView;
+            }
 
+            // use this as a fallback in case we have people using a hyphen
+            $localizedView = sprintf('%s-%s', $code, $path);
             if ($factory->exists($localizedView)) {
                 return $localizedView;
             }
