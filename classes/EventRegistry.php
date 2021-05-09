@@ -324,6 +324,7 @@ class EventRegistry
         }
 
         foreach ($searchPaths as $path) {
+            // must use "-" as locale seperator since "." is used as path seperator for the view file location
             $localizedView = sprintf('%s-%s', $code, $path);
 
             if ($factory->exists($localizedView)) {
