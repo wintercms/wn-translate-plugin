@@ -309,7 +309,7 @@ class Plugin extends PluginBase
         });
     }
 
-    protected function registerClassAliases()
+    public function registerClassAliases()
     {
         /**
          * To allow compatibility with plugins that extend the original RainLab.Translate plugin,
