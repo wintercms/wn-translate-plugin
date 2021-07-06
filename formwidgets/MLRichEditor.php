@@ -1,18 +1,18 @@
-<?php namespace RainLab\Translate\FormWidgets;
+<?php namespace Winter\Translate\FormWidgets;
 
 use Backend\FormWidgets\RichEditor;
-use RainLab\Translate\Models\Locale;
+use Winter\Translate\Models\Locale;
 
 /**
  * ML Rich Editor
  * Renders a multi-lingual WYSIWYG editor.
  *
- * @package rainlab\translate
+ * @package winter\translate
  * @author Alexey Bobkov, Samuel Georges
  */
 class MLRichEditor extends RichEditor
 {
-    use \RainLab\Translate\Traits\MLControl;
+    use \Winter\Translate\Traits\MLControl;
 
     /**
      * {@inheritDoc}

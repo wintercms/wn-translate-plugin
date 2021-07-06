@@ -1,4 +1,4 @@
-<?php namespace RainLab\Translate\Models;
+<?php namespace Winter\Translate\Models;
 
 use Str;
 use Lang;
@@ -16,7 +16,7 @@ class Message extends Model
     /**
      * @var string The database table used by the model.
      */
-    public $table = 'rainlab_translate_messages';
+    public $table = 'winter_translate_messages';
 
     /**
      * @var array Guarded fields
@@ -61,6 +61,11 @@ class Message extends Model
             $locale = self::DEFAULT_LOCALE;
         }
 
+        if (!array_key_exists($locale, $this->message_data)) {
+            // search parent locale (e.g. en-US -> en) before returning default
+            list($locale) = explode('-', $locale);
+        }
+
         if (array_key_exists($locale, $this->message_data)) {
             return $this->message_data[$locale];
         }
@@ -74,7 +79,7 @@ class Message extends Model
      * @param  string $message
      * @return void
      */
-    public function toLocale($locale = null, $message)
+    public function toLocale($locale = null, $message = null)
     {
         if ($locale === null) {
             return;
@@ -270,7 +275,7 @@ class Message extends Model
             return;
         }
 
-        $expiresAt = now()->addMinutes(Config::get('rainlab.translate::cacheTimeout', 1440));
+        $expiresAt = now()->addMinutes(Config::get('winter.translate::cacheTimeout', 1440));
         Cache::put(self::makeCacheKey(), self::$cache, $expiresAt);
     }
 

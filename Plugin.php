@@ -1,4 +1,4 @@
-<?php namespace RainLab\Translate;
+<?php namespace Winter\Translate;
 
 use App;
 use Lang;
@@ -10,9 +10,9 @@ use System\Models\File;
 use Cms\Models\ThemeData;
 use System\Classes\PluginBase;
 use System\Classes\CombineAssets;
-use RainLab\Translate\Models\Message;
-use RainLab\Translate\Classes\EventRegistry;
-use RainLab\Translate\Classes\Translator;
+use Winter\Translate\Models\Message;
+use Winter\Translate\Classes\EventRegistry;
+use Winter\Translate\Classes\Translator;
 
 /**
  * Translate Plugin Information File
@@ -27,16 +27,24 @@ class Plugin extends PluginBase
     public function pluginDetails()
     {
         return [
-            'name'        => 'rainlab.translate::lang.plugin.name',
-            'description' => 'rainlab.translate::lang.plugin.description',
-            'author'      => 'Alexey Bobkov, Samuel Georges',
+            'name'        => 'winter.translate::lang.plugin.name',
+            'description' => 'winter.translate::lang.plugin.description',
+            'author'      => 'Winter CMS',
             'icon'        => 'icon-language',
-            'homepage'    => 'https://github.com/rainlab/translate-plugin'
+            'homepage'    => 'https://github.com/wintercms/wn-translate-plugin',
+            'replaces'    => ['RainLab.Translate' => '<= 1.8.2'],
         ];
     }
 
     public function register()
     {
+        /*
+         * Load localized version of mail templates (akin to localized CMS content files)
+         */
+        Event::listen('mailer.beforeAddContent', function ($mailer, $message, $view, $data, $raw, $plain) {
+            return EventRegistry::instance()->findLocalizedMailViewContent($mailer, $message, $view, $data, $raw, $plain);
+        }, 1);
+
         /*
          * Defer event with low priority to let others contribute before this registers.
          */
@@ -47,13 +55,17 @@ class Plugin extends PluginBase
         /*
          * Handle translated page URLs
          */
-        Page::extend(function($page) {
-            if (!$page->propertyExists('translatable')) {
-                $page->addDynamicProperty('translatable', []);
+        Page::extend(function($model) {
+            if (!$model->propertyExists('translatable')) {
+                $model->addDynamicProperty('translatable', []);
             }
-            $page->translatable = array_merge($page->translatable, ['title', 'description', 'meta_title', 'meta_description']);
-            $page->extendClassWith('RainLab\Translate\Behaviors\TranslatablePageUrl');
-            $page->extendClassWith('RainLab\Translate\Behaviors\TranslatablePage');
+            $model->translatable = array_merge($model->translatable, ['title', 'description', 'meta_title', 'meta_description']);
+            if (!$model->isClassExtendedWith('Winter\Translate\Behaviors\TranslatablePageUrl')) {
+                $model->extendClassWith('Winter\Translate\Behaviors\TranslatablePageUrl');
+            }
+            if (!$model->isClassExtendedWith('Winter\Translate\Behaviors\TranslatablePage')) {
+                $model->extendClassWith('Winter\Translate\Behaviors\TranslatablePage');
+            }
         });
 
         /*
@@ -64,8 +76,12 @@ class Plugin extends PluginBase
                 $model->addDynamicProperty('translatable', []);
             }
             $model->translatable = array_merge($model->translatable, ['title', 'description']);
-            $model->extendClassWith('October\Rain\Database\Behaviors\Purgeable');
-            $model->extendClassWith('RainLab\Translate\Behaviors\TranslatableModel');
+            if (!$model->isClassExtendedWith('Winter\Storm\Database\Behaviors\Purgeable')) {
+                $model->extendClassWith('Winter\Storm\Database\Behaviors\Purgeable');
+            }
+            if (!$model->isClassExtendedWith('Winter\Translate\Behaviors\TranslatableModel')) {
+                $model->extendClassWith('Winter\Translate\Behaviors\TranslatableModel');
+            }
         });
 
         /*
@@ -76,8 +92,12 @@ class Plugin extends PluginBase
                 $model->addDynamicProperty('translatable', []);
             }
 
-            $model->extendClassWith('October\Rain\Database\Behaviors\Purgeable');
-            $model->extendClassWith('RainLab\Translate\Behaviors\TranslatableModel');
+            if (!$model->isClassExtendedWith('Winter\Storm\Database\Behaviors\Purgeable')) {
+                $model->extendClassWith('Winter\Storm\Database\Behaviors\Purgeable');
+            }
+            if (!$model->isClassExtendedWith('Winter\Translate\Behaviors\TranslatableModel')) {
+                $model->extendClassWith('Winter\Translate\Behaviors\TranslatableModel');
+            }
 
             $model->bindEvent('model.afterFetch', static function() use ($model) {
                 foreach ($model->getFormFields() as $id => $field) {
@@ -91,7 +111,7 @@ class Plugin extends PluginBase
         /*
          * Register console commands
          */
-        $this->registerConsoleCommand('translate.scan', 'Rainlab\Translate\Console\ScanCommand');
+        $this->registerConsoleCommand('translate.scan', 'Winter\Translate\Console\ScanCommand');
 
         $this->registerAssetBundles();
     }
@@ -104,6 +124,30 @@ class Plugin extends PluginBase
         Event::listen('cms.page.init', function($controller, $page) {
             EventRegistry::instance()->setMessageContext($page);
         }, 100);
+
+        /*
+         * Populate MenuItem properties with localized values if available
+         */
+        Event::listen('pages.menu.referencesGenerated', function (&$items) {
+            $locale = App::getLocale();
+            $iterator = function ($menuItems) use (&$iterator, $locale) {
+                $result = [];
+                foreach ($menuItems as $item) {
+                    $localeFields = array_get($item->viewBag, "locale.$locale", []);
+                    foreach ($localeFields as $fieldName => $fieldValue) {
+                        if ($fieldValue) {
+                            $item->$fieldName = $fieldValue;
+                        }
+                    }
+                    if ($item->items) {
+                        $item->items = $iterator($item->items);
+                    }
+                    $result[] = $item;
+                }
+                return $result;
+            };
+            $items = $iterator($items);
+        });
 
         /*
          * Import messages defined by the theme
@@ -134,7 +178,7 @@ class Plugin extends PluginBase
          * Look at session for locale using middleware
          */
         \Cms\Classes\CmsController::extend(function($controller) {
-            $controller->middleware(\RainLab\Translate\Classes\LocaleMiddleware::class);
+            $controller->middleware(\Winter\Translate\Classes\LocaleMiddleware::class);
         });
 
         /**
@@ -148,7 +192,7 @@ class Plugin extends PluginBase
         Event::listen('pages.snippet.getMapCacheKey', $modifyKey);
         Event::listen('pages.snippet.getPartialMapCacheKey', $modifyKey);
 
-        if (class_exists('\RainLab\Pages\Classes\SnippetManager')) {
+        if (class_exists('\Winter\Pages\Classes\SnippetManager')) {
             $handler = function ($controller, $template, $type) {
                 if (!$template->methodExists('getDirtyLocales')) {
                     return;
@@ -166,10 +210,10 @@ class Plugin extends PluginBase
                             continue;
                         }
 
-                        // Clear the RainLab.Pages caches for each dirty locale
+                        // Clear the Winter.Pages caches for each dirty locale
                         App::setLocale($locale);
-                        \RainLab\Pages\Classes\Page::clearMenuCache($theme);
-                        \RainLab\Pages\Classes\SnippetManager::clearCache($theme);
+                        \Winter\Pages\Classes\Page::clearMenuCache($theme);
+                        \Winter\Pages\Classes\SnippetManager::clearCache($theme);
                     }
 
                     // Restore the original locale for this request
@@ -185,21 +229,21 @@ class Plugin extends PluginBase
     public function registerComponents()
     {
         return [
-           'RainLab\Translate\Components\LocalePicker' => 'localePicker',
-           'RainLab\Translate\Components\AlternateHrefLangElements' => 'alternateHrefLangElements'
+           'Winter\Translate\Components\LocalePicker' => 'localePicker',
+           'Winter\Translate\Components\AlternateHrefLangElements' => 'alternateHrefLangElements'
         ];
     }
 
     public function registerPermissions()
     {
         return [
-            'rainlab.translate.manage_locales'  => [
-                'tab'   => 'rainlab.translate::lang.plugin.tab',
-                'label' => 'rainlab.translate::lang.plugin.manage_locales'
+            'winter.translate.manage_locales'  => [
+                'tab'   => 'winter.translate::lang.plugin.tab',
+                'label' => 'winter.translate::lang.plugin.manage_locales'
             ],
-            'rainlab.translate.manage_messages' => [
-                'tab'   => 'rainlab.translate::lang.plugin.tab',
-                'label' => 'rainlab.translate::lang.plugin.manage_messages'
+            'winter.translate.manage_messages' => [
+                'tab'   => 'winter.translate::lang.plugin.tab',
+                'label' => 'winter.translate::lang.plugin.manage_messages'
             ]
         ];
     }
@@ -208,22 +252,22 @@ class Plugin extends PluginBase
     {
         return [
             'locales' => [
-                'label'       => 'rainlab.translate::lang.locale.title',
-                'description' => 'rainlab.translate::lang.plugin.description',
+                'label'       => 'winter.translate::lang.locale.title',
+                'description' => 'winter.translate::lang.plugin.description',
                 'icon'        => 'icon-language',
-                'url'         => Backend::url('rainlab/translate/locales'),
+                'url'         => Backend::url('winter/translate/locales'),
                 'order'       => 550,
-                'category'    => 'rainlab.translate::lang.plugin.name',
-                'permissions' => ['rainlab.translate.manage_locales']
+                'category'    => 'winter.translate::lang.plugin.name',
+                'permissions' => ['winter.translate.manage_locales']
             ],
             'messages' => [
-                'label'       => 'rainlab.translate::lang.messages.title',
-                'description' => 'rainlab.translate::lang.messages.description',
+                'label'       => 'winter.translate::lang.messages.title',
+                'description' => 'winter.translate::lang.messages.description',
                 'icon'        => 'icon-list-alt',
-                'url'         => Backend::url('rainlab/translate/messages'),
+                'url'         => Backend::url('winter/translate/messages'),
                 'order'       => 551,
-                'category'    => 'rainlab.translate::lang.plugin.name',
-                'permissions' => ['rainlab.translate.manage_messages']
+                'category'    => 'winter.translate::lang.plugin.name',
+                'permissions' => ['winter.translate.manage_messages']
             ]
         ];
     }
@@ -248,22 +292,50 @@ class Plugin extends PluginBase
     public function registerFormWidgets()
     {
         return [
-            'RainLab\Translate\FormWidgets\MLText' => 'mltext',
-            'RainLab\Translate\FormWidgets\MLTextarea' => 'mltextarea',
-            'RainLab\Translate\FormWidgets\MLRichEditor' => 'mlricheditor',
-            'RainLab\Translate\FormWidgets\MLMarkdownEditor' => 'mlmarkdowneditor',
-            'RainLab\Translate\FormWidgets\MLRepeater' => 'mlrepeater',
-            'RainLab\Translate\FormWidgets\MLNestedForm' => 'mlnestedform',
-            'RainLab\Translate\FormWidgets\MLMediaFinder' => 'mlmediafinder',
+            'Winter\Translate\FormWidgets\MLText' => 'mltext',
+            'Winter\Translate\FormWidgets\MLTextarea' => 'mltextarea',
+            'Winter\Translate\FormWidgets\MLRichEditor' => 'mlricheditor',
+            'Winter\Translate\FormWidgets\MLMarkdownEditor' => 'mlmarkdowneditor',
+            'Winter\Translate\FormWidgets\MLRepeater' => 'mlrepeater',
+            'Winter\Translate\FormWidgets\MLNestedForm' => 'mlnestedform',
+            'Winter\Translate\FormWidgets\MLMediaFinder' => 'mlmediafinder',
         ];
     }
 
     protected function registerAssetBundles()
     {
         CombineAssets::registerCallback(function ($combiner) {
-            $combiner->registerBundle('$/rainlab/translate/assets/less/messages.less');
-            $combiner->registerBundle('$/rainlab/translate/assets/less/multilingual.less');
+            $combiner->registerBundle('$/winter/translate/assets/less/messages.less');
+            $combiner->registerBundle('$/winter/translate/assets/less/multilingual.less');
         });
+    }
+
+    public function registerClassAliases()
+    {
+        /**
+         * To allow compatibility with plugins that extend the original RainLab.Translate plugin,
+         * this will alias those classes to use the new Winter.Translate classes.
+         */
+        return [
+            \Winter\Translate\Plugin::class                                  => \RainLab\Translate\Plugin::class,
+            \Winter\Translate\Classes\EventRegistry::class                   => \RainLab\Translate\Classes\EventRegistry::class,
+            \Winter\Translate\Classes\LocaleMiddleware::class                => \RainLab\Translate\Classes\LocaleMiddleware::class,
+            \Winter\Translate\Classes\MLCmsObject::class                     => \RainLab\Translate\Classes\MLCmsObject::class,
+            \Winter\Translate\Classes\MLContent::class                       => \RainLab\Translate\Classes\MLContent::class,
+            \Winter\Translate\Classes\MLStaticPage::class                    => \RainLab\Translate\Classes\MLStaticPage::class,
+            \Winter\Translate\Classes\ThemeScanner::class                    => \RainLab\Translate\Classes\ThemeScanner::class,
+            \Winter\Translate\Classes\TranslatableBehavior::class            => \RainLab\Translate\Classes\TranslatableBehavior::class,
+            \Winter\Translate\Classes\Translator::class                      => \RainLab\Translate\Classes\Translator::class,
+            \Winter\Translate\Components\AlternateHrefLangElements::class    => \RainLab\Translate\Components\AlternateHrefLangElements::class,
+            \Winter\Translate\Components\LocalePicker::class                 => \RainLab\Translate\Components\LocalePicker::class,
+            \Winter\Translate\Models\Attribute::class                        => \RainLab\Translate\Models\Attribute::class,
+            \Winter\Translate\Models\Locale::class                           => \RainLab\Translate\Models\Locale::class,
+            \Winter\Translate\Models\Message::class                          => \RainLab\Translate\Models\Message::class,
+            \Winter\Translate\Models\MessageExport::class                    => \RainLab\Translate\Models\MessageExport::class,
+            \Winter\Translate\Models\MessageImport::class                    => \RainLab\Translate\Models\MessageImport::class,
+            \Winter\Translate\Controllers\Locales::class                     => \RainLab\Translate\Controllers\Locales::class,
+            \Winter\Translate\Controllers\Messages::class                    => \RainLab\Translate\Controllers\Messages::class,
+        ];
     }
 
     public function localeUrl($url, $locale)

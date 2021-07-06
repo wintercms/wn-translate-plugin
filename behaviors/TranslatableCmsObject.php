@@ -1,9 +1,9 @@
-<?php namespace RainLab\Translate\Behaviors;
+<?php namespace Winter\Translate\Behaviors;
 
-use RainLab\Translate\Models\Locale;
-use RainLab\Translate\Classes\Translator;
-use RainLab\Translate\Classes\TranslatableBehavior;
-use October\Rain\Html\Helper as HtmlHelper;
+use Winter\Translate\Models\Locale;
+use Winter\Translate\Classes\Translator;
+use Winter\Translate\Classes\TranslatableBehavior;
+use Winter\Storm\Html\Helper as HtmlHelper;
 
 /**
  * Translatable CMS Object extension
@@ -12,13 +12,13 @@ use October\Rain\Html\Helper as HtmlHelper;
  *
  * In the CMS object class definition:
  *
- *   public $implement = ['@RainLab.Translate.Behaviors.TranslatableCmsObject'];
+ *   public $implement = ['@Winter.Translate.Behaviors.TranslatableCmsObject'];
  *
  *   public $translatable = ['title', 'markup'];
  *
- * This definition is optional and defaults to RainLab\Translate\Classes\MLCmsObject
+ * This definition is optional and defaults to Winter\Translate\Classes\MLCmsObject
  *
- *   public $translatableModel = 'RainLab\Translate\Classes\MLStaticPage';
+ *   public $translatableModel = 'Winter\Translate\Classes\MLStaticPage';
  *
  */
 class TranslatableCmsObject extends TranslatableBehavior
@@ -31,7 +31,7 @@ class TranslatableCmsObject extends TranslatableBehavior
 
     /**
      * Constructor
-     * @param \October\Rain\Database\Model $model The extended model.
+     * @param \Winter\Storm\Database\Model $model The extended model.
      */
     public function __construct($model)
     {
@@ -225,6 +225,6 @@ class TranslatableCmsObject extends TranslatableBehavior
             return $this->model->translatableModel;
         }
 
-        return 'RainLab\Translate\Classes\MLCmsObject';
+        return 'Winter\Translate\Classes\MLCmsObject';
     }
 }

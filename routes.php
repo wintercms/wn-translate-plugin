@@ -1,14 +1,13 @@
 <?php
 
-use RainLab\Translate\Models\Message;
-use RainLab\Translate\Classes\Translator;
+use Winter\Translate\Models\Message;
+use Winter\Translate\Classes\Translator;
 
 /*
  * Adds a custom route to check for the locale prefix.
  */
-App::before(function($request) {
-
-    if (Config::get('rainlab.translate::disableLocalePrefixRoutes', false)) {
+App::before(function ($request) {
+    if (Config::get('winter.translate::disableLocalePrefixRoutes', false)) {
         return;
     }
 
@@ -29,8 +28,8 @@ App::before(function($request) {
     /*
      * Register routes
      */
-    Route::group(['prefix' => $locale, 'middleware' => 'web'], function() {
-        Route::any('{slug}', 'Cms\Classes\CmsController@run')->where('slug', '(.*)?');
+    Route::group(['prefix' => $locale, 'middleware' => 'web'], function () {
+        Route::any('{slug?}', 'Cms\Classes\CmsController@run')->where('slug', '(.*)?');
     });
 
     Route::any($locale, 'Cms\Classes\CmsController@run')->middleware('web');
@@ -39,9 +38,9 @@ App::before(function($request) {
      * Ensure Url::action() retains the localized URL
      * by re-registering the route after the CMS.
      */
-    Event::listen('cms.route', function() use ($locale) {
-        Route::group(['prefix' => $locale, 'middleware' => 'web'], function() {
-            Route::any('{slug}', 'Cms\Classes\CmsController@run')->where('slug', '(.*)?');
+    Event::listen('cms.route', function () use ($locale) {
+        Route::group(['prefix' => $locale, 'middleware' => 'web'], function () {
+            Route::any('{slug?}', 'Cms\Classes\CmsController@run')->where('slug', '(.*)?');
         });
     });
 });
@@ -49,8 +48,8 @@ App::before(function($request) {
 /*
  * Save any used messages to the contextual cache.
  */
-App::after(function($request) {
-    if (class_exists('RainLab\Translate\Models\Message')) {
+App::after(function ($request) {
+    if (class_exists('Winter\Translate\Models\Message')) {
         Message::saveToCache();
     }
 });

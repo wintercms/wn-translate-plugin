@@ -1,16 +1,16 @@
-<?php namespace RainLab\Translate\Tests\Unit\Behaviors;
+<?php namespace Winter\Translate\Tests\Unit\Behaviors;
 
+use Model;
 use Schema;
 use PluginTestCase;
-use Model;
-use RainLab\Translate\Classes\Translator;
-use RainLab\Translate\Tests\Fixtures\Models\Country as CountryModel;
-use RainLab\Translate\Models\Locale as LocaleModel;
-use October\Rain\Database\Relations\Relation;
+use Winter\Translate\Classes\Translator;
+use Winter\Translate\Tests\Fixtures\Models\Country as CountryModel;
+use Winter\Translate\Models\Locale as LocaleModel;
+use Winter\Storm\Database\Relations\Relation;
 
 class TranslatableModelTest extends PluginTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -172,7 +172,7 @@ class TranslatableModelTest extends PluginTestCase
 
         Translator::instance()->setLocale('en');
     }
-  
+
     public function testGetTranslationValueEagerLoadingWithMorphMap()
     {
         Relation::morphMap([

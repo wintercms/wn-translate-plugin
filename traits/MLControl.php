@@ -1,15 +1,15 @@
-<?php namespace RainLab\Translate\Traits;
+<?php namespace Winter\Translate\Traits;
 
 use Str;
-use RainLab\Translate\Models\Locale;
+use Winter\Translate\Models\Locale;
 use Backend\Classes\FormWidgetBase;
-use October\Rain\Html\Helper as HtmlHelper;
+use Winter\Storm\Html\Helper as HtmlHelper;
 
 /**
  * Generic ML Control
  * Renders a multi-lingual control.
  *
- * @package rainlab\translate
+ * @package winter\translate
  * @author Alexey Bobkov, Samuel Georges
  */
 trait MLControl
@@ -30,7 +30,7 @@ trait MLControl
     public $originalViewPath;
 
     /**
-     * @var RainLab\Translate\Models\Locale Object
+     * @var Winter\Translate\Models\Locale Object
      */
     protected $defaultLocale;
 
@@ -132,8 +132,8 @@ trait MLControl
      */
     public function loadLocaleAssets()
     {
-        $this->addJs('/plugins/rainlab/translate/assets/js/multilingual.js', 'RainLab.Translate');
-        $this->addCss('/plugins/rainlab/translate/assets/css/multilingual.css', 'RainLab.Translate');
+        $this->addJs('/plugins/winter/translate/assets/js/multilingual.js', 'Winter.Translate');
+        $this->addCss('/plugins/winter/translate/assets/css/multilingual.css', 'Winter.Translate');
     }
 
     /**
@@ -151,10 +151,10 @@ trait MLControl
         $studKey = Str::studly(implode(' ', HtmlHelper::nameToArray($key)));
         $mutateMethod = 'get'.$studKey.'AttributeTranslated';
 
-        if ($this->model->methodExists($mutateMethod)) {
+        if ($this->objectMethodExists($this->model, $mutateMethod)) {
             $value = $this->model->$mutateMethod($locale);
         }
-        elseif ($this->model->methodExists('getAttributeTranslated') && $this->defaultLocale->code != $locale) {
+        elseif ($this->objectMethodExists($this->model, 'getAttributeTranslated') && $this->defaultLocale->code != $locale) {
             $value = $this->model->noFallbackLocale()->getAttributeTranslated($key, $locale);
         }
         else {
@@ -193,12 +193,12 @@ trait MLControl
         $studKey = Str::studly(implode(' ', HtmlHelper::nameToArray($key)));
         $mutateMethod = 'set'.$studKey.'AttributeTranslated';
 
-        if ($this->model->methodExists($mutateMethod)) {
+        if ($this->objectMethodExists($this->model, $mutateMethod)) {
             foreach ($localeData as $locale => $value) {
                 $this->model->$mutateMethod($value, $locale);
             }
         }
-        elseif ($this->model->methodExists('setAttributeTranslated')) {
+        elseif ($this->objectMethodExists($this->model, 'setAttributeTranslated')) {
             foreach ($localeData as $locale => $value) {
                 $this->model->setAttributeTranslated($key, $value, $locale);
             }
@@ -259,5 +259,21 @@ trait MLControl
         }
 
         return false;
+    }
+
+    /**
+     * Internal helper for method existence checks.
+     *
+     * @param  object $object
+     * @param  string $method
+     * @return boolean
+     */
+    protected function objectMethodExists($object, $method)
+    {
+        if (method_exists($object, 'methodExists')) {
+            return $object->methodExists($method);
+        }
+
+        return method_exists($object, $method);
     }
 }

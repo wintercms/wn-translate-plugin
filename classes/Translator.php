@@ -1,25 +1,25 @@
-<?php namespace RainLab\Translate\Classes;
+<?php namespace Winter\Translate\Classes;
 
 use App;
 use Schema;
 use Session;
 use Request;
 use Config;
-use RainLab\Translate\Models\Locale;
+use Winter\Translate\Models\Locale;
 
 /**
  * Translate class
  *
- * @package rainlab\translate
+ * @package winter\translate
  * @author Alexey Bobkov, Samuel Georges
  */
 class Translator
 {
-    use \October\Rain\Support\Traits\Singleton;
+    use \Winter\Storm\Support\Traits\Singleton;
 
-    const SESSION_LOCALE = 'rainlab.translate.locale';
+    const SESSION_LOCALE = 'winter.translate.locale';
 
-    const SESSION_CONFIGURED = 'rainlab.translate.configured';
+    const SESSION_CONFIGURED = 'winter.translate.configured';
 
     /**
      * @var string The locale to use on the front end.
@@ -59,6 +59,7 @@ class Translator
         }
 
         App::setLocale($locale);
+
         $this->activeLocale = $locale;
 
         if ($remember) {
@@ -105,7 +106,7 @@ class Translator
         if (Session::has(self::SESSION_CONFIGURED)) {
             $result = true;
         }
-        elseif (App::hasDatabase() && Schema::hasTable('rainlab_translate_locales')) {
+        elseif (App::hasDatabase() && Schema::hasTable('winter_translate_locales')) {
             Session::put(self::SESSION_CONFIGURED, true);
             $result = true;
         }
@@ -158,7 +159,7 @@ class Translator
     public function getPathInLocale($path, $locale = null, $prefixDefaultLocale = null)
     {
         $prefixDefaultLocale = (is_null($prefixDefaultLocale))
-            ? Config::get('rainlab.translate::prefixDefaultLocale')
+            ? Config::get('winter.translate::prefixDefaultLocale')
             : $prefixDefaultLocale;
 
         $segments = explode('/', $path);

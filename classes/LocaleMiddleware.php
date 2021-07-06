@@ -1,6 +1,6 @@
-<?php namespace RainLab\Translate\Classes;
+<?php namespace Winter\Translate\Classes;
 
-use RainLab\Translate\Classes\Translator;
+use Winter\Translate\Classes\Translator;
 use Closure;
 use Config;
 
@@ -19,7 +19,7 @@ class LocaleMiddleware
         $translator->isConfigured();
 
         if (!$translator->loadLocaleFromRequest()) {
-            if (Config::get('rainlab.translate::prefixDefaultLocale')) {
+            if (Config::get('winter.translate::prefixDefaultLocale')) {
                 $translator->loadLocaleFromSession();
             } else {
                 $translator->setLocale($translator->getDefaultLocale());

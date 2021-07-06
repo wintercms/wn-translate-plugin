@@ -12,7 +12,7 @@
 
 +function ($) { "use strict";
 
-    var Base = $.oc.foundation.base,
+    var Base = $.wn.foundation.base,
         BaseProto = Base.prototype
 
     // MLRICHEDITOR CLASS DEFINITION
@@ -24,7 +24,7 @@
         this.$textarea = $(options.textareaElement)
         this.$richeditor = $('[data-control=richeditor]:first', this.$el)
 
-        $.oc.foundation.controlUtils.markDisposable(element)
+        $.wn.foundation.controlUtils.markDisposable(element)
         Base.call(this)
 
         // Init

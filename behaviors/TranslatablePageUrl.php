@@ -1,8 +1,8 @@
-<?php namespace RainLab\Translate\Behaviors;
+<?php namespace Winter\Translate\Behaviors;
 
 use App;
-use RainLab\Translate\Classes\Translator;
-use October\Rain\Extension\ExtensionBase;
+use Winter\Translate\Classes\Translator;
+use Winter\Storm\Extension\ExtensionBase;
 use ApplicationException;
 use Exception;
 
@@ -13,13 +13,13 @@ use Exception;
  *
  * In the model class definition:
  *
- *   public $implement = ['@RainLab.Translate.Behaviors.TranslatablePageUrl'];
+ *   public $implement = ['@Winter.Translate.Behaviors.TranslatablePageUrl'];
  *
  */
 class TranslatablePageUrl extends ExtensionBase
 {
     /**
-     * @var \October\Rain\Database\Model Reference to the extended model.
+     * @var \Winter\Storm\Database\Model Reference to the extended model.
      */
     protected $model;
 
@@ -40,7 +40,7 @@ class TranslatablePageUrl extends ExtensionBase
 
     /**
      * Constructor
-     * @param \October\Rain\Database\Model $model The extended model.
+     * @param \Winter\Storm\Database\Model $model The extended model.
      */
     public function __construct($model)
     {
@@ -59,7 +59,7 @@ class TranslatablePageUrl extends ExtensionBase
 
     protected function setModelUrl($value)
     {
-        if ($this->model instanceof \RainLab\Pages\Classes\Page) {
+        if ($this->model instanceof \Winter\Pages\Classes\Page) {
             array_set($this->model->attributes, 'viewBag.url', $value);
         }
         else {
@@ -69,7 +69,7 @@ class TranslatablePageUrl extends ExtensionBase
 
     protected function getModelUrl()
     {
-        if ($this->model instanceof \RainLab\Pages\Classes\Page) {
+        if ($this->model instanceof \Winter\Pages\Classes\Page) {
             return array_get($this->model->attributes, 'viewBag.url');
         }
         else {

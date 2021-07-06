@@ -1,18 +1,18 @@
-<?php namespace RainLab\Translate\FormWidgets;
+<?php namespace Winter\Translate\FormWidgets;
 
 use Backend\Classes\FormWidgetBase;
-use RainLab\Translate\Models\Locale;
+use Winter\Translate\Models\Locale;
 
 /**
  * ML Textarea
  * Renders a multi-lingual textarea field.
  *
- * @package rainlab\translate
+ * @package winter\translate
  * @author Alexey Bobkov, Samuel Georges
  */
 class MLTextarea extends FormWidgetBase
 {
-    use \RainLab\Translate\Traits\MLControl;
+    use \Winter\Translate\Traits\MLControl;
 
     /**
      * {@inheritDoc}
@@ -37,8 +37,6 @@ class MLTextarea extends FormWidgetBase
      */
     public function render()
     {
-        $this->isAvailable = Locale::isAvailable();
-
         $this->prepareLocaleVars();
 
         if ($this->isAvailable) {

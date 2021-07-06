@@ -1,21 +1,21 @@
-<?php namespace RainLab\Translate\Classes;
+<?php namespace Winter\Translate\Classes;
 
 use Str;
-use RainLab\Translate\Classes\Translator;
-use October\Rain\Extension\ExtensionBase;
-use October\Rain\Html\Helper as HtmlHelper;
+use Winter\Translate\Classes\Translator;
+use Winter\Storm\Extension\ExtensionBase;
+use Winter\Storm\Html\Helper as HtmlHelper;
 
 /**
  * Base class for model behaviors.
  *
- * @package october\translate
+ * @package winter\translate
  * @author Alexey Bobkov, Samuel Georges
  */
 abstract class TranslatableBehavior extends ExtensionBase
 {
 
     /**
-     * @var \October\Rain\Database\Model Reference to the extended model.
+     * @var \Winter\Storm\Database\Model Reference to the extended model.
      */
     protected $model;
 
@@ -51,7 +51,7 @@ abstract class TranslatableBehavior extends ExtensionBase
 
     /**
      * Constructor
-     * @param \October\Rain\Database\Model $model The extended model.
+     * @param \Winter\Storm\Database\Model $model The extended model.
      */
     public function __construct($model)
     {
@@ -186,6 +186,10 @@ abstract class TranslatableBehavior extends ExtensionBase
      */
     public function getTranslateAttributes($locale)
     {
+        if (!array_key_exists($locale, $this->translatableAttributes)) {
+            $this->loadTranslatableData($locale);
+        }
+
         return array_get($this->translatableAttributes, $locale, []);
     }
 
@@ -473,24 +477,4 @@ abstract class TranslatableBehavior extends ExtensionBase
      * @return array
      */
     abstract protected function loadTranslatableData($locale = null);
-
-    /**
-     * @deprecated setTranslateAttribute is deprecated, use setAttributeTranslated instead.
-     * @todo Remove method if year >= 2017
-     */
-    public function setTranslateAttribute($key, $value, $locale = null)
-    {
-        traceLog(static::class . '::setTranslateAttribute is deprecated, use setAttributeTranslated instead.');
-        return $this->setAttributeTranslated($key, $value, $locale);
-    }
-
-    /**
-     * @deprecated getTranslateAttribute is deprecated, use getAttributeTranslated instead.
-     * @todo Remove method if year >= 2017
-     */
-    public function getTranslateAttribute($key, $locale = null)
-    {
-        traceLog(static::class . '::getTranslateAttribute is deprecated, use getAttributeTranslated instead.');
-        return $this->getAttributeTranslated($key, $locale);
-    }
 }

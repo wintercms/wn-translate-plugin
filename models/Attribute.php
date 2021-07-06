@@ -1,4 +1,4 @@
-<?php namespace RainLab\Translate\Models;
+<?php namespace Winter\Translate\Models;
 
 use Model;
 
@@ -10,7 +10,7 @@ class Attribute extends Model
     /**
      * @var string The database table used by the model.
      */
-    public $table = 'rainlab_translate_attributes';
+    public $table = 'winter_translate_attributes';
 
     public $morphTo = [
         'model' => []

@@ -1,19 +1,19 @@
-<?php namespace RainLab\Translate\Tests\Unit\Behaviors;
+<?php namespace Winter\Translate\Tests\Unit\Behaviors;
 
 use File;
-use October\Rain\Halcyon\Model;
-use October\Rain\Filesystem\Filesystem;
-use October\Rain\Halcyon\Datasource\FileDatasource;
-use October\Rain\Halcyon\Datasource\Resolver;
-use RainLab\Translate\Tests\Fixtures\Classes\Feature as FeatureModel;
-use RainLab\Translate\Models\Locale as LocaleModel;
 use PluginTestCase;
+use Winter\Storm\Halcyon\Model;
+use Winter\Storm\Filesystem\Filesystem;
+use Winter\Storm\Halcyon\Datasource\FileDatasource;
+use Winter\Storm\Halcyon\Datasource\Resolver;
+use Winter\Translate\Tests\Fixtures\Classes\Feature as FeatureModel;
+use Winter\Translate\Models\Locale as LocaleModel;
 
 class TranslatableCmsObjectTest extends PluginTestCase
 {
     public $themePath;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -22,7 +22,7 @@ class TranslatableCmsObjectTest extends PluginTestCase
         $this->seedSampleSourceAndData();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->cleanUp();
     }
