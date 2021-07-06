@@ -1,8 +1,8 @@
-<?php namespace RainLab\Translate\FormWidgets;
+<?php namespace Winter\Translate\FormWidgets;
 
 use Backend\FormWidgets\NestedForm;
-use RainLab\Translate\Models\Locale;
-use October\Rain\Html\Helper as HtmlHelper;
+use Winter\Translate\Models\Locale;
+use Winter\Storm\Html\Helper as HtmlHelper;
 use ApplicationException;
 use Request;
 
@@ -15,7 +15,7 @@ use Request;
  */
 class MLNestedForm extends NestedForm
 {
-    use \RainLab\Translate\Traits\MLControl;
+    use \Winter\Translate\Traits\MLControl;
 
     /**
      * {@inheritDoc}
