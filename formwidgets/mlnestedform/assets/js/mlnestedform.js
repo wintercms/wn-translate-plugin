@@ -8,10 +8,9 @@
  * $('a#someElement').mlNestedForm({ option: 'value' })
  *
  */
-
 +function ($) { "use strict";
 
-    var Base = $.oc.foundation.base,
+    var Base = $.wn.foundation.base,
         BaseProto = Base.prototype
 
     // MLNESTEDFORM CLASS DEFINITION
@@ -24,7 +23,7 @@
         this.$locale   = $('[data-nestedform-active-locale]', this.$el)
         this.locale    = options.defaultLocale
 
-        $.oc.foundation.controlUtils.markDisposable(element)
+        $.wn.foundation.controlUtils.markDisposable(element)
         Base.call(this)
 
         // Init
@@ -52,7 +51,7 @@
 
         this.$el.off('dispose-control', this.proxy(this.dispose))
 
-        this.$el.removeData('oc.mlNestedForm')
+        this.$el.removeData('winter.translate.mlNestedForm')
 
         this.$selector = null
         this.$locale = null
@@ -97,9 +96,9 @@
         var args = Array.prototype.slice.call(arguments, 1), result
         this.each(function () {
             var $this   = $(this)
-            var data    = $this.data('oc.mlNestedForm')
+            var data    = $this.data('winter.translate.mlNestedForm')
             var options = $.extend({}, MLNestedForm.DEFAULTS, $this.data(), typeof option == 'object' && option)
-            if (!data) $this.data('oc.mlNestedForm', (data = new MLNestedForm(this, options)))
+            if (!data) $this.data('winter.translate.mlNestedForm', (data = new MLNestedForm(this, options)))
             if (typeof option == 'string') result = data[option].apply(data, args)
             if (typeof result != 'undefined') return false
         })
