@@ -297,6 +297,7 @@ class Plugin extends PluginBase
             'Winter\Translate\FormWidgets\MLRichEditor' => 'mlricheditor',
             'Winter\Translate\FormWidgets\MLMarkdownEditor' => 'mlmarkdowneditor',
             'Winter\Translate\FormWidgets\MLRepeater' => 'mlrepeater',
+            'Winter\Translate\FormWidgets\MLNestedForm' => 'mlnestedform',
             'Winter\Translate\FormWidgets\MLMediaFinder' => 'mlmediafinder',
         ];
     }
