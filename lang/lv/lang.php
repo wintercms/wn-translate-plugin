@@ -1,4 +1,6 @@
-<?php return [
+<?php
+
+return [
     'plugin' => [
         'name' => 'Tulkojumi',
         'description' => 'Pārvaldiet daudzvalodu tīmekļvietnes.',
@@ -62,3 +64,4 @@
         'found_title' => 'Skenēšanas kļūdas',
     ],
 ];
+
