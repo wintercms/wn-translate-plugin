@@ -8,16 +8,18 @@ class CreateIndexesTable extends Migration
 
     public function up()
     {
-        Schema::create('rainlab_translate_indexes', function($table)
-        {
-            $table->engine = 'InnoDB';
-            $table->increments('id');
-            $table->string('locale')->index();
-            $table->string('model_id')->index()->nullable();
-            $table->string('model_type')->index()->nullable();
-            $table->string('item')->nullable()->index();
-            $table->mediumText('value')->nullable();
-        });
+        if (!Schema::hasTable('rainlab_translate_indexes')) {
+            Schema::create('rainlab_translate_indexes', function($table)
+            {
+                $table->engine = 'InnoDB';
+                $table->increments('id');
+                $table->string('locale')->index();
+                $table->string('model_id')->index()->nullable();
+                $table->string('model_type')->index()->nullable();
+                $table->string('item')->nullable()->index();
+                $table->mediumText('value')->nullable();
+            });
+        }
     }
 
     public function down()
