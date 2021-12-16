@@ -68,41 +68,42 @@ class TranslatablePageTest extends PluginTestCase
     
     public function testThemeScanner()
     {
-        $should_match = [
-            "{{ 'hello'|_ }}}}",
-            "{{{{ 'hello'|_ }}",
-            "{{ 'hello'|_ }}",
-            "{{ \"hello\"|_ }}",
-            "{{ \"'hello\"|_ }}",
-            "{{ '\"hello'|_ }}",
-            "{{ 'hello'|__ }}",
-            "{{ 'hello'|transRaw }}",
-            "{{ 'hello'|transRawPlural }}",
-            "{{ 'hello'|localeUrl }}",
-            "{{ 'hello'|_() }}",
-            "{{ 'hello'|_(func()) }}",
-            "{{ 'hello'|_({var: val}) }}",
-            "{{ 'hello'|_({var: func(param)}) }}",
-            "{{ 'hello'|_({var: func(nestedFunc())}) }}",
-        ];
-
-        $should_not_match = [
-            "{ 'hello'|_ }",
-            "{{ var|_ }}",
-            "{{ 'hello'|var|_ }}",
-            "{{ 'hello\"|_ }}",
-            "{{ \"hello'|_ }}",
-            "{{ 'hello'|_()) }}",
-        ];
-
         $scanner = new MessageScanner();
 
-        foreach ($should_match as $string) {
-            $this->assertTrue($scanner->doesStringMatch($string));
-        }
+        $check_strings = [
+            // Should not match
+            ["{ 'hello'|_ }", 0],
+            ["{{ var|_ }}", 0],
+            ["{{ 'hello'|var|_ }}", 0],
+            ["{{ 'hello\"|_ }}", 0],
+            ["{{ \"hello'|_ }}", 0],
+            ["{{ 'hello'|_()) }}", 0],
 
-        foreach ($should_not_match as $string) {
-            $this->assertFalse($scanner->doesStringMatch($string));
+            // Should find 1 match
+            ["{{ 'hello'|_ }}}}", 1],
+            ["{{{{ 'hello'|_ }}", 1],
+            ["{{ 'hello'|_ }}", 1],
+            ["{{ \"hello\"|_ }}", 1],
+            ["{{ \"'hello\"|_ }}", 1],
+            ["{{ '\"hello'|_ }}", 1],
+            ["{{ 'hello'|__ }}", 1],
+            ["{{ 'hello'|transRaw }}", 1],
+            ["{{ 'hello'|transRawPlural }}", 1],
+            ["{{ 'hello'|localeUrl }}", 1],
+            ["{{ 'hello'|_() }}", 1],
+            ["{{ 'hello'|_(func()) }}", 1],
+            ["{{ 'hello'|_({var: val}) }}", 1],
+            ["{{ 'hello'|_({var: func(param)}) }}", 1],
+            ["{{ 'hello'|_({var: func(nestedFunc())}) }}", 1],
+            ["{{ 'hello'|_|filter }}", 1],
+            ["{{ 'hello'|_|filter|otherfilter }}", 1],
+
+            // Should find 2 matches
+            ["{{ 'hello'|_|filter|otherfilter }}{{ 'hello'|_|filter|otherfilter }}", 2],
+        ];
+
+        foreach ($check_strings as $check) {
+            $this->assertEquals($scanner->countMatches($check[0]), $check[1]);
         }
     }
 }
