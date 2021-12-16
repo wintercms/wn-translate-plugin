@@ -144,48 +144,14 @@ class ThemeScanner
     }
 
     /**
-     * Process standard language filter tag (_|)
+     * Process standard language filter tags (_, __, transRaw, transRawPlural, localeUrl)
      * @param  string $content
      * @return array
      */
     protected function processStandardTags($content)
     {
-        $messages = [];
-
-        /*
-         * Regex used:
-         *
-         * {{'AJAX framework'|_}}
-         * {{\s*'([^'])+'\s*[|]\s*_\s*}}
-         *
-         * {{'AJAX framework'|_(variables)}}
-         * {{\s*'([^'])+'\s*[|]\s*_\s*\([^\)]+\)\s*}}
-         */
-
-        $quoteChar = preg_quote("'");
-
-        preg_match_all('#{{\s*'.$quoteChar.'([^'.$quoteChar.']+)'.$quoteChar.'\s*[|]\s*_\s*(?:[|].+)?}}#', $content, $match);
-        if (isset($match[1])) {
-            $messages = array_merge($messages, $match[1]);
-        }
-
-        preg_match_all('#{{\s*'.$quoteChar.'([^'.$quoteChar.']+)'.$quoteChar.'\s*[|]\s*_\s*\([^\)]+\)\s*}}#', $content, $match);
-        if (isset($match[1])) {
-            $messages = array_merge($messages, $match[1]);
-        }
-
-        $quoteChar = preg_quote('"');
-
-        preg_match_all('#{{\s*'.$quoteChar.'([^'.$quoteChar.']+)'.$quoteChar.'\s*[|]\s*_\s*(?:[|].+)?}}#', $content, $match);
-        if (isset($match[1])) {
-            $messages = array_merge($messages, $match[1]);
-        }
-
-        preg_match_all('#{{\s*'.$quoteChar.'([^'.$quoteChar.']+)'.$quoteChar.'\s*[|]\s*_\s*\([^\)]+\)\s*}}#', $content, $match);
-        if (isset($match[1])) {
-            $messages = array_merge($messages, $match[1]);
-        }
-
-        return $messages;
+        $regex = '#{{\s*(["\'])((?:(?:(?!\1)).)+)\1\s*[|]\s*(?:_{1,2}|transRaw(?:Plural)?|localeUrl)\s*(?:\((?:[^)(]+|\((?:[^)(]+|\([^)(]*\))*\))*\))?\s*}}#';
+        preg_match_all($regex, $content, $match);
+        return $match[2] ?? [];
     }
 }
