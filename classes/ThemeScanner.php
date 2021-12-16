@@ -150,7 +150,7 @@ class ThemeScanner
      */
     protected function processStandardTags($content)
     {
-        $regex = '#{{\s*(["\'])((?:(?:(?!\1)).)+)\1\s*[|]\s*(?:_{1,2}|transRaw(?:Plural)?|localeUrl)\s*(?:\((?:[^)(]+|\((?:[^)(]+|\([^)(]*\))*\))*\))?\s*}}#';
+        $regex = '#{{\s*(["\'])((?:(?:(?!\1)).)+)\1\s*[|]\s*(?:_{1,2}|transRaw(?:Plural)?|localeUrl)\s*(?:\((?:[^)(]+|\((?:[^)(]+|\([^)(]*\))*\))*\))?\s*(?:[|](?:.*))?}}#U';
         preg_match_all($regex, $content, $match);
         return $match[2] ?? [];
     }
