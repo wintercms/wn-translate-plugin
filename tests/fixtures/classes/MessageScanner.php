@@ -2,13 +2,10 @@
 
 use Winter\Translate\Classes\ThemeScanner;
 
-/**
- * Feature Model
- */
 class MessageScanner extends ThemeScanner
 {
-    public function doesStringMatch($string)
+    public function countMatches($string)
     {
-        return count($this->processStandardTags($string)) === 1;
+        return count($this->processStandardTags($string));
     }
 }
