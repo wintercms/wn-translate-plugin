@@ -144,14 +144,80 @@ class ThemeScanner
     }
 
     /**
-     * Process standard language filter tags (_, __, transRaw, transRawPlural, localeUrl)
+     * Get an array of standard language filter tags
+     * @return array
+     */
+    protected function getFilters()
+    {
+        return [
+            '_',
+            '__',
+            'transRaw',
+            'transRawPlural',
+            'localeUrl'
+        ];
+    }
+
+    /**
+     * Get an array of Twig tokens
+     * @param  string $string
+     * @return array
+     */
+    protected function findTwigTokensInString($string)
+    {
+        $loader = new \Twig\Loader\ArrayLoader();
+        $env = new \Twig\Environment($loader);
+        $source = new \Twig\Source($string, 'test');
+
+        try {
+            $stream = $env->tokenize($source);
+        }
+        catch (\Exception $e) {
+            return [];
+        }
+
+        $tokens = [];
+        while (!$stream->isEOF()) {
+            $token = $stream->next();
+            $token->typeString = $token->typeToString($token->getType(), true);
+            $tokens[] = $token;
+        }
+        return $tokens;
+    }
+
+    /**
+     * Searches for strings to be translated within a given Twig string
      * @param  string $content
      * @return array
      */
     protected function processStandardTags($content)
     {
-        $regex = '#{{\s*(["\'])((?:(?:(?!\1)).)+)\1\s*[|]\s*(?:_{1,2}|transRaw(?:Plural)?|localeUrl)\s*(?:\((?:[^)(]+|\((?:[^)(]+|\([^)(]*\))*\))*\))?\s*(?:[|](?:.*))?}}#U';
-        preg_match_all($regex, $content, $match);
-        return $match[2] ?? [];
+        $tokens = $this->findTwigTokensInString($content);
+
+        $translatable_strings = [];
+        $var_token_started = false;
+        for ($i = 0; $i < count($tokens); $i++) {
+            switch ($tokens[$i]->typeString) {
+                case 'VAR_START_TYPE':
+                    $var_token_started = true;
+                    continue 2;
+                case 'VAR_END_TYPE':
+                    $var_token_started = false;
+                    continue 2;
+            }
+            if (
+                $var_token_started
+                && $tokens[$i]->typeString === 'STRING_TYPE'
+                && $tokens[$i+1]->typeString === 'PUNCTUATION_TYPE'
+                && $tokens[$i+1]->getValue() === '|'
+                && $tokens[$i+2]->typeString === 'NAME_TYPE'
+                && in_array($tokens[$i+2]->getValue(), $this->getFilters())
+            ) {
+                $translatable_strings[] = $tokens[$i]->getValue();
+                $i += 2;
+            }
+        }
+
+        return $translatable_strings;
     }
 }
