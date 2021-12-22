@@ -213,7 +213,7 @@ class ThemeScanner
                 && $tokens[$i+2]->typeString === 'NAME_TYPE'
                 && in_array($tokens[$i+2]->getValue(), $this->getFilters())
             ) {
-                $translatable_strings[] = $tokens[$i]->getValue();
+                $translatable_strings[] = stripslashes($tokens[$i]->getValue());
                 $i += 2;
             }
         }
