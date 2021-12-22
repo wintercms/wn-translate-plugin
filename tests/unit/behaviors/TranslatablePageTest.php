@@ -72,12 +72,15 @@ class TranslatablePageTest extends PluginTestCase
 
         $check_strings = [
             // Should not match
+            ["hello", 0],
+            ["'hello'|_", 0],
             ["{ 'hello'|_ }", 0],
             ["{{ var|_ }}", 0],
-            ["{{ 'hello'|var|_ }}", 0],
+            ["{{ 'hello'|upper|_ }}", 0],
+
+            // Code is syntactically wrong
             ["{{ 'hello\"|_ }}", 0],
             ["{{ \"hello'|_ }}", 0],
-            ["{{ 'hello'|_()) }}", 0],
 
             // Should find 1 match
             ["{{ 'hello'|_ }}}}", 1],
@@ -97,13 +100,17 @@ class TranslatablePageTest extends PluginTestCase
             ["{{ 'hello'|_({var: func(nestedFunc())}) }}", 1],
             ["{{ 'hello'|_|filter }}", 1],
             ["{{ 'hello'|_|filter|otherfilter }}", 1],
+            ["{{ 'Apostrophe\'s'|_ }}", 1],
+            ['{{ "String with \"Double quote\""|_ }}', 1],
 
             // Should find 2 matches
+            ['{{ \'Apostrophe\\\'s\'|_ }}{{ "String with \"Double quote\""|_ }}', 2],
             ["{{ 'hello'|_|filter|otherfilter }}{{ 'hello'|_|filter|otherfilter }}", 2],
+            ["{{ 'hello'|transRaw('nested translation'|_) }}", 2],
         ];
 
         foreach ($check_strings as $check) {
-            $this->assertEquals($scanner->countMatches($check[0]), $check[1]);
+            $this->assertEquals($scanner->countMatches($check[0]), $check[1], 'String that failed: ' . $check[0]);
         }
     }
 }
