@@ -72,45 +72,54 @@ class TranslatablePageTest extends PluginTestCase
 
         $check_strings = [
             // Should not match
-            ["hello", 0],
-            ["'hello'|_", 0],
-            ["{ 'hello'|_ }", 0],
-            ["{{ var|_ }}", 0],
-            ["{{ 'hello'|upper|_ }}", 0],
+            ["hello", []],
+            ["'hello'|_", []],
+            ["{ 'hello'|_ }", []],
+            ["{{ var|_ }}", []],
+            ["{{ 'hello'|upper|_ }}", []],
 
             // Code is syntactically wrong
-            ["{{ 'hello\"|_ }}", 0],
-            ["{{ \"hello'|_ }}", 0],
+            ["{{ 'hello\"|_ }}", []],
+            ["{{ \"hello'|_ }}", []],
 
             // Should find 1 match
-            ["{{ 'hello'|_ }}}}", 1],
-            ["{{{{ 'hello'|_ }}", 1],
-            ["{{ 'hello'|_ }}", 1],
-            ["{{ \"hello\"|_ }}", 1],
-            ["{{ \"'hello\"|_ }}", 1],
-            ["{{ '\"hello'|_ }}", 1],
-            ["{{ 'hello'|__ }}", 1],
-            ["{{ 'hello'|transRaw }}", 1],
-            ["{{ 'hello'|transRawPlural }}", 1],
-            ["{{ 'hello'|localeUrl }}", 1],
-            ["{{ 'hello'|_() }}", 1],
-            ["{{ 'hello'|_(func()) }}", 1],
-            ["{{ 'hello'|_({var: val}) }}", 1],
-            ["{{ 'hello'|_({var: func(param)}) }}", 1],
-            ["{{ 'hello'|_({var: func(nestedFunc())}) }}", 1],
-            ["{{ 'hello'|_|filter }}", 1],
-            ["{{ 'hello'|_|filter|otherfilter }}", 1],
-            ["{{ 'Apostrophe\'s'|_ }}", 1],
-            ['{{ "String with \"Double quote\""|_ }}', 1],
+            ["{{ 'hello'|_ }}}}", ['hello']],
+            ["{{{{ 'hello'|_ }}", ['hello']],
+            ["{{ 'hello'|_ }}", ['hello']],
+            ["{{ \"hello\"|_ }}", ['hello']],
+            ["{{ \"'hello\"|_ }}", ['\'hello']],
+            ["{{ '\"hello'|_ }}", ['"hello']],
+            ["{{ 'hello'|__ }}", ['hello']],
+            ["{{ 'hello'|transRaw }}", ['hello']],
+            ["{{ 'hello'|transRawPlural }}", ['hello']],
+            ["{{ 'hello'|localeUrl }}", ['hello']],
+            ["{{ 'hello'|_() }}", ['hello']],
+            ["{{ 'hello'|_(func()) }}", ['hello']],
+            ["{{ 'hello'|_({var: val}) }}", ['hello']],
+            ["{{ 'hello'|_({var: func(param)}) }}", ['hello']],
+            ["{{ 'hello'|_({var: func(nestedFunc())}) }}", ['hello']],
+            ["{{ 'hello'|_|filter }}", ['hello']],
+            ["{{ 'hello'|_|filter|otherfilter }}", ['hello']],
+            ["{{ 'Apostrophe\'s'|_ }}", ['Apostrophe\'s']],
+            ['{{ "String with \"Double quote\""|_ }}', ['String with "Double quote"']],
 
             // Should find 2 matches
-            ['{{ \'Apostrophe\\\'s\'|_ }}{{ "String with \"Double quote\""|_ }}', 2],
-            ["{{ 'hello'|_|filter|otherfilter }}{{ 'hello'|_|filter|otherfilter }}", 2],
-            ["{{ 'hello'|transRaw('nested translation'|_) }}", 2],
+            [
+                '{{ \'Apostrophe\\\'s\'|_ }}{{ "String with \"Double quote\""|_ }}',
+                ['Apostrophe\'s', 'String with "Double quote"']
+            ],
+            [
+                "{{ 'hello'|_|filter|otherfilter }}{{ 'hello'|_|filter|otherfilter }}",
+                ['hello', 'hello']
+            ],
+            [
+                "{{ 'hello'|transRaw('nested translation'|_) }}",
+                ['hello', 'nested translation']
+            ],
         ];
 
         foreach ($check_strings as $check) {
-            $this->assertEquals($scanner->countMatches($check[0]), $check[1], 'String that failed: ' . $check[0]);
+            $this->assertEquals($scanner->getMessages($check[0]), $check[1]);
         }
     }
 }
