@@ -144,48 +144,80 @@ class ThemeScanner
     }
 
     /**
-     * Process standard language filter tag (_|)
+     * Get an array of standard language filter tags
+     * @return array
+     */
+    protected function getFilters()
+    {
+        return [
+            '_',
+            '__',
+            'transRaw',
+            'transRawPlural',
+            'localeUrl'
+        ];
+    }
+
+    /**
+     * Get an array of Twig tokens
+     * @param  string $string
+     * @return array
+     */
+    protected function findTwigTokensInString($string)
+    {
+        $loader = new \Twig\Loader\ArrayLoader();
+        $env = new \Twig\Environment($loader);
+        $source = new \Twig\Source($string, 'test');
+
+        try {
+            $stream = $env->tokenize($source);
+        }
+        catch (\Exception $e) {
+            return [];
+        }
+
+        $tokens = [];
+        while (!$stream->isEOF()) {
+            $token = $stream->next();
+            $token->typeString = $token->typeToString($token->getType(), true);
+            $tokens[] = $token;
+        }
+        return $tokens;
+    }
+
+    /**
+     * Searches for strings to be translated within a given Twig string
      * @param  string $content
      * @return array
      */
     protected function processStandardTags($content)
     {
-        $messages = [];
+        $tokens = $this->findTwigTokensInString($content);
 
-        /*
-         * Regex used:
-         *
-         * {{'AJAX framework'|_}}
-         * {{\s*'([^'])+'\s*[|]\s*_\s*}}
-         *
-         * {{'AJAX framework'|_(variables)}}
-         * {{\s*'([^'])+'\s*[|]\s*_\s*\([^\)]+\)\s*}}
-         */
-
-        $quoteChar = preg_quote("'");
-
-        preg_match_all('#{{\s*'.$quoteChar.'([^'.$quoteChar.']+)'.$quoteChar.'\s*[|]\s*_\s*(?:[|].+)?}}#', $content, $match);
-        if (isset($match[1])) {
-            $messages = array_merge($messages, $match[1]);
+        $translatable_strings = [];
+        $var_token_started = false;
+        for ($i = 0; $i < count($tokens); $i++) {
+            switch ($tokens[$i]->typeString) {
+                case 'VAR_START_TYPE':
+                    $var_token_started = true;
+                    continue 2;
+                case 'VAR_END_TYPE':
+                    $var_token_started = false;
+                    continue 2;
+            }
+            if (
+                $var_token_started
+                && $tokens[$i]->typeString === 'STRING_TYPE'
+                && $tokens[$i+1]->typeString === 'PUNCTUATION_TYPE'
+                && $tokens[$i+1]->getValue() === '|'
+                && $tokens[$i+2]->typeString === 'NAME_TYPE'
+                && in_array($tokens[$i+2]->getValue(), $this->getFilters())
+            ) {
+                $translatable_strings[] = stripslashes($tokens[$i]->getValue());
+                $i += 2;
+            }
         }
 
-        preg_match_all('#{{\s*'.$quoteChar.'([^'.$quoteChar.']+)'.$quoteChar.'\s*[|]\s*_\s*\([^\)]+\)\s*}}#', $content, $match);
-        if (isset($match[1])) {
-            $messages = array_merge($messages, $match[1]);
-        }
-
-        $quoteChar = preg_quote('"');
-
-        preg_match_all('#{{\s*'.$quoteChar.'([^'.$quoteChar.']+)'.$quoteChar.'\s*[|]\s*_\s*(?:[|].+)?}}#', $content, $match);
-        if (isset($match[1])) {
-            $messages = array_merge($messages, $match[1]);
-        }
-
-        preg_match_all('#{{\s*'.$quoteChar.'([^'.$quoteChar.']+)'.$quoteChar.'\s*[|]\s*_\s*\([^\)]+\)\s*}}#', $content, $match);
-        if (isset($match[1])) {
-            $messages = array_merge($messages, $match[1]);
-        }
-
-        return $messages;
+        return $translatable_strings;
     }
 }
