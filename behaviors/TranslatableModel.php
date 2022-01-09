@@ -29,6 +29,21 @@ class TranslatableModel extends TranslatableBehavior
             'Winter\Translate\Models\Attribute',
             'name' => 'model'
         ];
+
+        /*
+         * Delete translated attributes/indexes if model is deleting
+         */
+        $model->bindEvent('model.beforeDelete', function() use ($model) {
+            Db::table('winter_translate_attributes')
+                ->where('model_id', $model->getKey())
+                ->where('model_type', get_class($model))
+                ->delete();
+
+            Db::table('winter_translate_indexes')
+                ->where('model_id', $model->getKey())
+                ->where('model_type', get_class($model))
+                ->delete();
+        });
     }
 
     /**
