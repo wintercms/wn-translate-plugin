@@ -33,8 +33,8 @@ class TranslatableModel extends TranslatableBehavior
         /*
          * Delete translated attributes/indexes if model is deleting
          */
-        $model->bindEvent('model.beforeDelete', function() use ($model) {
-            Db::table('winter_translate_attributes')
+        $model->bindEvent('model.beforeDelete', function () use ($model) {
+            $model->translations()
                 ->where('model_id', $model->getKey())
                 ->where('model_type', get_class($model))
                 ->delete();
@@ -49,10 +49,10 @@ class TranslatableModel extends TranslatableBehavior
     /**
      * Applies a translatable index to a basic query. This scope will join the index
      * table and can be executed neither more than once, nor with scopeTransOrder.
-     * @param  Builder $query
-     * @param  string $index
-     * @param  string $value
-     * @param  string $locale
+     * @param Builder $query
+     * @param string $index
+     * @param string $value
+     * @param string $locale
      * @return Builder
      */
     public function scopeTransWhere($query, $index, $value, $locale = null, $operator = '=')
@@ -81,10 +81,10 @@ class TranslatableModel extends TranslatableBehavior
 
     /**
      * Applies a sort operation with a translatable index to a basic query. This scope will join the index table.
-     * @param  Builder $query
-     * @param  string $index
-     * @param  string $direction
-     * @param  string $locale
+     * @param Builder $query
+     * @param string $index
+     * @param string $direction
+     * @param string $locale
      * @return Builder
      */
     public function scopeTransOrderBy($query, $index, $direction = 'asc', $locale = null)
@@ -95,8 +95,8 @@ class TranslatableModel extends TranslatableBehavior
         $indexTableAlias = 'winter_translate_indexes_' . $index . '_' . $locale;
 
         $query->select(
-            $this->model->getTable().'.*',
-            Db::raw('COALESCE(' . $indexTableAlias . '.value, '. $this->model->getTable() .'.'.$index.') AS translate_sorting_key')
+            $this->model->getTable() . '.*',
+            Db::raw('COALESCE(' . $indexTableAlias . '.value, ' . $this->model->getTable() . '.' . $index . ') AS translate_sorting_key')
         );
 
         $query->orderBy('translate_sorting_key', $direction);
@@ -108,9 +108,9 @@ class TranslatableModel extends TranslatableBehavior
 
     /**
      * Joins the translatable indexes table to a query.
-     * @param  Builder $query
-     * @param  string $locale
-     * @param  string $indexTableAlias
+     * @param Builder $query
+     * @param string $locale
+     * @param string $indexTableAlias
      * @return Builder
      */
     protected function joinTranslateIndexesTable($query, $locale, $index, $indexTableAlias)
@@ -121,7 +121,7 @@ class TranslatableModel extends TranslatableBehavior
             return $query;
         }
 
-        $query->leftJoin($joinTableWithAlias, function($join) use ($locale, $index, $indexTableAlias) {
+        $query->leftJoin($joinTableWithAlias, function ($join) use ($locale, $index, $indexTableAlias) {
             $join
                 ->on(Db::raw(DbDongle::cast($this->model->getQualifiedKeyName(), 'TEXT')), '=', $indexTableAlias . '.model_id')
                 ->where($indexTableAlias . '.model_type', '=', $this->getClass())
@@ -134,7 +134,7 @@ class TranslatableModel extends TranslatableBehavior
 
     /**
      * Saves the translation data in the join table.
-     * @param  string $locale
+     * @param string $locale
      * @return void
      */
     protected function storeTranslatableData($locale = null)
@@ -147,7 +147,7 @@ class TranslatableModel extends TranslatableBehavior
          * Model doesn't exist yet, defer this logic in memory
          */
         if (!$this->model->exists) {
-            $this->model->bindEventOnce('model.afterCreate', function() use ($locale) {
+            $this->model->bindEventOnce('model.afterCreate', function () use ($locale) {
                 $this->storeTranslatableData($locale);
             });
 
@@ -187,7 +187,7 @@ class TranslatableModel extends TranslatableBehavior
 
     /**
      * Saves the basic translation data in the join table.
-     * @param  string $locale
+     * @param string $locale
      * @return void
      */
     protected function storeTranslatableBasicData($locale = null)
@@ -201,8 +201,7 @@ class TranslatableModel extends TranslatableBehavior
 
         if ($obj->count() > 0) {
             $obj->update(['attribute_data' => $data]);
-        }
-        else {
+        } else {
             Db::table('winter_translate_attributes')->insert([
                 'locale' => $locale,
                 'model_id' => $this->model->getKey(),
@@ -214,7 +213,7 @@ class TranslatableModel extends TranslatableBehavior
 
     /**
      * Saves the indexed translation data in the join table.
-     * @param  string $locale
+     * @param string $locale
      * @return void
      */
     protected function storeTranslatableIndexData($locale = null)
@@ -250,8 +249,7 @@ class TranslatableModel extends TranslatableBehavior
 
             if ($recordExists) {
                 $obj->update(['value' => $value]);
-            }
-            else {
+            } else {
                 Db::table('winter_translate_indexes')->insert([
                     'locale' => $locale,
                     'model_id' => $this->model->getKey(),
@@ -265,7 +263,7 @@ class TranslatableModel extends TranslatableBehavior
 
     /**
      * Loads the translation data from the join table.
-     * @param  string $locale
+     * @param string $locale
      * @return array
      */
     protected function loadTranslatableData($locale = null)
