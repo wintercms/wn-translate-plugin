@@ -1,6 +1,5 @@
 <?php namespace Winter\Translate\Models;
 
-use Str;
 use Lang;
 use Model;
 use Cache;
@@ -289,23 +288,12 @@ class Message extends Model
     }
 
     /**
-     * Creates a sterile key for a message.
-     * @param  string $messageId
+     * Get the code for the provided message (32 character hexadecimal MD5-hashed version)
+     * @param  string $message
      * @return string
      */
-    protected static function makeMessageCode($messageId)
+    public static function makeMessageCode($message)
     {
-        $separator = '.';
-
-        // Convert all dashes/underscores into separator
-        $messageId = preg_replace('!['.preg_quote('_').'|'.preg_quote('-').']+!u', $separator, $messageId);
-
-        // Remove all characters that are not the separator, letters, numbers, or whitespace.
-        $messageId = preg_replace('![^'.preg_quote($separator).'\pL\pN\s]+!u', '', mb_strtolower($messageId));
-
-        // Replace all separator characters and whitespace by a single separator
-        $messageId = preg_replace('!['.preg_quote($separator).'\s]+!u', $separator, $messageId);
-
-        return Str::limit(trim($messageId, $separator), 250);
+        return md5(mb_strtolower(trim($message)));
     }
 }
