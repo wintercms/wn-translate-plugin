@@ -6,7 +6,7 @@ use Winter\Translate\Classes\Translator;
 /*
  * Adds a custom route to check for the locale prefix.
  */
-App::before(function ($request) {
+Event::listen('system.route', function () {
     if (Config::get('winter.translate::disableLocalePrefixRoutes', false)) {
         return;
     }
