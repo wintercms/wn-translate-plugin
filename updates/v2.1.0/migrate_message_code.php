@@ -3,6 +3,7 @@
 use Schema;
 use Str;
 use Winter\Storm\Database\Updates\Migration;
+use Winter\Translate\Classes\ThemeScanner;
 use Winter\Translate\Models\Message;
 
 class MigrateMessageCode extends Migration
@@ -11,9 +12,28 @@ class MigrateMessageCode extends Migration
 
     public function up()
     {
+        if (!Schema::hasColumn(self::TABLE_NAME, 'code_pre_2_1_0')) {
+            Schema::table(self::TABLE_NAME, function($table) {
+                $table->string('code_pre_2_1_0')->index()->nullable();
+            });
+        }
+
         foreach (Message::all() as $message) {
-            $default_message = $message->message_data['x'];
-            $message->code = Message::makeMessageCode($default_message);
+            $message->code_pre_2_1_0 = $message->code;
+            $message->code = $message->code_md5 ?: Message::makeMessageCode($message->message_data[Message::DEFAULT_LOCALE]);
+            $message->save();
+        }
+
+        if (Schema::hasColumn(self::TABLE_NAME, 'code_md5')) {
+            Schema::table(self::TABLE_NAME, function($table) {
+                $table->dropColumn('code_md5');
+           });
+        }
+
+        ThemeScanner::scan(); // \Artisan::call('translate:scan'); doesn't works.
+
+        foreach (Message::whereNull('code_pre_2_1_0')->get() as $message) {
+            $message->message_data = array_merge(Message::firstWhere('code_pre_2_1_0', static::makeLegacyMessageCode($message->message_data[Message::DEFAULT_LOCALE]))->message_data, $message->message_data);
             $message->save();
         }
     }
@@ -23,12 +43,20 @@ class MigrateMessageCode extends Migration
         if (!Schema::hasTable(self::TABLE_NAME)) {
             return;
         }
+        Schema::table(self::TABLE_NAME, function($table) {
+            $table->char('code_md5', 32)->index()->nullable();
+            $table->string('code')->change();
+        });
 
         foreach (Message::all() as $message) {
-            $default_message = $message->message_data['x'];
-            $message->code = static::makeLegacyMessageCode($default_message);
+            $message->code_md5 = $message->code;
+            $message->code = $message->code_pre_2_1_0 ?: static::makeLegacyMessageCode($message->message_data[Message::DEFAULT_LOCALE]);
             $message->save();
         }
+
+        Schema::table(self::TABLE_NAME, function($table) {
+            $table->dropColumn('code_pre_2_1_0');
+        });
     }
 
     public static function makeLegacyMessageCode($messageId)
