@@ -134,40 +134,40 @@ If you are extending a plugin and want the added fields in the backend to be tra
 
 ```
 public function boot() {
-	Event::listen('backend.form.extendFieldsBefore', function($widget) {
+    Event::listen('backend.form.extendFieldsBefore', function($widget) {
 
-	    // Only apply this listener when the Page controller is being used
-	    if (!$widget->getController() instanceof \Winter\Pages\Controllers\Index) {
-		return;
-	    }
+        // Only apply this listener when the Page controller is being used
+        if (!$widget->getController() instanceof \Winter\Pages\Controllers\Index) {
+            return;
+        }
 
-	    // Only apply this listener when the Page model is being modified
-	    if (!$widget->model instanceof \Winter\Pages\Classes\Page) {
-		return;
-	    }
+        // Only apply this listener when the Page model is being modified
+        if (!$widget->model instanceof \Winter\Pages\Classes\Page) {
+            return;
+        }
 
-	    // Only apply this listener when the Form widget in question is a root-level
-	    // Form widget (not a repeater, nestedform, etc)
-	    if ($widget->isNested) {
-		return;
-	    }
+        // Only apply this listener when the Form widget in question is a root-level
+        // Form widget (not a repeater, nestedform, etc)
+        if ($widget->isNested) {
+            return;
+        }
 
-	    // Add fields
-	    $widget->tabs['fields']['viewBag[myField]'] = [
-		'tab' => 'mytab',
-		'label' => 'myLabel',
-		'type' => 'text'
-	    ];
+        // Add fields
+        $widget->tabs['fields']['viewBag[myField]'] = [
+            'tab' => 'mytab',
+            'label' => 'myLabel',
+            'type' => 'text'
+        ];
 
-	    // Translate fields
-	    $translatable = [
-		'viewBag[myField]'
-	    ];
+        // Translate fields
+        $translatable = [
+            'viewBag[myField]'
+        ];
 
-	    // Merge the fields in the translatable array
-	    $widget->model->translatable = array_merge($widget->model->translatable, $translatable);
+        // Merge the fields in the translatable array
+        $widget->model->translatable = array_merge($widget->model->translatable, $translatable);
 
-	});
+    });
 }
 ```
 ## Model translation
