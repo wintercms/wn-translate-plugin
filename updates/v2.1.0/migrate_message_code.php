@@ -33,7 +33,11 @@ class MigrateMessageCode extends Migration
         ThemeScanner::scan(); // \Artisan::call('translate:scan'); doesn't works.
 
         foreach (Message::whereNull('code_pre_2_1_0')->get() as $message) {
-            if ($legacyMessage = Message::firstWhere('code_pre_2_1_0', static::makeLegacyMessageCode($message->message_data[Message::DEFAULT_LOCALE]))) {
+            $legacyMessage = Message::firstWhere(
+                'code_pre_2_1_0',
+                static::makeLegacyMessageCode($message->message_data[Message::DEFAULT_LOCALE])
+            );
+            if ($legacyMessage) {
                 $message->message_data = array_merge($legacyMessage->message_data, $message->message_data);
                 $message->save();
             }
