@@ -1,5 +1,6 @@
 <?php namespace Winter\Translate\Updates;
 
+use Config;
 use Schema;
 use Str;
 use Winter\Storm\Database\Updates\Migration;
@@ -30,7 +31,9 @@ class MigrateMessageCode extends Migration
            });
         }
 
-        ThemeScanner::scan(); // \Artisan::call('translate:scan'); doesn't works.
+        if (in_array('Cms', Config::get('cms.loadModules', []))) {
+            ThemeScanner::scan();
+        }
 
         foreach (Message::whereNull('code_pre_2_1_0')->get() as $message) {
             $legacyMessage = Message::firstWhere(
