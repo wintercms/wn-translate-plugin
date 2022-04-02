@@ -138,7 +138,9 @@ class ThemeScanner
     protected function parseContent($content)
     {
         $messages = [];
-        $messages = array_merge($messages, $this->processStandardTags($content));
+        if ($content) {
+            $messages = array_merge($messages, $this->processStandardTags($content));
+        }
 
         return $messages;
     }
