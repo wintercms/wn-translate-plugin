@@ -99,7 +99,7 @@ class Locale extends Model
             return self::$defaultLocale;
         }
 
-        if ($forceDefault = Config::get('rainlab.translate::forceDefaultLocale')) {
+        if ($forceDefault = Config::get('winter.translate::forceDefaultLocale')) {
             $locale = new self;
             $locale->name = $locale->code = $forceDefault;
             $locale->is_default = $locale->is_enabled = true;
