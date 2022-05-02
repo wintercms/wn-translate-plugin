@@ -1,4 +1,6 @@
-<?php return [
+<?php
+
+return [
     'plugin' => [
         'name' => 'ترجمة',
         'description' => 'تفعيل تعدد اللغات للموقع.',

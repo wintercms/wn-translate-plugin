@@ -14,7 +14,7 @@ class AddSortOrder extends Migration
             return;
         }
 
-        if (!Schema::hasColumn(self::TABLE_NAME, 'found')) {
+        if (!Schema::hasColumn(self::TABLE_NAME, 'sort_order')) {
             Schema::table(self::TABLE_NAME, function($table)
             {
                 $table->integer('sort_order')->default(0);

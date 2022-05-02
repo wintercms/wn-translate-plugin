@@ -49,6 +49,13 @@ class MessageImport extends ImportModel
                         $default = (isset($result[$defaultName]) && !empty($result[$defaultName])) ? $result[$defaultName] : $code;
                         $result[$defaultName] = $default;
                     }
+                    
+                    // Prevent empty strings from being imported
+                    foreach ($result as $key => $translation) {
+                        if (empty($translation)) {
+                            unset($result[$key]);
+                        }
+                    }
 
                     $message->message_data = array_merge($message->message_data, $result);
 
