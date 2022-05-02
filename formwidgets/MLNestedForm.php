@@ -61,8 +61,7 @@ class MLNestedForm extends NestedForm
     public function getSaveValue($value)
     {
         $this->rewritePostValues();
-
-        return $this->getLocaleSaveValue(is_array($value) ? array_values($value) : $value);
+        return $this->getLocaleSaveValue($value);
     }
 
     /**
@@ -108,17 +107,10 @@ class MLNestedForm extends NestedForm
 
         // Update widget to show form for switched locale
         $lockerData = $this->getLocaleSaveDataAsArray($locale) ?: [];
+
         $this->reprocessLocaleItems($lockerData);
 
-        foreach ($this->formWidgets as $key => $widget) {
-            $value = array_shift($lockerData);
-            if (!$value) {
-                unset($this->formWidgets[$key]);
-            }
-            else {
-                $widget->setFormValues($value);
-            }
-        }
+        $this->formWidget->setFormValues($lockerData);
 
         $this->actAsParent();
         $parentContent = parent::render();
@@ -132,20 +124,17 @@ class MLNestedForm extends NestedForm
     }
 
     /**
-     * Ensure that the current locale data is processed by the repeater instead of the original non-translated data
+     * Ensure that the current locale data is processed by the nestedform instead of the original non-translated data
      * @return void
      */
     protected function reprocessLocaleItems($data)
     {
-        $this->formWidgets = [];
         $this->formField->value = $data;
 
         $key = implode('.', HtmlHelper::nameToArray($this->formField->getName()));
         $requestData = Request::all();
         array_set($requestData, $key, $data);
         Request::merge($requestData);
-
-        $this->processItems();
     }
 
     /**
@@ -156,7 +145,7 @@ class MLNestedForm extends NestedForm
     {
         $data = post($this->formField->getName()) ?: [];
 
-        return $this->processSaveValue($data);
+        return $data;
     }
 
     /**
@@ -176,7 +165,7 @@ class MLNestedForm extends NestedForm
 
     /**
      * Since the locker does always contain the latest values, this method
-     * will take the save data from the repeater and merge it in to the
+     * will take the save data from the nestedform and merge it in to the
      * locker based on which ever locale is selected using an item map
      * @return void
      */
