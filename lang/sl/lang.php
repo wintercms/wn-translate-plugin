@@ -1,4 +1,6 @@
-<?php return [
+<?php
+
+return [
     'plugin' => [
         'name' => 'Večjezičnost',
         'description' => 'Podpora za večjezične spletne strani.',
