@@ -129,6 +129,47 @@ This plugin activates a feature in the CMS that allows Mail template files to us
 * **mail-notify-ru.htm** will contain the mail template in Russian.
 * **mail-notify-fr.htm** will contain the mail template in French.
 
+## Extending a plugin with translatable fields
+If you are extending a plugin and want the added fields in the backend to be translatable, you have to use the '[backend.form.extendFieldsBefore](https://wintercms.com/docs/events/event/backend.form.extendFieldsBefore)' and tell which fields you want to be translatable by pushing them to the array.
+
+```
+public function boot() {
+    Event::listen('backend.form.extendFieldsBefore', function($widget) {
+
+        // Only apply this listener when the Page controller is being used
+        if (!$widget->getController() instanceof \Winter\Pages\Controllers\Index) {
+            return;
+        }
+
+        // Only apply this listener when the Page model is being modified
+        if (!$widget->model instanceof \Winter\Pages\Classes\Page) {
+            return;
+        }
+
+        // Only apply this listener when the Form widget in question is a root-level
+        // Form widget (not a repeater, nestedform, etc)
+        if ($widget->isNested) {
+            return;
+        }
+
+        // Add fields
+        $widget->tabs['fields']['viewBag[myField]'] = [
+            'tab' => 'mytab',
+            'label' => 'myLabel',
+            'type' => 'text'
+        ];
+
+        // Translate fields
+        $translatable = [
+            'viewBag[myField]'
+        ];
+
+        // Merge the fields in the translatable array
+        $widget->model->translatable = array_merge($widget->model->translatable, $translatable);
+
+    });
+}
+```
 ## Model translation
 
 Models can have their attributes translated by using the `Winter.Translate.Behaviors.TranslatableModel` behavior and specifying which attributes to translate in the class.

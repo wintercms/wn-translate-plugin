@@ -1,4 +1,6 @@
-<?php return [
+<?php
+
+return [
     'plugin' => [
         'name' => 'Traduci',
         'description' => 'Abilita siti multi-lingua.',
@@ -36,7 +38,7 @@
         'clear_cache_link' => 'Pulisci cache',
         'clear_cache_loading' => 'Pulizia della cache dell\'applicazione in corso...',
         'clear_cache_success' => 'La cache è stata pulita con successo!',
-        'clear_cache_hint' => 'Potrebbe essere necessario cliccare il bottobe <strong>Pulisci cache</strong> per vedere i cambiamenti nel sito web.',
+        'clear_cache_hint' => 'Potrebbe essere necessario cliccare il bottone <strong>Pulisci cache</strong> per vedere i cambiamenti nel sito web.',
         'scan_messages_link' => 'Scansiona per nuovi messaggi',
         'scan_messages_begin_scan' => 'Inizio scansione',
         'scan_messages_loading' => 'Scansione in corso per nuovi messaggi...',

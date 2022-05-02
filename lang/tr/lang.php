@@ -1,4 +1,6 @@
-<?php return [
+<?php
+
+return [
     'plugin' => [
         'name' => 'Çeviri',
         'description' => 'Çoklu dil destekli websiteleri oluşturmanızı sağlar.',

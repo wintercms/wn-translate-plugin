@@ -1,11 +1,5 @@
 <?php
 
-/**
- * Translate Plugin Lang File
- * Carlos Gonzalez Gurrea
- * http://www.carlosgonzalezgurrea.es
- */
-
 return [
     'plugin' => [
         'name' => 'Multilenguaje',
