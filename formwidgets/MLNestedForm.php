@@ -156,7 +156,7 @@ class MLNestedForm extends NestedForm
     {
         $data = post($this->formField->getName()) ?: [];
 
-        return $this->processSaveValue($data);
+        return (array)$data;
     }
 
     /**
