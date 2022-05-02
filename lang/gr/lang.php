@@ -1,4 +1,6 @@
-<?php return [
+<?php
+
+return [
     'plugin' => [
         'name' => 'Μετέφρασε',
         'description' => 'Ενεργοποίηση πολύγλωσσων ιστότοπων.',
