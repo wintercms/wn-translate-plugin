@@ -109,7 +109,6 @@ class MLNestedForm extends NestedForm
         $lockerData = $this->getLocaleSaveDataAsArray($locale) ?: [];
 
         $this->reprocessLocaleItems($lockerData);
-
         $this->formWidget->setFormValues($lockerData);
 
         $this->actAsParent();
@@ -129,12 +128,15 @@ class MLNestedForm extends NestedForm
      */
     protected function reprocessLocaleItems($data)
     {
+        $this->formWidgets = [];
         $this->formField->value = $data;
 
         $key = implode('.', HtmlHelper::nameToArray($this->formField->getName()));
         $requestData = Request::all();
         array_set($requestData, $key, $data);
         Request::merge($requestData);
+
+        $this->processItems();
     }
 
     /**
@@ -145,7 +147,7 @@ class MLNestedForm extends NestedForm
     {
         $data = post($this->formField->getName()) ?: [];
 
-        return $data;
+        return (array)$data;
     }
 
     /**

@@ -1,4 +1,6 @@
-<?php return [
+<?php
+
+return [
     'plugin' => [
         'name' => 'Vertaal',
         'description' => 'Stelt meerdere talen in voor een website.',
