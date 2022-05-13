@@ -1,6 +1,6 @@
 /*
  * Multi lingual control plugin
- * 
+ *
  * Data attributes:
  * - data-control="multilingual" - enables the plugin on an element
  * - data-default-locale="en" - default locale code
@@ -140,6 +140,40 @@
     // ===============
     $(document).render(function () {
         $('[data-control="multilingual"]').multiLingual()
+        patchTableWidget()
     })
+
+    var tablePatched = false;
+
+    function patchTableWidget() {
+      if ($.wn.table && $.wn.table.table && !tablePatched) {
+        var tableOnFormSubmit = $.wn.table.table.prototype.onFormSubmit
+
+        $.wn.table.table.prototype.onFormSubmit = function(ev, data) {
+          if (data.handler.indexOf('onSwitchItemLocale') &&
+            (
+              $(this.el).parents('[data-control="mlrepeater"]').length ||
+              $(this.el).parents('[data-control="mlnestedform"]').length
+            )
+          ) {
+            // temporary override postback handler name
+            var postbackHandlerName = this.options.postbackHandlerName;
+            this.options.postbackHandlerName = data.handler;
+
+            // now call submit handler with new postback handler
+            var result = tableOnFormSubmit.call(this, ev, data);
+
+            // reset to previous value
+            this.options.postbackHandlerName = postbackHandlerName;
+
+            return result;
+          }
+
+          return tableOnFormSubmit.call(this, ev, data)
+        };
+
+        tablePatched = true;
+      }
+    }
 
 }(window.jQuery);
