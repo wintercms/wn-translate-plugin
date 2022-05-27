@@ -2,6 +2,20 @@
 
 Enables multi-lingual sites.
 
+## Getting started
+
+To install the plugin, you may install it through the [Winter CMS Marketplace](https://github.com/wintercms/wn-translate-plugin), or you may install it using Composer:
+
+```bash
+composer require winter/wn-translate-plugin
+```
+
+Then, run the migrations to ensure the plugin is enabled:
+
+```bash
+php artisan winter:up
+```
+
 ## Selecting a language
 
 Different languages can be set up in the back-end area, with a single default language selected. This activates the use of the language on the front-end and in the back-end UI.
