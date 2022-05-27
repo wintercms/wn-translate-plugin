@@ -4,7 +4,7 @@ Enables multi-lingual sites.
 
 ## Getting started
 
-To install the plugin, you may install it through the [Winter CMS Marketplace](https://github.com/wintercms/wn-translate-plugin), or you may install it using Composer:
+Use composer to install the plugin:
 
 ```bash
 composer require winter/wn-translate-plugin
