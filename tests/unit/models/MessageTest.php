@@ -2,7 +2,7 @@
 
 use Winter\Translate\Models\Locale;
 use Winter\Translate\Models\Message;
-use PluginTestCase;
+use System\Tests\Bootstrap\PluginTestCase;
 use Model;
 
 class MessageTest extends PluginTestCase

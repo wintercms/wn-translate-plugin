@@ -1,7 +1,7 @@
 <?php namespace Winter\Translate\Tests\Unit\Behaviors;
 
 use File;
-use PluginTestCase;
+use System\Tests\Bootstrap\PluginTestCase;
 use Winter\Storm\Halcyon\Model;
 use Winter\Storm\Filesystem\Filesystem;
 use Winter\Storm\Halcyon\Datasource\FileDatasource;

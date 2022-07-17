@@ -1,6 +1,6 @@
 <?php namespace Winter\Translate\Tests\Unit\Models;
 
-use PluginTestCase;
+use System\Tests\Bootstrap\PluginTestCase;
 use Winter\Translate\Models\Message;
 use Winter\Translate\Models\MessageExport;
 use Winter\Translate\Models\Locale;

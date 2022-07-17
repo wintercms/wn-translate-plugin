@@ -2,7 +2,7 @@
 
 use Model;
 use Schema;
-use PluginTestCase;
+use System\Tests\Bootstrap\PluginTestCase;
 use Winter\Translate\Classes\Translator;
 use Winter\Translate\Tests\Fixtures\Models\Country as CountryModel;
 use Winter\Translate\Models\Locale as LocaleModel;
