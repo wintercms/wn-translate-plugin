@@ -1,9 +1,5 @@
 <?php
 
-use App;
-use Event;
-use Route;
-use Config;
 use Illuminate\Foundation\Application as Laravel;
 use Winter\Translate\Models\Message;
 use Winter\Translate\Classes\Translator;
