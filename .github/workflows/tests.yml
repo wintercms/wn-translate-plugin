@@ -57,8 +57,6 @@ jobs:
         with:
           php-version: ${{ matrix.phpVersion }}
           extensions: ${{ env.phpExtensions }}
-          tools: composer:v1
-          coverage: none
 
       - name: Install Winter CMS
         run: |
