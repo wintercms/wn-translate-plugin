@@ -1,7 +1,6 @@
 <?php namespace Winter\Translate\Tests\Unit\Behaviors;
 
 use File;
-use PluginTestCase;
 use Winter\Storm\Halcyon\Model;
 use Winter\Storm\Filesystem\Filesystem;
 use Winter\Storm\Halcyon\Datasource\FileDatasource;
@@ -9,7 +8,7 @@ use Winter\Storm\Halcyon\Datasource\Resolver;
 use Winter\Translate\Tests\Fixtures\Classes\MessageScanner;
 use Winter\Translate\Tests\Fixtures\Classes\TranslatablePage;
 
-class TranslatablePageTest extends PluginTestCase
+class TranslatablePageTest extends \Winter\Translate\Tests\TranslatePluginTestCase
 {
     public $themePath;
 
@@ -36,6 +35,8 @@ class TranslatablePageTest extends PluginTestCase
     public function tearDown(): void
     {
         File::deleteDirectory($this->themePath.'/pages');
+
+        parent::tearDown();
     }
 
     public function testUseFallback()
@@ -65,7 +66,7 @@ class TranslatablePageTest extends PluginTestCase
         $title_fr = $page->title;
         $this->assertEquals('titre francais', $title_fr);
     }
-    
+
     public function testThemeScanner()
     {
         $scanner = new MessageScanner();

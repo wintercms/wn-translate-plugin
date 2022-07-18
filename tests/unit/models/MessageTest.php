@@ -1,11 +1,8 @@
 <?php namespace Winter\Translate\Tests\Unit\Models;
 
-use Winter\Translate\Models\Locale;
 use Winter\Translate\Models\Message;
-use PluginTestCase;
-use Model;
 
-class MessageTest extends PluginTestCase
+class MessageTest extends \Winter\Translate\Tests\TranslatePluginTestCase
 {
     public function testImportMessages()
     {

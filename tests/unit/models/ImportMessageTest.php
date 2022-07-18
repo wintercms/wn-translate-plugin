@@ -1,10 +1,9 @@
 <?php namespace Winter\Translate\Tests\Unit\Models;
 
-use PluginTestCase;
 use Winter\Translate\Models\Message;
 use Winter\Translate\Models\MessageImport;
 
-class ImportMessageTest extends PluginTestCase
+class ImportMessageTest extends \Winter\Translate\Tests\TranslatePluginTestCase
 {
     public function testCanHandleEmptyImport()
     {
