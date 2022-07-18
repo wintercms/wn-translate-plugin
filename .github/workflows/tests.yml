@@ -9,11 +9,23 @@ on:
 jobs:
   phpUnitTests:
     runs-on: ubuntu-latest
-    name: Unit Tests / PHP ${{ matrix.phpVersions }}
+    name: Unit Tests / PHP ${{ matrix.phpVersion }} / Winter ${{ matrix.winterRelease }}
     strategy:
       max-parallel: 6
       matrix:
-        phpVersions: ['7.2', '7.3', '7.4', '8.0']
+        phpVersion: ['8.0', '8.1']
+        winterRelease: ['develop']
+        winterReleaseDir: ['develop']
+        include:
+          - phpVersion: '7.2'
+            winterRelease: 'v1.1.9'
+            winterReleaseDir: '1.1.9'
+          - phpVersion: '7.3'
+            winterRelease: 'v1.1.9'
+            winterReleaseDir: '1.1.9'
+          - phpVersion: '7.4'
+            winterRelease: 'v1.1.9'
+            winterReleaseDir: '1.1.9'
       fail-fast: false
     env:
       phpExtensions: mbstring, intl, gd, xml, sqlite
@@ -29,7 +41,7 @@ jobs:
         id: extcache
         uses: shivammathur/cache-extensions@v1
         with:
-          php-version: ${{ matrix.phpVersions }}
+          php-version: ${{ matrix.phpVersion }}
           extensions: ${{ env.phpExtensions }}
           key: ${{ env.cacheKey }}
 
@@ -43,17 +55,17 @@ jobs:
       - name: Install PHP and extensions
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.phpVersions }}
+          php-version: ${{ matrix.phpVersion }}
           extensions: ${{ env.phpExtensions }}
-          tools: composer:v1
-          coverage: none
 
       - name: Install Winter CMS
         run: |
-          wget https://github.com/wintercms/winter/archive/${{ env.winterCmsRelease }}.zip
-          unzip ${{ env.winterCmsRelease }}.zip
+          wget https://github.com/wintercms/winter/archive/${{ matrix.winterRelease }}.zip
+          unzip ${{ matrix.winterRelease }}.zip
+          rm ${{ matrix.winterRelease }}.zip
           shopt -s dotglob
-          mv winter-${{ env.winterCmsRelease }}/* ./
+          mv winter-${{ matrix.winterReleaseDir }}/* ./
+          rmdir winter-${{ matrix.winterReleaseDir }}
           shopt -u dotglob
           cp config/cms.php config/testing/cms.php
           mkdir -p plugins/winter
@@ -77,6 +89,4 @@ jobs:
         run: ./vendor/bin/parallel-lint plugins/winter/translate
 
       - name: Run unit tests
-        run: |
-          cd plugins/winter/translate
-          ../../../vendor/bin/phpunit
+        run: php artisan winter:test -p Winter.Translate
