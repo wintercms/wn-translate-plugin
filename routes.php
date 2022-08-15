@@ -1,12 +1,13 @@
 <?php
 
+use Illuminate\Foundation\Application as Laravel;
 use Winter\Translate\Models\Message;
 use Winter\Translate\Classes\Translator;
 
 /*
  * Adds a custom route to check for the locale prefix.
  */
-Event::listen('system.route', function () {
+$beforeCallback = function () {
     if (Config::get('winter.translate::disableLocalePrefixRoutes', false)) {
         return;
     }
@@ -43,12 +44,18 @@ Event::listen('system.route', function () {
             Route::any('{slug?}', 'Cms\Classes\CmsController@run')->where('slug', '(.*)?');
         });
     });
-});
+};
+
+if (version_compare(Laravel::VERSION, '9.0.0', '>=')) {
+    Event::listen('system.route', $beforeCallback);
+} else {
+    App::before($beforeCallback);
+}
 
 /*
  * Save any used messages to the contextual cache.
  */
-App::after(function ($request) {
+App::after(function () {
     if (class_exists('Winter\Translate\Models\Message')) {
         Message::saveToCache();
     }

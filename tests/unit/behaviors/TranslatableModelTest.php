@@ -2,13 +2,12 @@
 
 use Model;
 use Schema;
-use PluginTestCase;
 use Winter\Translate\Classes\Translator;
 use Winter\Translate\Tests\Fixtures\Models\Country as CountryModel;
 use Winter\Translate\Models\Locale as LocaleModel;
 use Winter\Storm\Database\Relations\Relation;
 
-class TranslatableModelTest extends PluginTestCase
+class TranslatableModelTest extends \Winter\Translate\Tests\TranslatePluginTestCase
 {
     public function setUp(): void
     {

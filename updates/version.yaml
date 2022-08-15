@@ -116,3 +116,4 @@
 "2.1.0":
     - "!!! Potential breaking change: Message codes are now MD5 hashed versions of the original string. See https://github.com/wintercms/wn-translate-plugin/pull/2"
     - v2.1.0/migrate_message_code.php
+"2.1.1": Added support for Winter CMS 1.2.
