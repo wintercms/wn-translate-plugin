@@ -6,11 +6,6 @@ use Winter\Storm\Database\Model;
 
 class EventRegistryTest extends \Winter\Translate\Tests\TranslatePluginTestCase
 {
-    public function setUp(): void
-    {
-        parent::setUp();
-    }
-
     public function testRegisterModelTranslation()
     {
         FormTestModel::extend(function ($model) {
@@ -30,8 +25,7 @@ class EventRegistryTest extends \Winter\Translate\Tests\TranslatePluginTestCase
             ];
         });
 
-        $controller = new \Backend\Classes\Controller();
-        $form = new Form($controller, [
+        $form = new Form(new \Backend\Classes\Controller(), [
             'model' => new FormTestModel,
             'arrayName' => 'array',
             'fields' => [
@@ -41,9 +35,9 @@ class EventRegistryTest extends \Winter\Translate\Tests\TranslatePluginTestCase
                 ],
             ]
         ]);
-
         $form->bindToController();
         $this->assertInstanceOf(Form::class, $form);
+
         $this->assertEquals('mltext', $form->fields['testField']['type']);
         $this->assertEquals('mltext', $form->tabs['fields']['tabTestField']['type']);
         $this->assertEquals('mltext', $form->secondaryTabs['fields']['secondaryTabTestField']['type']);
