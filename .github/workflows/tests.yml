@@ -17,12 +17,6 @@ jobs:
         winterRelease: ['develop']
         winterReleaseDir: ['develop']
         include:
-          - phpVersion: '7.2'
-            winterRelease: 'v1.1.9'
-            winterReleaseDir: '1.1.9'
-          - phpVersion: '7.3'
-            winterRelease: 'v1.1.9'
-            winterReleaseDir: '1.1.9'
           - phpVersion: '7.4'
             winterRelease: 'v1.1.9'
             winterReleaseDir: '1.1.9'
