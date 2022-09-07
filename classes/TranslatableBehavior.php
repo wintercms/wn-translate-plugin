@@ -117,12 +117,6 @@ abstract class TranslatableBehavior extends ExtensionBase
      * @return boolean
      */
     public function isTranslatable($key)
-    /**
-     * Checks if an attribute should be translated or not.
-     * @param  string  $key
-     * @return boolean
-     */
-    public function isTranslatable($key)
     {
         if ($key === 'translatable' || $this->translatableDefault == $this->translatableContext) {
             return false;
