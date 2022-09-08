@@ -198,4 +198,20 @@ class TranslatableModelTest extends \Winter\Translate\Tests\TranslatePluginTestC
         $this->assertEquals('Australie', $obj->name);
         $this->assertEquals(['a', 'b', 'c'], $obj->states);
     }
+
+    public function testAddTranslatableAttributes()
+    {
+        $country = new CountryModel;
+        $country->translatable = [];
+        $country->addTranslatableAttributes('attr1');
+        $this->assertEquals($country->getTranslatableAttributes(), ['attr1']);
+
+        $country->translatable = [];
+        $country->addTranslatableAttributes('attr1', 'attr2');
+        $this->assertEquals($country->getTranslatableAttributes(), ['attr1', 'attr2']);
+
+        $country->translatable = [];
+        $country->addTranslatableAttributes(['attr1', 'attr2']);
+        $this->assertEquals($country->getTranslatableAttributes(), ['attr1', 'attr2']);
+    }
 }
