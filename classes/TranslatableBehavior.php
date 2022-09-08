@@ -99,7 +99,7 @@ abstract class TranslatableBehavior extends ExtensionBase
 
     /**
      * Add attribute(s) to the model's translatable array.
-     * @param string|array $attribute
+     * @param string|array $attributes
      * @return void
      */
     public function addTranslatableAttributes($attributes = null): void
