@@ -82,5 +82,11 @@ jobs:
       - name: Run linting
         run: ./vendor/bin/parallel-lint plugins/winter/translate
 
-      - name: Run unit tests
+      - name: Run unit tests (1.2/develop)
+        if: matrix.winterRelease != 'v1.1.9'
         run: php artisan winter:test -p Winter.Translate
+
+      - name: Run unit tests (1.1)
+        if: matrix.winterRelease == 'v1.1.9'
+        working-directory: plugins/winter/translate
+        run: ../../../vendor/bin/phpunit --bootstrap ../../../tests/bootstrap.php
