@@ -109,7 +109,7 @@ class Translator
         }
 
         if (App::hasDatabase() && Schema::hasTable('winter_translate_locales')) {
-            Cache::put(self::SESSION_CONFIGURED, true);
+            Cache::forever(self::SESSION_CONFIGURED, true);
             return $this->isConfigured = true;
         }
 
