@@ -104,7 +104,7 @@ class Translator
             return $this->isConfigured;
         }
 
-        if (Cache::has(self::SESSION_CONFIGURED)) {
+        if (Cache::get(self::SESSION_CONFIGURED)) {
             return $this->isConfigured = true;
         }
 
