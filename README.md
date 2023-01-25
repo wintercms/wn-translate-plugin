@@ -59,10 +59,18 @@ Message or string translation is the conversion of adhoc strings used throughout
     {{ 'Welcome to our website!'|_ }}
 
     {{ 'Hello :name!'|_({ name: 'Friend' }) }}
+    
+Or in PHP:
+    
+    t('Welcome to our website!'); 
 
 A message can also be translated for a choice usage.
 
     {{ 'There are no apples|There are :number applies!'|__(2, { number: 'two' }) }}
+
+Or in PHP:
+    
+    t_choice('There are no apples|There are :number applies!', 2, ['number': 'two']);
 
 Or you set a locale manually by passing a second argument.
 
