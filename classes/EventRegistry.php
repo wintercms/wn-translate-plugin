@@ -126,19 +126,19 @@ class EventRegistry
         }
 
 
-        if (!$model->hasTranslatableAttributes()) {
+        if (!$model->hasTranslatableAttributes() || $widget->isNested) {
             return;
         }
 
-        if (!empty($widget->fields) && !$widget->isNested) {
+        if (!empty($widget->fields)) {
             $widget->fields = $this->processFormMLFields($widget->fields, $model);
         }
 
-        if (!empty($widget->tabs['fields']) && !$widget->isNested) {
+        if (!empty($widget->tabs['fields'])) {
             $widget->tabs['fields'] = $this->processFormMLFields($widget->tabs['fields'], $model);
         }
 
-        if (!empty($widget->secondaryTabs['fields']) && !$widget->isNested) {
+        if (!empty($widget->secondaryTabs['fields'])) {
             $widget->secondaryTabs['fields'] = $this->processFormMLFields($widget->secondaryTabs['fields'], $model);
         }
     }
