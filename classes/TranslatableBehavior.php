@@ -92,9 +92,11 @@ abstract class TranslatableBehavior extends ExtensionBase
         $this->model->bindEvent('model.saveInternal', function() {
             $this->syncTranslatableAttributes();
 
-            foreach ($this->getDirtyLocales() as $locale) {
-                $this->translateContext($locale);
-                $this->model->validate();
+            if (method_exists($this->model, 'validate')) {
+                foreach ($this->getDirtyLocales() as $locale) {
+                    $this->translateContext($locale);
+                    $this->model->validate();
+                }
             }
         });
     }
