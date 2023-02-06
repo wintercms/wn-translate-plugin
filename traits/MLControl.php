@@ -247,7 +247,10 @@ trait MLControl
      */
     public function isLocaleFieldJsonable()
     {
-        if ($this instanceof \Backend\FormWidgets\Repeater) {
+        if (
+            $this instanceof \Backend\FormWidgets\Repeater ||
+            $this instanceof \Backend\FormWidgets\NestedForm
+        ) {
             return true;
         }
 
