@@ -2,13 +2,12 @@
 
 use Model;
 use Schema;
-use PluginTestCase;
 use Winter\Translate\Classes\Translator;
 use Winter\Translate\Tests\Fixtures\Models\Country as CountryModel;
 use Winter\Translate\Models\Locale as LocaleModel;
 use Winter\Storm\Database\Relations\Relation;
 
-class TranslatableModelTest extends PluginTestCase
+class TranslatableModelTest extends \Winter\Translate\Tests\TranslatePluginTestCase
 {
     public function setUp(): void
     {
@@ -198,5 +197,21 @@ class TranslatableModelTest extends PluginTestCase
         $obj->translateContext('fr');
         $this->assertEquals('Australie', $obj->name);
         $this->assertEquals(['a', 'b', 'c'], $obj->states);
+    }
+
+    public function testAddTranslatableAttributes()
+    {
+        $country = new CountryModel;
+        $country->translatable = [];
+        $country->addTranslatableAttributes('attr1');
+        $this->assertEquals($country->getTranslatableAttributes(), ['attr1']);
+
+        $country->translatable = [];
+        $country->addTranslatableAttributes('attr1', 'attr2');
+        $this->assertEquals($country->getTranslatableAttributes(), ['attr1', 'attr2']);
+
+        $country->translatable = [];
+        $country->addTranslatableAttributes(['attr1', 'attr2']);
+        $this->assertEquals($country->getTranslatableAttributes(), ['attr1', 'attr2']);
     }
 }
