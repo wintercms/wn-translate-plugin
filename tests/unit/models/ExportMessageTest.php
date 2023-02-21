@@ -1,11 +1,10 @@
 <?php namespace Winter\Translate\Tests\Unit\Models;
 
-use PluginTestCase;
 use Winter\Translate\Models\Message;
 use Winter\Translate\Models\MessageExport;
 use Winter\Translate\Models\Locale;
 
-class ExportMessageTest extends PluginTestCase
+class ExportMessageTest extends \Winter\Translate\Tests\TranslatePluginTestCase
 {
 
     public function testCanHandleNoMessages()

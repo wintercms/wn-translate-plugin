@@ -1,6 +1,5 @@
 <?php namespace Winter\Translate\Tests\Fixtures\Classes;
 
-use Model;
 use Cms\Classes\CmsCompoundObject;
 
 /**

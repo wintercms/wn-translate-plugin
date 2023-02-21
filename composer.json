@@ -31,6 +31,9 @@
         "php": ">=7.2",
         "composer/installers": "~1.0"
     },
+    "replace": {
+        "rainlab/translate-plugin": "~1.6"
+    },
     "extra": {
         "installer-name": "translate"
     }

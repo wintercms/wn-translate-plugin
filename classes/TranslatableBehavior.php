@@ -98,6 +98,22 @@ abstract class TranslatableBehavior extends ExtensionBase
     }
 
     /**
+     * Add attribute(s) to the model's translatable array.
+     * @param string|array $attributes
+     * @return void
+     */
+    public function addTranslatableAttributes($attributes = null): void
+    {
+        $attributes = is_array($attributes) ? $attributes : func_get_args();
+
+        if (!isset($this->model->translatable)) {
+            $this->model->addDynamicProperty('translatable', $attributes);
+        } else {
+            $this->model->translatable = array_merge($this->model->translatable, $attributes);
+        }
+    }
+
+    /**
      * Checks if an attribute should be translated or not.
      * @param  string  $key
      * @return boolean
