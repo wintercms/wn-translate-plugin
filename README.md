@@ -16,6 +16,7 @@ Then, run the migrations to ensure the plugin is enabled:
 php artisan winter:up
 ```
 
+If you are using a [public folder](https://wintercms.com/docs/setup/configuration#public-folder) then you will also need to regenerate it with `php artisan winter:mirror public --relative`
 ## Selecting a language
 
 Different languages can be set up in the back-end area, with a single default language selected. This activates the use of the language on the front-end and in the back-end UI.
