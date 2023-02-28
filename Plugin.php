@@ -2,6 +2,7 @@
 
 use App;
 use Backend;
+use Config;
 use Event;
 use Lang;
 use Request;
@@ -401,12 +402,11 @@ class Plugin extends PluginBase
         });
 
         Event::listen('winter.sitemap.makeUrlSet', function ($definition, $xml, $urlSet) {
-            $botsRegex = '/(Apple|Bing|Google|DuckDuck|Yandex|Exa|Face)[bB]ot|Baiduspider|Slurp|Sogou/';
-            if (preg_match($botsRegex, Request::server('HTTP_USER_AGENT', ''))) {
-                $nsUrl = 'http://www.w3.org/1999/xhtml';
-            } else {
+            if (Config::get('app.debug', false)) {
                 // hack to force browser to properly render the XML sitemap
                 $nsUrl = 'xmlns:xhtml-namespace-definition-URL-here';
+            } else {
+                $nsUrl = 'http://www.w3.org/1999/xhtml';
             }
             $urlSet->setAttribute('xmlns:xhtml', $nsUrl);
         });
