@@ -1,15 +1,19 @@
 <?php namespace Winter\Translate;
 
 use App;
-use Lang;
-use Event;
 use Backend;
+use Event;
+use Lang;
+use Request;
+
 use Cms\Classes\Page;
 use Cms\Classes\Theme;
 use System\Models\File;
 use Cms\Models\ThemeData;
 use System\Classes\PluginBase;
 use System\Classes\CombineAssets;
+
+use Winter\Translate\Models\Locale;
 use Winter\Translate\Models\Message;
 use Winter\Translate\Classes\EventRegistry;
 use Winter\Translate\Classes\Translator;
@@ -149,6 +153,7 @@ class Plugin extends PluginBase
             $items = $iterator($items);
         });
 
+        $this->ExtendWinterSitemap();
         /*
          * Import messages defined by the theme
          */
@@ -365,5 +370,49 @@ class Plugin extends PluginBase
     public function translateRawPlural($string, $count = 0, $params = [], $locale = null)
     {
         return Lang::choice(Message::transRaw($string, $params, $locale), $count, $params);
+    }
+
+    public function extendWinterSitemap()
+    {
+        Event::listen('winter.sitemap.processMenuItems', function ($item, $url, $theme, $apiResult) {
+            switch ($item->type) {
+                case 'cms-page':
+                    return Classes\MLCmsPage::resolveMenuItem($item, $url, $theme);
+                case 'blog-category':
+                case 'all-blog-categories':
+                    return Classes\MLBlogCategoryModel::resolveMenuItem($item, $url, $theme);
+                case 'blog-post':
+                # TODO: fix category-blog-posts type (generates an error in the query)
+                #case 'category-blog-posts':
+                case 'all-blog-posts':
+                    return Classes\MLBlogPostModel::resolveMenuItem($item, $url, $theme);
+                default:
+                    return false;
+            }
+        });
+
+        Event::listen('winter.sitemap.makeUrlSet', function ($definition, $xml, $urlSet) {
+            if (!str_contains(Request::server('HTTP_USER_AGENT', ''), 'Googlebot/')) {
+                // hack to force browser to properly render the XML sitemap
+                $urlSet->setAttribute('xmlns:xhtml', 'xmlns:xhtml-namespace-definition-URL-here');
+            } else {
+                // Googlebot needs this URL
+                $urlSet->setAttribute('xmlns:xhtml', 'http://www.w3.org/1999/xhtml');
+            }
+        });
+
+        Event::listen('winter.sitemap.makeUrlElement',
+            function ($definition, $xml, $pageUrl, $lastModified, $itemDefinition, $itemInfo, $itemReference, $urlElement) {
+                if (isset($itemInfo['alternateLinks'])) {
+                    foreach ($itemInfo['alternateLinks'] as $locale => $altUrl) {
+                        $linkElement = $xml->createElement('xhtml:link');
+                        $linkElement->setAttribute('rel', 'alternate');
+                        $linkElement->setAttribute('hreflang', $locale);
+                        $linkElement->setAttribute('href', $altUrl);
+                        $urlElement->appendChild($linkElement);
+                    }
+                }
+            }
+        );
     }
 }
