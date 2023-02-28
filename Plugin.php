@@ -392,13 +392,14 @@ class Plugin extends PluginBase
         });
 
         Event::listen('winter.sitemap.makeUrlSet', function ($definition, $xml, $urlSet) {
-            if (!str_contains(Request::server('HTTP_USER_AGENT', ''), 'Googlebot/')) {
-                // hack to force browser to properly render the XML sitemap
-                $urlSet->setAttribute('xmlns:xhtml', 'xmlns:xhtml-namespace-definition-URL-here');
+            $botsRegex = '/(Apple|Bing|Google|DuckDuck|Yandex|Exa|Face)[bB]ot|Baiduspider|Slurp|Sogou/';
+            if (preg_match($botsRegex, Request::server('HTTP_USER_AGENT', ''))) {
+                $nsUrl = 'http://www.w3.org/1999/xhtml';
             } else {
-                // Googlebot needs this URL
-                $urlSet->setAttribute('xmlns:xhtml', 'http://www.w3.org/1999/xhtml');
+                // hack to force browser to properly render the XML sitemap
+                $nsUrl = 'xmlns:xhtml-namespace-definition-URL-here';
             }
+            $urlSet->setAttribute('xmlns:xhtml', $nsUrl);
         });
 
         Event::listen('winter.sitemap.makeUrlElement',
