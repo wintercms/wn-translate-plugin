@@ -153,7 +153,7 @@ class Plugin extends PluginBase
             $items = $iterator($items);
         });
 
-        $this->ExtendWinterSitemap();
+        $this->extendWinterSitemap();
         /*
          * Import messages defined by the theme
          */
