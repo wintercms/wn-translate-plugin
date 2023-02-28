@@ -41,8 +41,7 @@ class MLBlogPostModel extends Post
                 ];
             }
 
-        }
-        elseif ($item->type == 'all-blog-posts') {
+        } elseif ($item->type == 'all-blog-posts') {
             $recordItems = [];
 
             $records = self::orderBy('title')->get();
@@ -63,8 +62,7 @@ class MLBlogPostModel extends Post
                 }
             }
             $result[] = $recordItems;
-        }
-        elseif ($item->type == 'category-blog-posts') {
+        } elseif ($item->type == 'category-blog-posts') {
             $recordItems = [];
 
             if (!$item->reference || !$item->cmsPage) {
