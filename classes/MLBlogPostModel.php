@@ -76,7 +76,7 @@ class MLBlogPostModel extends Post
                 return;
             }
 
-            $query = self::isPublished()->orderBy('title');
+            $query = Post::isPublished()->orderBy('title');
 
             $categories = $category->getAllChildrenAndSelf()->lists('id');
             $query->whereHas('categories', function($q) use ($categories) {

@@ -382,8 +382,7 @@ class Plugin extends PluginBase
                 case 'all-blog-categories':
                     return Classes\MLBlogCategoryModel::resolveMenuItem($item, $url, $theme);
                 case 'blog-post':
-                # TODO: fix category-blog-posts type (generates an error in the query)
-                #case 'category-blog-posts':
+                case 'category-blog-posts':
                 case 'all-blog-posts':
                     return Classes\MLBlogPostModel::resolveMenuItem($item, $url, $theme);
                 default:
