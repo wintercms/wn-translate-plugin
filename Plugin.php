@@ -8,10 +8,11 @@ use Request;
 
 use Cms\Classes\Page;
 use Cms\Classes\Theme;
-use System\Models\File;
 use Cms\Models\ThemeData;
-use System\Classes\PluginBase;
+use System\Models\File;
 use System\Classes\CombineAssets;
+use System\Classes\PluginBase;
+use System\Classes\PluginManager;
 
 use Winter\Translate\Models\Locale;
 use Winter\Translate\Models\Message;
@@ -375,19 +376,28 @@ class Plugin extends PluginBase
     public function extendWinterSitemap()
     {
         Event::listen('winter.sitemap.processMenuItems', function ($item, $url, $theme, $apiResult) {
-            switch ($item->type) {
-                case 'cms-page':
-                    return Classes\MLCmsPage::resolveMenuItem($item, $url, $theme);
-                case 'blog-category':
-                case 'all-blog-categories':
-                    return Classes\MLBlogCategoryModel::resolveMenuItem($item, $url, $theme);
-                case 'blog-post':
-                case 'category-blog-posts':
-                case 'all-blog-posts':
-                    return Classes\MLBlogPostModel::resolveMenuItem($item, $url, $theme);
-                default:
-                    return false;
+            if ($item->type === 'cms-page') {
+                return Classes\MLCmsPage::resolveMenuItem($item, $url, $theme);
             }
+
+            if (PluginManager::instance()->exists('Winter.Pages')) {
+                if ($item->type === 'static-page') {
+                    return Classes\MLStaticPage::resolveMenuItem($item, $url, $theme);
+                }
+            }
+
+            if (PluginManager::instance()->exists('Winter.blog')) {
+                switch ($item->type) {
+                    case 'blog-category':
+                    case 'all-blog-categories':
+                        return Classes\MLBlogCategoryModel::resolveMenuItem($item, $url, $theme);
+                    case 'blog-post':
+                    case 'category-blog-posts':
+                    case 'all-blog-posts':
+                        return Classes\MLBlogPostModel::resolveMenuItem($item, $url, $theme);
+                }
+            }
+            return false;
         });
 
         Event::listen('winter.sitemap.makeUrlSet', function ($definition, $xml, $urlSet) {
