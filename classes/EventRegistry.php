@@ -53,16 +53,16 @@ class EventRegistry
             $defaultLocale = LocaleModel::getDefault();
             $availableLocales = LocaleModel::listAvailable();
             $fieldsToTranslate = ['title', 'url'];
-            
+
             // Replace specified fields with multilingual versions
             foreach ($fieldsToTranslate as $fieldName) {
                 $widget->fields[$fieldName]['type'] = 'mltext';
-                
+
                 foreach ($availableLocales as $code => $locale) {
                     if (!$defaultLocale || $defaultLocale->code === $code) {
                         continue;
                     }
-                    
+
                     // Add data locker fields for the different locales under the `viewBag[locale]` property
                     $widget->fields["viewBag[locale][$code][$fieldName]"] = [
                         'cssClass' => 'hidden',
@@ -126,11 +126,11 @@ class EventRegistry
         }
 
 
-        if (!$model->hasTranslatableAttributes()) {
+        if (!$model->hasTranslatableAttributes() || $widget->isNested) {
             return;
         }
 
-        if (!empty($widget->fields) && !$widget->isNested) {
+        if (!empty($widget->fields)) {
             $widget->fields = $this->processFormMLFields($widget->fields, $model);
         }
 
