@@ -33,7 +33,7 @@ class MLBlogCategoryModel extends Category
             }
 
             foreach ($alternateLinks as $locale => $link) {
-                $result[] = [ 
+                $result[] = [
                     'url' => $link,
                     'mtime' => $record->updated_at,
                     'alternateLinks' => $alternateLinks,
@@ -52,7 +52,7 @@ class MLBlogCategoryModel extends Category
                 }
 
                 foreach ($alternateLinks as $locale => $link) {
-                    $recordItems['items'][] = [ 
+                    $recordItems['items'][] = [
                         'url' => $link,
                         'mtime' => $record->updated_at,
                         'alternateLinks' => $alternateLinks,
