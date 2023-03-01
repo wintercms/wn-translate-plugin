@@ -15,6 +15,8 @@ use System\Classes\PluginBase;
 use System\Classes\PluginManager;
 use System\Models\File;
 use Winter\Translate\Classes\EventRegistry;
+use Winter\Translate\Classes\MLBlogCategoryModel;
+use Winter\Translate\Classes\MLBlogPostModel;
 use Winter\Translate\Classes\MLPage;
 use Winter\Translate\Classes\Translator;
 use Winter\Translate\Models\Message;
