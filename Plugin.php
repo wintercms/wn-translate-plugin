@@ -338,6 +338,7 @@ class Plugin extends PluginBase
 
     /**
      * Extend the Winter.Sitemap plugin
+     * ref. document: https://developers.google.com/search/blog/2012/05/multilingual-and-multinational-site
      */
     protected function extendWinterSitemapPlugin(): void
     {
