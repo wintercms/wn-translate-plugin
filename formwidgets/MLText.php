@@ -1,7 +1,8 @@
-<?php namespace Winter\Translate\FormWidgets;
+<?php
+
+namespace Winter\Translate\FormWidgets;
 
 use Backend\Classes\FormWidgetBase;
-use Winter\Translate\Models\Locale;
 
 /**
  * ML Text
@@ -36,8 +37,7 @@ class MLText extends FormWidgetBase
 
         if ($this->isAvailable) {
             return $this->makePartial('mltext');
-        }
-        else {
+        } else {
             return $this->renderFallbackField();
         }
     }

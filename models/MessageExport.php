@@ -1,4 +1,6 @@
-<?php namespace Winter\Translate\Models;
+<?php
+
+namespace Winter\Translate\Models;
 
 use Backend\Models\ExportModel;
 

@@ -1,10 +1,10 @@
-<?php namespace Winter\Translate\Behaviors;
+<?php
+
+namespace Winter\Translate\Behaviors;
 
 use App;
-use Winter\Translate\Classes\Translator;
 use Winter\Storm\Extension\ExtensionBase;
-use ApplicationException;
-use Exception;
+use Winter\Translate\Classes\Translator;
 
 /**
  * Translatable page URL model extension

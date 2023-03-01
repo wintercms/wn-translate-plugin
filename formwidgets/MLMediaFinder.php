@@ -1,8 +1,10 @@
-<?php namespace Winter\Translate\FormWidgets;
+<?php
+
+namespace Winter\Translate\FormWidgets;
 
 use Backend\FormWidgets\MediaFinder;
-use Winter\Translate\Models\Locale;
 use System\Classes\MediaLibrary;
+use Winter\Translate\Models\Locale;
 
 /**
  * ML MediaFinder Form Widget

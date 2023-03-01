@@ -4,15 +4,13 @@ namespace Winter\Translate\Components;
 
 use Cms\Classes\ComponentBase;
 use Event;
+use Winter\Storm\Router\Router as RainRouter;
 use Winter\Translate\Classes\Translator;
 use Winter\Translate\Models\Locale as LocaleModel;
-use Winter\Storm\Router\Router as RainRouter;
 
 class AlternateHrefLangElements extends ComponentBase
 {
-
-
-    public function componentDetails()
+    public function componentDetails(): array
     {
         return [
             'name'        => 'winter.translate::lang.alternate_hreflang.component_name',
