@@ -89,14 +89,14 @@ class MLBlogCategoryModel extends Category
 
         $paramName = substr(trim($matches[1]), 1);
 
-        $record->translateContext($locale);
-        $params = [$paramName => $record->slug];
-
         $translator = Translator::instance();
         $translator->setLocale($locale);
 
         $page->rewriteTranslatablePageUrl($locale);
         $url = $translator->getPathInLocale($page->url, $locale);
+
+        $record->translateContext($locale);
+        $params = [$paramName => $record->slug];
 
         return (new Router)->urlFromPattern($url, $params);
     }

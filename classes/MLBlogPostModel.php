@@ -129,6 +129,12 @@ class MLBlogPostModel extends Post
 
         $paramName = substr(trim($matches[1]), 1);
 
+        $translator = Translator::instance();
+        $translator->setLocale($locale);
+
+        $page->rewriteTranslatablePageUrl($locale);
+        $url = $translator->getPathInLocale($page->url, $locale);
+
         $record->translateContext($locale);
         $params = [
             $paramName => $record->slug,
@@ -136,14 +142,6 @@ class MLBlogPostModel extends Post
             'month' => $record->published_at->format('m'),
             'day'   => $record->published_at->format('d'),
         ];
-
-        $params = [$paramName => $record->slug];
-
-        $translator = Translator::instance();
-        $translator->setLocale($locale);
-
-        $page->rewriteTranslatablePageUrl($locale);
-        $url = $translator->getPathInLocale($page->url, $locale);
 
         return (new Router)->urlFromPattern($url, $params);
     }
