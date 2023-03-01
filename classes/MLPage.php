@@ -99,10 +99,6 @@ class MLCmsPage extends Page
         return (new Router)->urlFromPattern($url);
     }
 
-
-        return $result;
-    }
-
     protected static function getMLStaticPageUrl($page, $locale)
     {
         $translator = Translator::instance();
