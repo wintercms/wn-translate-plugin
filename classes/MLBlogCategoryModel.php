@@ -1,9 +1,11 @@
-<?php namespace Winter\Translate\Classes;
+<?php
 
-use Url;
+namespace Winter\Translate\Classes;
+
 use Cms\Classes\Page;
-use Winter\Storm\Router\Router;
+use Url;
 use Winter\Blog\Models\Category;
+use Winter\Storm\Router\Router;
 use Winter\Translate\Models\Locale;
 
 class MLBlogCategoryModel extends Category

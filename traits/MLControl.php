@@ -1,9 +1,10 @@
-<?php namespace Winter\Translate\Traits;
+<?php
+
+namespace Winter\Translate\Traits;
 
 use Str;
-use Winter\Translate\Models\Locale;
-use Backend\Classes\FormWidgetBase;
 use Winter\Storm\Html\Helper as HtmlHelper;
+use Winter\Translate\Models\Locale;
 
 /**
  * Generic ML Control

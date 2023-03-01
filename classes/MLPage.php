@@ -1,11 +1,11 @@
-<?php namespace Winter\Translate\Classes;
+<?php
 
-use Url;
+namespace Winter\Translate\Classes;
 
 use Cms\Classes\Page as CmsPage;
-use Winter\Storm\Router\Router;
-
+use Url;
 use Winter\Pages\Classes\Page as StaticPage;
+use Winter\Storm\Router\Router;
 use Winter\Translate\Models\Locale;
 
 class MLPage extends CmsPage
@@ -31,7 +31,7 @@ class MLPage extends CmsPage
             }
 
             foreach ($alternateLinks as $locale => $link) {
-                $result[] = [ 
+                $result[] = [
                     'url' => $link,
                     'mtime' => $page->mtime,
                     'alternateLinks' => $alternateLinks,
@@ -54,7 +54,7 @@ class MLPage extends CmsPage
             }
 
             foreach ($alternateLinks as $locale => $link) {
-                $result[] = [ 
+                $result[] = [
                     'url' => $link,
                     'mtime' => $page->mtime,
                     'alternateLinks' => $alternateLinks,
@@ -76,7 +76,7 @@ class MLPage extends CmsPage
                 }
 
                 foreach ($alternateLinks as $locale => $link) {
-                    $recordItems['items'][] = [ 
+                    $recordItems['items'][] = [
                         'url' => $link,
                         'mtime' => $page->mtime,
                         'alternateLinks' => $alternateLinks,

@@ -1,8 +1,10 @@
-<?php namespace Winter\Translate\Classes;
+<?php
 
-use Winter\Translate\Classes\Translator;
+namespace Winter\Translate\Classes;
+
 use Closure;
 use Config;
+use Winter\Translate\Classes\Translator;
 
 class LocaleMiddleware
 {

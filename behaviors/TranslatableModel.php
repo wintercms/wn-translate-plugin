@@ -1,11 +1,10 @@
-<?php namespace Winter\Translate\Behaviors;
+<?php
+
+namespace Winter\Translate\Behaviors;
 
 use Db;
 use DbDongle;
-use Winter\Translate\Classes\Translator;
 use Winter\Translate\Classes\TranslatableBehavior;
-use ApplicationException;
-use Exception;
 
 /**
  * Translatable model extension
@@ -275,10 +274,8 @@ class TranslatableModel extends TranslatableBehavior
     /**
      * Returns the class name of the model. Takes any
      * custom morphMap aliases into account.
-     *
-     * @return string
      */
-    protected function getClass()
+    protected function getClass(): string
     {
         return $this->model->getMorphClass();
     }

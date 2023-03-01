@@ -1,7 +1,8 @@
-<?php namespace Winter\Translate\Classes;
+<?php
+
+namespace Winter\Translate\Classes;
 
 use Cms\Classes\CmsCompoundObject;
-use Winter\Pages\Classes\Page as PageBase;
 
 /**
  * Represents a multi-lingual CMS compound object.

@@ -1,7 +1,8 @@
-<?php namespace Winter\Translate\FormWidgets;
+<?php
+
+namespace Winter\Translate\FormWidgets;
 
 use Backend\Classes\FormWidgetBase;
-use Winter\Translate\Models\Locale;
 
 /**
  * ML Textarea
@@ -41,8 +42,7 @@ class MLTextarea extends FormWidgetBase
 
         if ($this->isAvailable) {
             return $this->makePartial('mltextarea');
-        }
-        else {
+        } else {
             return $this->renderFallbackField();
         }
     }

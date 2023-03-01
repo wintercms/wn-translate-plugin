@@ -1,24 +1,23 @@
-<?php namespace Winter\Translate;
+<?php
 
-use App;
+namespace Winter\Translate;
+
 use Backend;
-use Config;
-use Event;
-use Lang;
-use Request;
-
+use Backend\Models\UserRole;
 use Cms\Classes\Page;
 use Cms\Classes\Theme;
 use Cms\Models\ThemeData;
-use System\Models\File;
+use Event;
+use Lang;
+use Request;
 use System\Classes\CombineAssets;
 use System\Classes\PluginBase;
 use System\Classes\PluginManager;
-
-use Winter\Translate\Models\Locale;
-use Winter\Translate\Models\Message;
+use System\Models\File;
 use Winter\Translate\Classes\EventRegistry;
+use Winter\Translate\Classes\MLPage;
 use Winter\Translate\Classes\Translator;
+use Winter\Translate\Models\Message;
 
 /**
  * Translate Plugin Information File
@@ -27,10 +26,8 @@ class Plugin extends PluginBase
 {
     /**
      * Returns information about this plugin.
-     *
-     * @return array
      */
-    public function pluginDetails()
+    public function pluginDetails(): array
     {
         return [
             'name'        => 'winter.translate::lang.plugin.name',
@@ -42,70 +39,175 @@ class Plugin extends PluginBase
         ];
     }
 
-    public function register()
+    /**
+     * Registers the components provided by this plugin.
+     */
+    public function registerComponents(): array
+    {
+        return [
+           \Winter\Translate\Components\LocalePicker::class => 'localePicker',
+           \Winter\Translate\Components\AlternateHrefLangElements::class => 'alternateHrefLangElements'
+        ];
+    }
+
+    /**
+     * Registers the permissions provided by this plugin.
+     */
+    public function registerPermissions(): array
+    {
+        return [
+            'winter.translate.manage_locales'  => [
+                'tab'   => 'winter.translate::lang.plugin.tab',
+                'label' => 'winter.translate::lang.plugin.manage_locales',
+                'roles' => [UserRole::CODE_DEVELOPER],
+            ],
+            'winter.translate.manage_messages' => [
+                'tab'   => 'winter.translate::lang.plugin.tab',
+                'label' => 'winter.translate::lang.plugin.manage_messages',
+                'roles' => [UserRole::CODE_DEVELOPER, UserRole::CODE_PUBLISHER],
+            ]
+        ];
+    }
+
+    /**
+     * Registers the settings provided by this plugin
+     */
+    public function registerSettings(): array
+    {
+        return [
+            'locales' => [
+                'label'       => 'winter.translate::lang.locale.title',
+                'description' => 'winter.translate::lang.plugin.description',
+                'icon'        => 'icon-language',
+                'url'         => Backend::url('winter/translate/locales'),
+                'order'       => 550,
+                'category'    => 'winter.translate::lang.plugin.name',
+                'permissions' => ['winter.translate.manage_locales']
+            ],
+            'messages' => [
+                'label'       => 'winter.translate::lang.messages.title',
+                'description' => 'winter.translate::lang.messages.description',
+                'icon'        => 'icon-list-alt',
+                'url'         => Backend::url('winter/translate/messages'),
+                'order'       => 551,
+                'category'    => 'winter.translate::lang.plugin.name',
+                'permissions' => ['winter.translate.manage_messages']
+            ]
+        ];
+    }
+
+    /**
+     * Register Twig extensions provided by this plugin
+     */
+    public function registerMarkupTags(): array
+    {
+        return [
+            'filters' => [
+                '_'  => function ($string, $params = [], $locale = null) {
+                    return Message::trans($string, $params, $locale);
+                },
+                '__' => function ($string, $count = 0, $params = [], $locale = null) {
+                    return Lang::choice(Message::trans($string, $params, $locale), $count, $params);
+                },
+                'transRaw'  => function ($string, $params = [], $locale = null) {
+                    return Message::transRaw($string, $params, $locale);
+                },
+                'transRawPlural' => function ($string, $count = 0, $params = [], $locale = null) {
+                    return Lang::choice(Message::transRaw($string, $params, $locale), $count, $params);
+                },
+                'localeUrl' => function ($url, $locale) {
+                    $translator = Translator::instance();
+                    $parts = parse_url($url);
+                    $path = array_get($parts, 'path');
+                    return http_build_url($parts, [
+                        'path' => '/' . $translator->getPathInLocale($path, $locale)
+                    ]);
+                },
+            ]
+        ];
+    }
+
+    /**
+     * Registers FormWidgets provided by this plugin
+     */
+    public function registerFormWidgets(): array
+    {
+        return [
+            \Winter\Translate\FormWidgets\MLText::class => 'mltext',
+            \Winter\Translate\FormWidgets\MLTextarea::class => 'mltextarea',
+            \Winter\Translate\FormWidgets\MLRichEditor::class => 'mlricheditor',
+            \Winter\Translate\FormWidgets\MLMarkdownEditor::class => 'mlmarkdowneditor',
+            \Winter\Translate\FormWidgets\MLRepeater::class => 'mlrepeater',
+            \Winter\Translate\FormWidgets\MLMediaFinder::class => 'mlmediafinder',
+        ];
+    }
+
+    /**
+     * Registers Asset Combiner bundles provided by this plugin
+     */
+    protected function registerAssetBundles()
+    {
+        CombineAssets::registerCallback(function ($combiner) {
+            $combiner->registerBundle('$/winter/translate/assets/less/messages.less');
+            $combiner->registerBundle('$/winter/translate/assets/less/multilingual.less');
+        });
+    }
+
+    /**
+     * Registers the plugin
+     */
+    public function register(): void
     {
         /*
-         * Load localized version of mail templates (akin to localized CMS content files)
+         * Register console commands
          */
-        Event::listen('mailer.beforeAddContent', function ($mailer, $message, $view, $data, $raw, $plain) {
-            return EventRegistry::instance()->findLocalizedMailViewContent($mailer, $message, $view, $data, $raw, $plain);
-        }, 1);
+        $this->registerConsoleCommand('translate.scan', \Winter\Translate\Console\ScanCommand::class);
 
-        /*
-         * Defer event with low priority to let others contribute before this registers.
-         */
-        Event::listen('backend.form.extendFieldsBefore', function($widget) {
+        $this->registerAssetBundles();
+    }
+
+    /**
+     * Boots the plugin
+     */
+    public function boot(): void
+    {
+        $this->extendBackendModule();
+        $this->extendCmsModule();
+        $this->extendSystemModule();
+        $this->extendWinterPagesPlugin();
+        $this->extendWinterSitemapPlugin();
+    }
+
+    /**
+     * Extends the Backend module with translation support
+     */
+    protected function extendBackendModule(): void
+    {
+        // Defer event with low priority to let others contribute before this registers.
+        Event::listen('backend.form.extendFieldsBefore', function ($widget) {
             EventRegistry::instance()->registerFormFieldReplacements($widget);
         }, -1);
+    }
 
+    /**
+     * Extends the CMS module with translation support
+     */
+    protected function extendCmsModule(): void
+    {
         /*
          * Handle translated page URLs
          */
         Page::extend(function($model) {
-            if (!$model->propertyExists('translatable')) {
-                $model->addDynamicProperty('translatable', []);
-            }
-            $model->translatable = array_merge($model->translatable, ['title', 'description', 'meta_title', 'meta_description']);
-            if (!$model->isClassExtendedWith('Winter\Translate\Behaviors\TranslatablePageUrl')) {
-                $model->extendClassWith('Winter\Translate\Behaviors\TranslatablePageUrl');
-            }
-            if (!$model->isClassExtendedWith('Winter\Translate\Behaviors\TranslatablePage')) {
-                $model->extendClassWith('Winter\Translate\Behaviors\TranslatablePage');
-            }
-        });
-
-        /*
-         * Add translation support to file models
-         */
-        File::extend(function ($model) {
-            if (!$model->propertyExists('translatable')) {
-                $model->addDynamicProperty('translatable', []);
-            }
-            $model->translatable = array_merge($model->translatable, ['title', 'description']);
-            if (!$model->isClassExtendedWith('Winter\Storm\Database\Behaviors\Purgeable')) {
-                $model->extendClassWith('Winter\Storm\Database\Behaviors\Purgeable');
-            }
-            if (!$model->isClassExtendedWith('Winter\Translate\Behaviors\TranslatableModel')) {
-                $model->extendClassWith('Winter\Translate\Behaviors\TranslatableModel');
-            }
+            $this->extendModel($model, ['title', 'description', 'meta_title', 'meta_description']);
         });
 
         /*
          * Add translation support to theme settings
          */
-        ThemeData::extend(static function ($model) {
-            if (!$model->propertyExists('translatable')) {
-                $model->addDynamicProperty('translatable', []);
-            }
+        ThemeData::extend(function ($model) {
+            $this->extendModel($model);
 
-            if (!$model->isClassExtendedWith('Winter\Storm\Database\Behaviors\Purgeable')) {
-                $model->extendClassWith('Winter\Storm\Database\Behaviors\Purgeable');
-            }
-            if (!$model->isClassExtendedWith('Winter\Translate\Behaviors\TranslatableModel')) {
-                $model->extendClassWith('Winter\Translate\Behaviors\TranslatableModel');
-            }
-
-            $model->bindEvent('model.afterFetch', static function() use ($model) {
+            $model->bindEvent('model.afterFetch', function() use ($model) {
                 foreach ($model->getFormFields() as $id => $field) {
                     if (!empty($field['translatable'])) {
                         $model->translatable[] = $id;
@@ -114,28 +216,53 @@ class Plugin extends PluginBase
             });
         });
 
-        /*
-         * Register console commands
-         */
-        $this->registerConsoleCommand('translate.scan', 'Winter\Translate\Console\ScanCommand');
+        // Look at session for locale using middleware
+        \Cms\Classes\CmsController::extend(function($controller) {
+            $controller->middleware(\Winter\Translate\Classes\LocaleMiddleware::class);
+        });
 
-        $this->registerAssetBundles();
-    }
-
-    public function boot()
-    {
-        /*
-         * Set the page context for translation caching with high priority.
-         */
+        // Set the page context for translation caching with high priority.
         Event::listen('cms.page.init', function($controller, $page) {
             EventRegistry::instance()->setMessageContext($page);
         }, 100);
 
-        /*
-         * Populate MenuItem properties with localized values if available
-         */
+        // Import messages defined by the theme
+        Event::listen('cms.theme.setActiveTheme', function($code) {
+            EventRegistry::instance()->importMessagesFromTheme();
+        });
+
+        // Adds language suffixes to content files.
+        Event::listen('cms.page.beforeRenderContent', function($controller, $fileName) {
+            return EventRegistry::instance()
+                ->findTranslatedContentFile($controller, $fileName)
+            ;
+        });
+    }
+
+    /**
+     * Extends the System module with translation support
+     */
+    protected function extendSystemModule(): void
+    {
+        // Add translation support to file models
+        File::extend(function ($model) {
+            $this->extendModel($model, ['title', 'description']);
+        });
+
+        // Load localized version of mail templates (akin to localized CMS content files)
+        Event::listen('mailer.beforeAddContent', function ($mailer, $message, $view, $data, $raw, $plain) {
+            return EventRegistry::instance()->findLocalizedMailViewContent($mailer, $message, $view, $data, $raw, $plain);
+        }, 1);
+    }
+
+    /**
+     * Extends the Winter.Pages plugin with translation support
+     */
+    protected function extendWinterPagesPlugin(): void
+    {
+        // Populate MenuItem properties with localized values if available
         Event::listen('pages.menu.referencesGenerated', function (&$items) {
-            $locale = App::getLocale();
+            $locale = $this->app->getLocale();
             $iterator = function ($menuItems) use (&$iterator, $locale) {
                 $result = [];
                 foreach ($menuItems as $item) {
@@ -155,37 +282,11 @@ class Plugin extends PluginBase
             $items = $iterator($items);
         });
 
-        $this->extendWinterSitemap();
-        /*
-         * Import messages defined by the theme
-         */
-        Event::listen('cms.theme.setActiveTheme', function($code) {
-            EventRegistry::instance()->importMessagesFromTheme();
-        });
-
-        /*
-         * Adds language suffixes to content files.
-         */
-        Event::listen('cms.page.beforeRenderContent', function($controller, $fileName) {
-            return EventRegistry::instance()
-                ->findTranslatedContentFile($controller, $fileName)
-            ;
-        });
-
-        /*
-         * Prune localized content files from template list
-         */
+        // Prune localized content files from template list
         Event::listen('pages.content.templateList', function($widget, $templates) {
             return EventRegistry::instance()
                 ->pruneTranslatedContentTemplates($templates)
             ;
-        });
-
-        /*
-         * Look at session for locale using middleware
-         */
-        \Cms\Classes\CmsController::extend(function($controller) {
-            $controller->middleware(\Winter\Translate\Classes\LocaleMiddleware::class);
         });
 
         /**
@@ -218,13 +319,13 @@ class Plugin extends PluginBase
                         }
 
                         // Clear the Winter.Pages caches for each dirty locale
-                        App::setLocale($locale);
+                        $this->app->setLocale($locale);
                         \Winter\Pages\Classes\Page::clearMenuCache($theme);
                         \Winter\Pages\Classes\SnippetManager::clearCache($theme);
                     }
 
                     // Restore the original locale for this request
-                    App::setLocale($currentLocale);
+                    $this->app->setLocale($currentLocale);
                 }
             };
 
@@ -233,148 +334,36 @@ class Plugin extends PluginBase
         }
     }
 
-    public function registerComponents()
-    {
-        return [
-           'Winter\Translate\Components\LocalePicker' => 'localePicker',
-           'Winter\Translate\Components\AlternateHrefLangElements' => 'alternateHrefLangElements'
-        ];
-    }
-
-    public function registerPermissions()
-    {
-        return [
-            'winter.translate.manage_locales'  => [
-                'tab'   => 'winter.translate::lang.plugin.tab',
-                'label' => 'winter.translate::lang.plugin.manage_locales'
-            ],
-            'winter.translate.manage_messages' => [
-                'tab'   => 'winter.translate::lang.plugin.tab',
-                'label' => 'winter.translate::lang.plugin.manage_messages'
-            ]
-        ];
-    }
-
-    public function registerSettings()
-    {
-        return [
-            'locales' => [
-                'label'       => 'winter.translate::lang.locale.title',
-                'description' => 'winter.translate::lang.plugin.description',
-                'icon'        => 'icon-language',
-                'url'         => Backend::url('winter/translate/locales'),
-                'order'       => 550,
-                'category'    => 'winter.translate::lang.plugin.name',
-                'permissions' => ['winter.translate.manage_locales']
-            ],
-            'messages' => [
-                'label'       => 'winter.translate::lang.messages.title',
-                'description' => 'winter.translate::lang.messages.description',
-                'icon'        => 'icon-list-alt',
-                'url'         => Backend::url('winter/translate/messages'),
-                'order'       => 551,
-                'category'    => 'winter.translate::lang.plugin.name',
-                'permissions' => ['winter.translate.manage_messages']
-            ]
-        ];
-    }
-
-    /**
-     * Register new Twig variables
-     * @return array
-     */
-    public function registerMarkupTags()
-    {
-        return [
-            'filters' => [
-                '_'  => [$this, 'translateString'],
-                '__' => [$this, 'translatePlural'],
-                'transRaw'  => [$this, 'translateRawString'],
-                'transRawPlural' => [$this, 'translateRawPlural'],
-                'localeUrl' => [$this, 'localeUrl'],
-            ]
-        ];
-    }
-
-    public function registerFormWidgets()
-    {
-        return [
-            'Winter\Translate\FormWidgets\MLText' => 'mltext',
-            'Winter\Translate\FormWidgets\MLTextarea' => 'mltextarea',
-            'Winter\Translate\FormWidgets\MLRichEditor' => 'mlricheditor',
-            'Winter\Translate\FormWidgets\MLMarkdownEditor' => 'mlmarkdowneditor',
-            'Winter\Translate\FormWidgets\MLRepeater' => 'mlrepeater',
-            'Winter\Translate\FormWidgets\MLMediaFinder' => 'mlmediafinder',
-        ];
-    }
-
-    protected function registerAssetBundles()
-    {
-        CombineAssets::registerCallback(function ($combiner) {
-            $combiner->registerBundle('$/winter/translate/assets/less/messages.less');
-            $combiner->registerBundle('$/winter/translate/assets/less/multilingual.less');
-        });
-    }
-
-    public function localeUrl($url, $locale)
-    {
-        $translator = Translator::instance();
-        $parts = parse_url($url);
-        $path = array_get($parts, 'path');
-        return http_build_url($parts, [
-            'path' => '/' . $translator->getPathInLocale($path, $locale)
-        ]);
-    }
-
-    public function translateString($string, $params = [], $locale = null)
-    {
-        return Message::trans($string, $params, $locale);
-    }
-
-    public function translatePlural($string, $count = 0, $params = [], $locale = null)
-    {
-        return Lang::choice(Message::trans($string, $params, $locale), $count, $params);
-    }
-
-    public function translateRawString($string, $params = [], $locale = null)
-    {
-        return Message::transRaw($string, $params, $locale);
-    }
-
-    public function translateRawPlural($string, $count = 0, $params = [], $locale = null)
-    {
-        return Lang::choice(Message::transRaw($string, $params, $locale), $count, $params);
-    }
-
     /**
      * Extend the Winter.Sitemap plugin
      */
-    protected function extendWinterSitemap(): void
+    protected function extendWinterSitemapPlugin(): void
     {
-        $this->pm = PluginManager::instance();
+        $pluginManager = PluginManager::instance();
+        if (!$pluginManager->exists('Winter.Sitemap')) {
+            return;
+        }
 
-        Event::listen('winter.sitemap.processMenuItems', function ($item, $url, $theme, $apiResult) {
-            if ($item->type === 'cms-page') {
-                return Classes\MLPage::resolveMenuItem($item, $url, $theme);
-            }
+        $typeMapping = [
+            MLPage::class => ['cms-page'],
+        ];
 
-            if ($this->pm->exists('Winter.Pages')) {
-                if ($item->type === 'static-page' || $item->type === 'all-static-pages') {
-                    return Classes\MLPage::resolveMenuItem($item, $url, $theme);
+        if ($pluginManager->exists('Winter.Pages')) {
+            $typeMapping[MLPage::class] = array_merge($typeMapping[MLPage::class], ['static-page', 'all-static-pages']);
+        }
+
+        if ($pluginManager->exists('Winter.Blog')) {
+            $typeMapping[MLBlogCategoryModel::class] = ['blog-category', 'all-blog-categories'];
+            $typeMapping[MLBlogPostModel::class] = ['blog-post', 'category-blog-posts', 'all-blog-posts'];
+        }
+
+        Event::listen('winter.sitemap.processMenuItems', function ($item, $url, $theme, $apiResult) use ($typeMapping) {
+            foreach ($typeMapping as $class => $types) {
+                if (in_array($item->type, $types)) {
+                    return $class::resolveMenuItem($item, $url, $theme);
                 }
             }
 
-            if ($this->pm->exists('Winter.blog')) {
-                switch ($item->type) {
-                    case 'blog-category':
-                    case 'all-blog-categories':
-                        return Classes\MLBlogCategoryModel::resolveMenuItem($item, $url, $theme);
-                    case 'blog-post':
-                    case 'category-blog-posts':
-                    case 'all-blog-posts':
-                        return Classes\MLBlogPostModel::resolveMenuItem($item, $url, $theme);
-                }
-            }
             return false;
         });
 
@@ -401,5 +390,22 @@ class Plugin extends PluginBase
                 }
             }
         );
+    }
+
+    /**
+     * Helper method to extend the provided model with translation support
+     */
+    public function extendModel($model, array $translatableAttributes = [])
+    {
+        if (!$model->propertyExists('translatable')) {
+            $model->addDynamicProperty('translatable', []);
+        }
+        $model->translatable = array_merge($model->translatable, $translatableAttributes);
+        if (!$model->isClassExtendedWith('Winter\Translate\Behaviors\TranslatablePageUrl')) {
+            $model->extendClassWith('Winter\Translate\Behaviors\TranslatablePageUrl');
+        }
+        if (!$model->isClassExtendedWith('Winter\Translate\Behaviors\TranslatablePage')) {
+            $model->extendClassWith('Winter\Translate\Behaviors\TranslatablePage');
+        }
     }
 }

@@ -1,10 +1,11 @@
-<?php namespace Winter\Translate\Models;
+<?php
+
+namespace Winter\Translate\Models;
 
 use Backend\Models\ImportModel;
 
 class MessageImport extends ImportModel
 {
-
     public $rules = [
         'code' => 'required'
     ];
@@ -49,7 +50,7 @@ class MessageImport extends ImportModel
                         $default = (isset($result[$defaultName]) && !empty($result[$defaultName])) ? $result[$defaultName] : $code;
                         $result[$defaultName] = $default;
                     }
-                    
+
                     // Prevent empty strings from being imported
                     foreach ($result as $key => $translation) {
                         if (empty($translation)) {

@@ -1,10 +1,12 @@
-<?php namespace Winter\Translate\FormWidgets;
+<?php
 
-use Backend\FormWidgets\Repeater;
-use Winter\Translate\Models\Locale;
-use Winter\Storm\Html\Helper as HtmlHelper;
+namespace Winter\Translate\FormWidgets;
+
 use ApplicationException;
+use Backend\FormWidgets\Repeater;
 use Request;
+use Winter\Storm\Html\Helper as HtmlHelper;
+use Winter\Translate\Models\Locale;
 
 /**
  * ML Repeater

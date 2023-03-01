@@ -1,9 +1,11 @@
-<?php namespace Winter\Translate\Models;
+<?php
 
-use Lang;
-use Model;
+namespace Winter\Translate\Models;
+
 use Cache;
 use Config;
+use Lang;
+use Model;
 
 /**
  * Message Model
