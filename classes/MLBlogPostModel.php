@@ -44,7 +44,7 @@ class MLBlogPostModel extends Post
         } elseif ($item->type == 'all-blog-posts') {
             $recordItems = [];
 
-            $records = self::orderBy('title')->get();
+            $records = self::isPublished()->orderBy('title')->get();
             foreach ($records as $record) {
                 $alternateLinks = [];
                 foreach ($locales as $locale => $name) {
