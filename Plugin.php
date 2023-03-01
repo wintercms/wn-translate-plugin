@@ -370,13 +370,7 @@ class Plugin extends PluginBase
         });
 
         Event::listen('winter.sitemap.makeUrlSet', function ($definition, $xml, $urlSet) {
-            if (Request::has('preview')) {
-                // hack to force browser to properly render the XML sitemap
-                $nsUrl = 'xmlns:xhtml-namespace-definition-URL-here';
-            } else {
-                $nsUrl = 'http://www.w3.org/1999/xhtml';
-            }
-            $urlSet->setAttribute('xmlns:xhtml', $nsUrl);
+            $urlSet->setAttribute('xmlns:xhtml', 'http://www.w3.org/1999/xhtml');
         });
 
         Event::listen('winter.sitemap.makeUrlElement',
