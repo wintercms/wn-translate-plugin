@@ -63,6 +63,10 @@ class ThemeScanner
     public function scanThemeConfigForMessages()
     {
         $theme = Theme::getActiveTheme();
+        if (!$theme) {
+            return;
+        }
+        
         $config = $theme->getConfigArray('translate');
 
         if (!count($config)) {
