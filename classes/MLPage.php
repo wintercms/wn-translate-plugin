@@ -38,6 +38,7 @@ class MLPage extends CmsPage
                 ];
             }
             return $result;
+
         } elseif ($item->type == 'static-page') {
             if (!$item->reference) {
                 return;
