@@ -41,6 +41,7 @@ class MLBlogCategoryModel extends Category
                     'alternateLinks' => $alternateLinks,
                 ];
             }
+
         } elseif ($item->type == 'all-blog-categories') {
             $recordItems = [];
 

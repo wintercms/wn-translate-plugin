@@ -63,6 +63,7 @@ class MLBlogPostModel extends Post
                 }
             }
             $result[] = $recordItems;
+
         } elseif ($item->type == 'category-blog-posts') {
             $recordItems = [];
 
