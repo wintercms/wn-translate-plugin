@@ -22,7 +22,7 @@ class MLBlogPostModel extends Post
                 return;
             }
 
-            $record = self::find($item->reference);
+            $record = Post::find($item->reference);
             if (!$record) {
                 return;
             }
@@ -45,7 +45,7 @@ class MLBlogPostModel extends Post
         } elseif ($item->type == 'all-blog-posts') {
             $recordItems = [];
 
-            $records = self::isPublished()->orderBy('title')->get();
+            $records = Post::isPublished()->orderBy('title')->get();
             foreach ($records as $record) {
                 $alternateLinks = [];
                 foreach ($locales as $locale => $name) {

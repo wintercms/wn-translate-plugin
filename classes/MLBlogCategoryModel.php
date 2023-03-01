@@ -22,7 +22,7 @@ class MLBlogCategoryModel extends Category
                 return;
             }
 
-            $record = self::find($item->reference);
+            $record = Category::find($item->reference);
             if (!$record) {
                 return;
             }
@@ -45,7 +45,7 @@ class MLBlogCategoryModel extends Category
         } elseif ($item->type == 'all-blog-categories') {
             $recordItems = [];
 
-            $records = self::orderBy('name')->get();
+            $records = Category::orderBy('name')->get();
             foreach ($records as $record) {
                 $alternateLinks = [];
                 foreach ($locales as $locale => $name) {
