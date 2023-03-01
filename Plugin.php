@@ -376,18 +376,20 @@ class Plugin extends PluginBase
 
     public function extendWinterSitemap()
     {
+        $this->pm = PluginManager::instance();
+
         Event::listen('winter.sitemap.processMenuItems', function ($item, $url, $theme, $apiResult) {
             if ($item->type === 'cms-page') {
-                return Classes\MLCmsPage::resolveMenuItem($item, $url, $theme);
+                return Classes\MLPage::resolveMenuItem($item, $url, $theme);
             }
 
-            if (PluginManager::instance()->exists('Winter.Pages')) {
-                if ($item->type === 'static-page') {
-                    return Classes\MLStaticPage::resolveMenuItem($item, $url, $theme);
+            if ($this->pm->exists('Winter.Pages')) {
+                if ($item->type === 'static-page' || $item->type === 'all-static-pages') {
+                    return Classes\MLPage::resolveMenuItem($item, $url, $theme);
                 }
             }
 
-            if (PluginManager::instance()->exists('Winter.blog')) {
+            if ($this->pm->exists('Winter.blog')) {
                 switch ($item->type) {
                     case 'blog-category':
                     case 'all-blog-categories':
@@ -402,7 +404,7 @@ class Plugin extends PluginBase
         });
 
         Event::listen('winter.sitemap.makeUrlSet', function ($definition, $xml, $urlSet) {
-            if (Config::get('app.debug', false)) {
+            if (Request::has('preview')) {
                 // hack to force browser to properly render the XML sitemap
                 $nsUrl = 'xmlns:xhtml-namespace-definition-URL-here';
             } else {
