@@ -8,7 +8,7 @@ use Winter\Storm\Router\Router;
 use Winter\Pages\Classes\Page as StaticPage;
 use Winter\Translate\Models\Locale;
 
-class MLCmsPage extends Page
+class MLPage extends CmsPage
 {
     public static function resolveMenuItem($item, $url, $theme)
     {
