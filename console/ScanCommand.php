@@ -2,7 +2,7 @@
 
 namespace Winter\Translate\Console;
 
-use Winter\Storm\Console\Command;
+use Illuminate\Console\Command;
 use Winter\Translate\Classes\ThemeScanner;
 use Winter\Translate\Models\Message;
 
