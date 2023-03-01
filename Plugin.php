@@ -346,7 +346,10 @@ class Plugin extends PluginBase
         return Lang::choice(Message::transRaw($string, $params, $locale), $count, $params);
     }
 
-    public function extendWinterSitemap()
+    /**
+     * Extend the Winter.Sitemap plugin
+     */
+    protected function extendWinterSitemap(): void
     {
         $this->pm = PluginManager::instance();
 
