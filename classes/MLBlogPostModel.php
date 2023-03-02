@@ -10,7 +10,7 @@ use Winter\Storm\Database\NestedTreeScope;
 use Winter\Storm\Router\Router;
 use Winter\Translate\Models\Locale;
 
-class MLBlogPostModel extends Post
+class MLBlogPostModel
 {
     public static function resolveMenuItem($item, $url, $theme)
     {

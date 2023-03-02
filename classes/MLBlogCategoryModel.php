@@ -8,7 +8,7 @@ use Winter\Blog\Models\Category;
 use Winter\Storm\Router\Router;
 use Winter\Translate\Models\Locale;
 
-class MLBlogCategoryModel extends Category
+class MLBlogCategoryModel
 {
     public static function resolveMenuItem($item, $url, $theme)
     {
