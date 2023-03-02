@@ -370,10 +370,6 @@ class Plugin extends PluginBase
             return false;
         });
 
-        Event::listen('winter.sitemap.makeUrlSet', function ($definition, $xml, $urlSet) {
-            $urlSet->setAttribute('xmlns:xhtml', 'http://www.w3.org/1999/xhtml');
-        });
-
         Event::listen('winter.sitemap.makeUrlElement',
             function ($definition, $xml, $pageUrl, $lastModified, $itemDefinition, $itemInfo, $itemReference, $urlElement) {
                 if (isset($itemInfo['alternateLinks'])) {
