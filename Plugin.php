@@ -7,13 +7,16 @@ use Backend\Models\UserRole;
 use Cms\Classes\Page;
 use Cms\Classes\Theme;
 use Cms\Models\ThemeData;
+use DOMDocument;
+use DOMElement;
 use Event;
 use Lang;
-use Request;
 use System\Classes\CombineAssets;
 use System\Classes\PluginBase;
 use System\Classes\PluginManager;
 use System\Models\File;
+use Winter\Sitemap\Classes\DefinitionItem;
+use Winter\Sitemap\Models\Definition;
 use Winter\Translate\Classes\EventRegistry;
 use Winter\Translate\Classes\MLPage;
 use Winter\Translate\Classes\Translator;
@@ -350,15 +353,12 @@ class Plugin extends PluginBase
             if ($item->type === 'cms-page') {
                 return MLPage::resolveMenuItem($item, $url, $theme);
             }
-            return false;
         });
 
+        $defaultLocale = Locale::getDefault();
         Event::listen('winter.sitemap.addItem',
-            function ($definition, $xml, $pageUrl, $lastModified, $itemDefinition, $itemInfo, $itemReference, $urlElement) {
-                $defaultLocale = Locale::getDefault();
-
+            function (DefinitionItem $item, array $itemInfo, Definition $definition, DOMDocument $xml, DOMElement $urlSet, DOMElement $urlElement) use ($defaultLocale) {
                 if (isset($itemInfo['alternateLinks'])) {
-                    $urlSet = $urlElement->parentNode;
                     foreach ($itemInfo['alternateLinks'] as $locale => $altUrl) {
                         $linkElement = $xml->createElement('xhtml:link');
                         $linkElement->setAttribute('rel', 'alternate');
