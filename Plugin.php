@@ -15,10 +15,9 @@ use System\Classes\PluginBase;
 use System\Classes\PluginManager;
 use System\Models\File;
 use Winter\Translate\Classes\EventRegistry;
-use Winter\Translate\Classes\MLBlogCategoryModel;
-use Winter\Translate\Classes\MLBlogPostModel;
 use Winter\Translate\Classes\MLPage;
 use Winter\Translate\Classes\Translator;
+use Winter\Translate\Models\Locale;
 use Winter\Translate\Models\Message;
 
 /**
@@ -347,38 +346,34 @@ class Plugin extends PluginBase
             return;
         }
 
-        $typeMapping = [
-            MLPage::class => ['cms-page'],
-        ];
-
-        if ($pluginManager->exists('Winter.Pages')) {
-            $typeMapping[MLPage::class] = array_merge($typeMapping[MLPage::class], ['static-page', 'all-static-pages']);
-        }
-
-        if ($pluginManager->exists('Winter.Blog')) {
-            $typeMapping[MLBlogCategoryModel::class] = ['blog-category', 'all-blog-categories'];
-            $typeMapping[MLBlogPostModel::class] = ['blog-post', 'category-blog-posts', 'all-blog-posts'];
-        }
-
-        Event::listen('winter.sitemap.processMenuItems', function ($item, $url, $theme, $apiResult) use ($typeMapping) {
-            foreach ($typeMapping as $class => $types) {
-                if (in_array($item->type, $types)) {
-                    return $class::resolveMenuItem($item, $url, $theme);
-                }
+        Event::listen('winter.sitemap.processMenuItems', function ($item, $url, $theme, $apiResult) {
+            if ($item->type === 'cms-page') {
+                return MLPage::resolveMenuItem($item, $url, $theme);
             }
-
             return false;
         });
 
-        Event::listen('winter.sitemap.makeUrlElement',
+        Event::listen('winter.sitemap.addItem',
             function ($definition, $xml, $pageUrl, $lastModified, $itemDefinition, $itemInfo, $itemReference, $urlElement) {
+                $defaultLocale = Locale::getDefault();
+
                 if (isset($itemInfo['alternateLinks'])) {
+                    $urlSet = $urlElement->parentNode;
                     foreach ($itemInfo['alternateLinks'] as $locale => $altUrl) {
                         $linkElement = $xml->createElement('xhtml:link');
                         $linkElement->setAttribute('rel', 'alternate');
                         $linkElement->setAttribute('hreflang', $locale);
                         $linkElement->setAttribute('href', $altUrl);
                         $urlElement->appendChild($linkElement);
+                    }
+                    foreach ($itemInfo['alternateLinks'] as $locale => $altUrl) {
+                        if ($locale === $defaultLocale->code) {
+                            continue;
+                        }
+                        $newElement = $urlElement->cloneNode(true);
+                        $loc = $newElement->getElementsByTagName('loc')->item(0);
+                        $loc->nodeValue = $itemInfo['alternateLinks'][$locale];
+                        $urlSet->appendChild($newElement);
                     }
                 }
             }
