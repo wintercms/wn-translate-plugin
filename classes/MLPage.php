@@ -38,7 +38,7 @@ class MLPage
                 if ($locale === $defaultLocale->code) {
                     $pageUrl = $result['url'];
                 } else {
-                    $pageUrl = static::getMLPageUrl($page, $locale);
+                    $pageUrl = static::getLocalizedPageUrl($page, $locale);
                 }
                 if ($pageUrl) {
                     $alternateLinks[$locale] = Url::to($pageUrl);
@@ -55,7 +55,10 @@ class MLPage
         return $result;
     }
 
-    protected static function getMLPageUrl($page, $locale)
+    /**
+     * Gets the localized URL for the provided page
+     */
+    protected static function getLocalizedPageUrl(CmsPage $page, string $locale): string
     {
         $translator = Translator::instance();
 
