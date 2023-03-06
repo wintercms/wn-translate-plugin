@@ -353,6 +353,7 @@ class Plugin extends PluginBase
             if ($item->type === 'cms-page') {
                 return MLPage::resolveMenuItem($item, $url, $theme);
             }
+            return false;
         });
 
         $defaultLocale = Locale::getDefault();
