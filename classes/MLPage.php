@@ -3,6 +3,7 @@
 namespace Winter\Translate\Classes;
 
 use Cms\Classes\Page as CmsPage;
+use Cms\Classes\Theme;
 use Url;
 use Winter\Storm\Router\Router;
 use Winter\Translate\Models\Locale;
@@ -13,8 +14,9 @@ class MLPage
      * Resolves a menu item to a CMS page with support for translated pages
      *
      * @see Cms\Classes\Page::resolveMenuItem()
+     * @param \Winter\Sitemap\Classes\DefinitionItem|\Winter\Pages\Classes\MenuItem $item Specifies the menu item.
      */
-    public static function resolveMenuItem($item, $url, $theme)
+    public static function resolveMenuItem(object $item, string $url, Theme $theme): ?array
     {
         $result = CmsPage::resolveMenuItem($item, $url, $theme);
 
