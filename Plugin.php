@@ -349,12 +349,12 @@ class Plugin extends PluginBase
             return;
         }
 
-        Event::listen('winter.sitemap.processMenuItems', function ($item, $url, $theme, $apiResult) {
+        // Ensure that CMS Pages include their alternateLinks data when generating the sitemap
+        Event::listen('pages.menuitem.resolveItem', function ($type, $item, $url, $theme) {
             if ($item->type === 'cms-page') {
                 return MLPage::resolveMenuItem($item, $url, $theme);
             }
-            return false;
-        });
+        }, 1);
 
         $defaultLocale = Locale::getDefault();
         Event::listen('winter.sitemap.addItem',
