@@ -2,7 +2,6 @@
 
 namespace Winter\Translate\Classes;
 
-use Cms\Classes\Controller;
 use Cms\Classes\Page as CmsPage;
 use Url;
 use Winter\Storm\Router\Router;
@@ -10,28 +9,19 @@ use Winter\Translate\Models\Locale;
 
 class MLPage
 {
+    /**
+     * Resolves a menu item to a CMS page with support for translated pages
+     *
+     * @see Cms\Classes\Page::resolveMenuItem()
+     */
     public static function resolveMenuItem($item, $url, $theme)
     {
-        $result = [];
-        $locales = Locale::listEnabled();
-        $defaultLocale = Locale::getDefault();
+        $result = CmsPage::resolveMenuItem($item, $url, $theme);
 
-        if ($item->type === 'cms-page') {
-            if (!$item->reference) {
-                return;
-            }
-            if (!$page = CmsPage::loadCached($theme, $item->reference)) {
-                return;
-            }
-
-            $controller = Controller::getController() ?: new Controller;
-            $pageUrl = $controller->pageUrl($item->reference, [], false);
-
-            $result = [
-                'url' => $pageUrl,
-                'isActive' => rtrim($pageUrl, '/') === rtrim($url, '/'),
-                'mtime' => $page->mtime,
-            ];
+        if ($result) {
+            $page = CmsPage::loadCached($theme, $item->reference);
+            $locales = Locale::listEnabled();
+            $defaultLocale = Locale::getDefault();
 
             $alternateLinks = [];
             foreach ($locales as $locale => $name) {
@@ -48,10 +38,8 @@ class MLPage
             if ($alternateLinks) {
                 $result['alternateLinks'] = $alternateLinks;
             }
-
-            return $result;
-
         }
+
         return $result;
     }
 
