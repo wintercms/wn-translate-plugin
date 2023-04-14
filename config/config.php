@@ -11,6 +11,7 @@ return [
     | Related to https://github.com/rainlab/translate-plugin/issues/231
     |
     */
+
     'forceDefaultLocale' => env('TRANSLATE_FORCE_LOCALE', null),
 
     /*
@@ -21,6 +22,7 @@ return [
     | Specifies if the default locale be prefixed by the plugin.
     |
     */
+
     'prefixDefaultLocale' => env('TRANSLATE_PREFIX_LOCALE', true),
 
     /*
@@ -34,6 +36,7 @@ return [
     | For example, 43200 for 30 days or 525600 for one year.
     |
     */
+
     'cacheTimeout' => env('TRANSLATE_CACHE_TIMEOUT', 1440),
 
     /*
@@ -45,6 +48,7 @@ return [
     | (i.e. /en/original-route) when enabled.
     |
     */
+
     'disableLocalePrefixRoutes' => env('TRANSLATE_DISABLE_PREFIX_ROUTES', false),
 
 ];

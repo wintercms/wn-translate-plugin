@@ -1,4 +1,6 @@
-<?php namespace Winter\Translate\Classes;
+<?php
+
+namespace Winter\Translate\Classes;
 
 /**
  * Represents a multi-lingual Static Page object.

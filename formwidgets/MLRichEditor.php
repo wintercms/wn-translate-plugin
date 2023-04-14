@@ -1,4 +1,6 @@
-<?php namespace Winter\Translate\FormWidgets;
+<?php
+
+namespace Winter\Translate\FormWidgets;
 
 use Backend\FormWidgets\RichEditor;
 use Winter\Translate\Models\Locale;

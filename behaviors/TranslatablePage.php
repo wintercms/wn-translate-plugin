@@ -1,4 +1,6 @@
-<?php namespace Winter\Translate\Behaviors;
+<?php
+
+namespace Winter\Translate\Behaviors;
 
 use App;
 use Winter\Translate\Classes\TranslatableBehavior;
@@ -128,8 +130,7 @@ class TranslatablePage extends TranslatableBehavior
         $localeAttr = sprintf('viewBag.locale%s.%s', ucfirst($key), $locale);
         if (!$value) {
             array_forget($this->model->attributes, $localeAttr);
-        }
-        else {
+        } else {
             array_set($this->model->attributes, $localeAttr, $value);
         }
     }

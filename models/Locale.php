@@ -1,10 +1,12 @@
-<?php namespace Winter\Translate\Models;
+<?php
 
-use Lang;
-use Cache;
-use Model;
-use Config;
+namespace Winter\Translate\Models;
+
 use ApplicationException;
+use Cache;
+use Config;
+use Lang;
+use Model;
 use ValidationException;
 
 /**

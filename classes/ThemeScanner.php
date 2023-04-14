@@ -1,13 +1,15 @@
-<?php namespace Winter\Translate\Classes;
+<?php
 
-use Cms\Classes\Page;
-use Cms\Classes\Theme;
+namespace Winter\Translate\Classes;
+
 use Cms\Classes\Layout;
+use Cms\Classes\Page;
 use Cms\Classes\Partial;
-use Winter\Translate\Models\Message;
-use Winter\Translate\Classes\Translator;
-use System\Models\MailTemplate;
+use Cms\Classes\Theme;
 use Event;
+use System\Models\MailTemplate;
+use Winter\Translate\Classes\Translator;
+use Winter\Translate\Models\Message;
 
 /**
  * Theme scanner class
@@ -66,7 +68,7 @@ class ThemeScanner
         if (!$theme) {
             return;
         }
-        
+
         $config = $theme->getConfigArray('translate');
 
         if (!count($config)) {

@@ -1,17 +1,19 @@
-<?php namespace Winter\Translate\Classes;
+<?php
+
+namespace Winter\Translate\Classes;
 
 use App;
+use Cms\Classes\Content;
+use Cms\Classes\Page;
 use Exception;
 use File;
 use Str;
-use Cms\Classes\Page;
-use Cms\Classes\Content;
 use System\Classes\MailManager;
 use System\Classes\PluginManager;
-use Winter\Translate\Models\Message;
-use Winter\Translate\Models\Locale as LocaleModel;
-use Winter\Translate\Classes\Translator;
 use Winter\Translate\Classes\ThemeScanner;
+use Winter\Translate\Classes\Translator;
+use Winter\Translate\Models\Locale as LocaleModel;
+use Winter\Translate\Models\Message;
 
 /**
  * Registrant class for bootstrapping events

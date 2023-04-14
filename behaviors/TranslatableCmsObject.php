@@ -1,9 +1,11 @@
-<?php namespace Winter\Translate\Behaviors;
+<?php
 
-use Winter\Translate\Models\Locale;
-use Winter\Translate\Classes\Translator;
+namespace Winter\Translate\Behaviors;
+
+use Winter\Storm\Halcyon\Model as HalcyonModel;
+use Winter\Translate\Classes\MLCmsObject;
 use Winter\Translate\Classes\TranslatableBehavior;
-use Winter\Storm\Html\Helper as HtmlHelper;
+use Winter\Translate\Models\Locale;
 
 /**
  * Translatable CMS Object extension
@@ -23,7 +25,6 @@ use Winter\Storm\Html\Helper as HtmlHelper;
  */
 class TranslatableCmsObject extends TranslatableBehavior
 {
-
     /**
      * @var array Data store for translated viewbag attributes.
      */
@@ -206,9 +207,8 @@ class TranslatableCmsObject extends TranslatableBehavior
 
     /**
      * Internal method, prepare the form model object
-     * @return Model
      */
-    protected function createModel()
+    protected function createModel(): HalcyonModel
     {
         $class = $this->getTranslatableModelClass();
         $model = new $class;
@@ -216,15 +216,14 @@ class TranslatableCmsObject extends TranslatableBehavior
     }
 
     /**
-     * Returns a collection of fields that will be hashed.
-     * @return array
+     * Returns the translateable model class name.
      */
-    public function getTranslatableModelClass()
+    public function getTranslatableModelClass(): string
     {
         if (property_exists($this->model, 'translatableModel')) {
             return $this->model->translatableModel;
         }
 
-        return 'Winter\Translate\Classes\MLCmsObject';
+        return MLCmsObject::class;
     }
 }
