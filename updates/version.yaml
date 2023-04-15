@@ -117,3 +117,10 @@
     - "!!! Potential breaking change: Message codes are now MD5 hashed versions of the original string. See https://github.com/wintercms/wn-translate-plugin/pull/2"
     - v2.1.0/migrate_message_code.php
 "2.1.1": Added support for Winter CMS 1.2.
+"2.1.2":
+    - "Add Vietnamese translations"
+    - "Add composer replace config."
+    - "Add MultiLang capability to Winter.Sitemap."
+    - "Add addTranslatableAttributes() method to TranslatableBehavior."
+    - "Fix dynamically adding fields to non-existent tab."
+    - "Fix translations conflicting between nested fields and translatable root fields of the same name."
