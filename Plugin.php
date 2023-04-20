@@ -11,6 +11,7 @@ use DOMDocument;
 use DOMElement;
 use Event;
 use Lang;
+use Model;
 use System\Classes\CombineAssets;
 use System\Classes\PluginBase;
 use System\Classes\PluginManager;
@@ -211,10 +212,6 @@ class Plugin extends PluginBase
         ThemeData::extend(function ($model) {
             $this->extendModel($model);
 
-            if (!$model->isClassExtendedWith('Winter\Translate\Behaviors\TranslatableModel')) {
-                $model->extendClassWith('Winter\Translate\Behaviors\TranslatableModel');
-            }
-
             $model->bindEvent('model.afterFetch', function() use ($model) {
                 foreach ($model->getFormFields() as $id => $field) {
                     if (!empty($field['translatable'])) {
@@ -399,6 +396,11 @@ class Plugin extends PluginBase
         }
         if (!$model->isClassExtendedWith('Winter\Translate\Behaviors\TranslatablePage')) {
             $model->extendClassWith('Winter\Translate\Behaviors\TranslatablePage');
+        }
+        if ($model instanceof Model) {
+            if (!$model->isClassExtendedWith('Winter\Translate\Behaviors\TranslatableModel')) {
+                $model->extendClassWith('Winter\Translate\Behaviors\TranslatableModel');
+            }
         }
     }
 }
