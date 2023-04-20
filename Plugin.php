@@ -211,6 +211,10 @@ class Plugin extends PluginBase
         ThemeData::extend(function ($model) {
             $this->extendModel($model);
 
+            if (!$model->isClassExtendedWith('Winter\Translate\Behaviors\TranslatableModel')) {
+                $model->extendClassWith('Winter\Translate\Behaviors\TranslatableModel');
+            }
+
             $model->bindEvent('model.afterFetch', function() use ($model) {
                 foreach ($model->getFormFields() as $id => $field) {
                     if (!empty($field['translatable'])) {
