@@ -13,9 +13,9 @@ use Winter\Translate\Models\Locale as LocaleModel;
 class Locales extends Controller
 {
     public $implement = [
-        Backend\Behaviors\ListController::class,
-        Backend\Behaviors\FormController::class,
-        Backend\Behaviors\ReorderController::class,
+        \Backend\Behaviors\ListController::class,
+        \Backend\Behaviors\FormController::class,
+        \Backend\Behaviors\ReorderController::class,
     ];
 
     public $requiredPermissions = ['winter.translate.manage_locales'];
