@@ -16,6 +16,7 @@ use System\Classes\CombineAssets;
 use System\Classes\PluginBase;
 use System\Classes\PluginManager;
 use System\Models\File;
+use System\Models\MailTemplate;
 use Winter\Sitemap\Classes\DefinitionItem;
 use Winter\Sitemap\Models\Definition;
 use Winter\Translate\Classes\EventRegistry;
@@ -252,6 +253,10 @@ class Plugin extends PluginBase
         // Add translation support to file models
         File::extend(function ($model) {
             $this->extendModel($model, ['title', 'description']);
+        });
+
+        MailTemplate::extend(function ($model) {
+            $this->extendModel($model, ['subject', 'description', 'content_html', 'content_text']);
         });
 
         // Load localized version of mail templates (akin to localized CMS content files)
