@@ -172,7 +172,12 @@ class EventRegistry
         }
 
         foreach ($fields as $name => $config) {
-            if (!array_key_exists($name, $translatable)) {
+            $fieldName = $name;
+            if (str_contains($name, '@')) {
+                // apply to fields with any context
+                list ($fieldName, $context) = explode('@', $name);
+            }
+            if (!array_key_exists($fieldName, $translatable)) {
                 continue;
             }
 
