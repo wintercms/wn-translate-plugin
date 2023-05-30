@@ -1,11 +1,13 @@
-<?php namespace Winter\Translate\Classes;
+<?php
+
+namespace Winter\Translate\Classes;
 
 use App;
 use Cache;
+use Config;
+use Request;
 use Schema;
 use Session;
-use Request;
-use Config;
 use Winter\Translate\Models\Locale;
 
 /**

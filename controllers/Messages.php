@@ -1,28 +1,27 @@
-<?php namespace Winter\Translate\Controllers;
+<?php
+
+namespace Winter\Translate\Controllers;
 
 use Backend\Behaviors\ImportExportController;
-use Lang;
-use Flash;
-use Winter\Translate\Models\MessageExport;
-use Request;
-use BackendMenu;
 use Backend\Classes\Controller;
-use Winter\Translate\Models\Message;
-use Winter\Translate\Models\Locale;
-use Winter\Translate\Classes\ThemeScanner;
-use System\Helpers\Cache as CacheHelper;
+use BackendMenu;
+use Flash;
+use Lang;
 use System\Classes\SettingsManager;
+use System\Helpers\Cache as CacheHelper;
+use Winter\Translate\Classes\ThemeScanner;
+use Winter\Translate\Models\Locale;
+use Winter\Translate\Models\Message;
+use Winter\Translate\Models\MessageExport;
 
 /**
- * Messages Back-end Controller
+ * Messages Backend Controller
  */
 class Messages extends Controller
 {
     public $implement = [
         ImportExportController::class,
     ];
-
-    public $importExportConfig = 'config_import_export.yaml';
 
     public $requiredPermissions = ['winter.translate.manage_messages'];
 
@@ -74,7 +73,7 @@ class Messages extends Controller
         }
 
         ThemeScanner::scan();
-        
+
         if (post('purge_deleted_messages', false)) {
             Message::where('found', 0)->delete();
         }

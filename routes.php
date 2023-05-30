@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Foundation\Application as Laravel;
-use Winter\Translate\Models\Message;
 use Winter\Translate\Classes\Translator;
+use Winter\Translate\Models\Message;
 
 /*
  * Adds a custom route to check for the locale prefix.

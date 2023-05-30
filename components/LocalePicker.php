@@ -1,13 +1,15 @@
-<?php namespace Winter\Translate\Components;
+<?php
 
-use Event;
-use Config;
-use Request;
-use Redirect;
-use Winter\Translate\Models\Locale as LocaleModel;
-use Winter\Translate\Classes\Translator;
-use Winter\Storm\Router\Router as RainRouter;
+namespace Winter\Translate\Components;
+
 use Cms\Classes\ComponentBase;
+use Config;
+use Event;
+use Redirect;
+use Request;
+use Winter\Storm\Router\Router as RainRouter;
+use Winter\Translate\Classes\Translator;
+use Winter\Translate\Models\Locale as LocaleModel;
 
 class LocalePicker extends ComponentBase
 {
@@ -36,7 +38,7 @@ class LocalePicker extends ComponentBase
      */
     public $oldLocale;
 
-    public function componentDetails()
+    public function componentDetails(): array
     {
         return [
             'name'        => 'winter.translate::lang.locale_picker.component_name',
@@ -44,7 +46,7 @@ class LocalePicker extends ComponentBase
         ];
     }
 
-    public function defineProperties()
+    public function defineProperties(): array
     {
         return [
             'forceUrl' => [

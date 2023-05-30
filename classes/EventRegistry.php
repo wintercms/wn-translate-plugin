@@ -1,17 +1,19 @@
-<?php namespace Winter\Translate\Classes;
+<?php
+
+namespace Winter\Translate\Classes;
 
 use App;
+use Cms\Classes\Content;
+use Cms\Classes\Page;
 use Exception;
 use File;
 use Str;
-use Cms\Classes\Page;
-use Cms\Classes\Content;
 use System\Classes\MailManager;
 use System\Classes\PluginManager;
-use Winter\Translate\Models\Message;
-use Winter\Translate\Models\Locale as LocaleModel;
-use Winter\Translate\Classes\Translator;
 use Winter\Translate\Classes\ThemeScanner;
+use Winter\Translate\Classes\Translator;
+use Winter\Translate\Models\Locale as LocaleModel;
+use Winter\Translate\Models\Message;
 
 /**
  * Registrant class for bootstrapping events
@@ -53,16 +55,16 @@ class EventRegistry
             $defaultLocale = LocaleModel::getDefault();
             $availableLocales = LocaleModel::listAvailable();
             $fieldsToTranslate = ['title', 'url'];
-            
+
             // Replace specified fields with multilingual versions
             foreach ($fieldsToTranslate as $fieldName) {
                 $widget->fields[$fieldName]['type'] = 'mltext';
-                
+
                 foreach ($availableLocales as $code => $locale) {
                     if (!$defaultLocale || $defaultLocale->code === $code) {
                         continue;
                     }
-                    
+
                     // Add data locker fields for the different locales under the `viewBag[locale]` property
                     $widget->fields["viewBag[locale][$code][$fieldName]"] = [
                         'cssClass' => 'hidden',
@@ -126,11 +128,11 @@ class EventRegistry
         }
 
 
-        if (!$model->hasTranslatableAttributes()) {
+        if (!$model->hasTranslatableAttributes() || $widget->isNested) {
             return;
         }
 
-        if (!empty($widget->fields) && !$widget->isNested) {
+        if (!empty($widget->fields)) {
             $widget->fields = $this->processFormMLFields($widget->fields, $model);
         }
 
@@ -171,7 +173,12 @@ class EventRegistry
         }
 
         foreach ($fields as $name => $config) {
-            if (!array_key_exists($name, $translatable)) {
+            $fieldName = $name;
+            if (str_contains($name, '@')) {
+                // apply to fields with any context
+                list ($fieldName, $context) = explode('@', $name);
+            }
+            if (!array_key_exists($fieldName, $translatable)) {
                 continue;
             }
 

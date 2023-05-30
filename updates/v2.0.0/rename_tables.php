@@ -1,7 +1,9 @@
 <?php namespace Winter\Translate\Updates;
 
+use Illuminate\Support\Facades\Cache;
 use Schema;
 use Winter\Storm\Database\Updates\Migration;
+use Winter\Translate\Classes\Translator;
 
 class RenameTables extends Migration
 {
@@ -21,6 +23,11 @@ class RenameTables extends Migration
                 Schema::rename($from, $to);
             }
         }
+
+        // Clear isConfigured cache
+        if (Cache::get(Translator::SESSION_CONFIGURED)) {
+            Cache::forget(Translator::SESSION_CONFIGURED);
+        }
     }
 
     public function down()
@@ -31,6 +38,11 @@ class RenameTables extends Migration
             if (Schema::hasTable($from) && !Schema::hasTable($to)) {
                 Schema::rename($from, $to);
             }
+        }
+
+        // Clear isConfigured cache
+        if (Cache::get(Translator::SESSION_CONFIGURED)) {
+            Cache::forget(Translator::SESSION_CONFIGURED);
         }
     }
 }
