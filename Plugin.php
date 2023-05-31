@@ -380,6 +380,8 @@ class Plugin extends PluginBase
                     }
                     foreach ($itemInfo['alternateLinks'] as $locale => $altUrl) {
                         if ($locale === $defaultLocale->code) {
+                            $loc = $urlElement->getElementsByTagName('loc')->item(0);
+                            $loc->nodeValue = $altUrl;
                             continue;
                         }
                         $newElement = $urlElement->cloneNode(true);
