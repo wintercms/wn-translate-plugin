@@ -175,7 +175,7 @@ class EventRegistry
             $fieldName = $name;
             if (str_contains($name, '@')) {
                 // apply to fields with any context
-                list ($fieldName, $context) = explode('@', $name);
+                list($fieldName, $context) = explode('@', $name);
             }
             if (!array_key_exists($fieldName, $translatable)) {
                 continue;
