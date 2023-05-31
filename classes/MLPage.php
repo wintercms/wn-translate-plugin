@@ -27,14 +27,8 @@ class MLPage
 
             $alternateLinks = [];
             foreach ($locales as $locale => $name) {
-                if ($locale === $defaultLocale->code) {
-                    $pageUrl = $result['url'];
-                } else {
-                    $pageUrl = static::getLocalizedPageUrl($page, $locale);
-                }
-                if ($pageUrl) {
-                    $alternateLinks[$locale] = Url::to($pageUrl);
-                }
+                $pageUrl = static::getLocalizedPageUrl($page, $locale) ?: $result['url'];
+                $alternateLinks[$locale] = Url::to($pageUrl);
             }
 
             if ($alternateLinks) {
