@@ -46,8 +46,8 @@ If translated, the text above will appear as whatever language is selected by th
 
     <p>
         Switch language to:
-        <a href="#" data-request="onSwitchLocale" data-request-data="locale: 'en'">English</a>,
-        <a href="#" data-request="onSwitchLocale" data-request-data="locale: 'ru'">Russian</a>
+        <a href="javascript:;" data-request="onSwitchLocale" data-request-data="locale: 'en'">English</a>,
+        <a href="javascript:;" data-request="onSwitchLocale" data-request-data="locale: 'ru'">Russian</a>
     </p>
 
 ## Message translation
