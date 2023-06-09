@@ -68,6 +68,24 @@ class TranslatableModelTest extends \Winter\Translate\Tests\TranslatePluginTestC
         $this->assertEquals('Australia', $obj->name);
     }
 
+    /**
+     * @since 2.1.5
+     */
+    public function testGetTranslationValueUseFallbackFalse()
+    {
+        $obj = CountryModel::first();
+
+        $this->assertEquals('Australia', $obj->name);
+
+        $obj->setTranslatableUseFallback(false)->translateContext('fr');
+        
+        $this->assertEquals(null, $obj->name);
+    }
+    
+    /**
+     * @deprecated 2.1.5
+     * @see testGetTranslationValueUseFallbackFalse()
+     */
     public function testGetTranslationValueNoFallback()
     {
         $obj = CountryModel::first();

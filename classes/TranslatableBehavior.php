@@ -130,12 +130,27 @@ abstract class TranslatableBehavior extends ExtensionBase
     }
 
     /**
+     * Enables/disables translation fallback locale.
+     * @param bool $value
+     * @return \Winter\Storm\Database\Model
+     * @since 2.1.5
+     */
+    public function setTranslatableUseFallback(bool $value)
+    {
+        $this->translatableUseFallback = $value;
+
+        return $this->model;
+    }
+
+    /**
      * Disables translation fallback locale.
-     * @return self
+     * @return \Winter\Storm\Database\Model
+     * @deprecated 2.1.5
+     * @see setTranslatableUseFallback()
      */
     public function noFallbackLocale()
     {
-        $this->translatableUseFallback = false;
+        $this->setTranslatableUseFallback(false);
 
         return $this->model;
     }
