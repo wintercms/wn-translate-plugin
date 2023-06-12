@@ -156,6 +156,7 @@ class EventRegistry
         $typesMap = [
             'markdown'    => 'mlmarkdowneditor',
             'mediafinder' => 'mlmediafinder',
+            'nestedform'  => 'mlnestedform',
             'repeater'    => 'mlrepeater',
             'richeditor'  => 'mlricheditor',
             'text'        => 'mltext',

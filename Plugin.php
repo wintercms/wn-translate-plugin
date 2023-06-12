@@ -145,6 +145,7 @@ class Plugin extends PluginBase
             \Winter\Translate\FormWidgets\MLMarkdownEditor::class => 'mlmarkdowneditor',
             \Winter\Translate\FormWidgets\MLRepeater::class => 'mlrepeater',
             \Winter\Translate\FormWidgets\MLMediaFinder::class => 'mlmediafinder',
+            \Winter\Translate\FormWidgets\MLNestedForm::class => 'mlnestedform',
         ];
     }
 
