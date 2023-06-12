@@ -10,7 +10,6 @@ use Request;
  * ML NestedForm
  * Renders a multi-lingual nestedform field.
  *
- * @package rainlab\translate
  * @author Luke Towers
  */
 class MLNestedForm extends NestedForm
