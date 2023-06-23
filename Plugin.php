@@ -205,14 +205,14 @@ class Plugin extends PluginBase
          * Handle translated page URLs
          */
         Page::extend(function($model) {
-            $this->extendModel($model, ['title', 'description', 'meta_title', 'meta_description']);
+            $this->extendModel($model, 'page', ['title', 'description', 'meta_title', 'meta_description']);
         });
 
         /*
          * Add translation support to theme settings
          */
         ThemeData::extend(function ($model) {
-            $this->extendModel($model);
+            $this->extendModel($model, 'model');
 
             $model->bindEvent('model.afterFetch', function() use ($model) {
                 foreach ($model->getFormFields() as $id => $field) {
@@ -253,11 +253,11 @@ class Plugin extends PluginBase
     {
         // Add translation support to file models
         File::extend(function ($model) {
-            $this->extendModel($model, ['title', 'description']);
+            $this->extendModel($model, 'model', ['title', 'description']);
         });
 
         MailTemplate::extend(function ($model) {
-            $this->extendModel($model, ['subject', 'description', 'content_html', 'content_text']);
+            $this->extendModel($model, 'model', ['subject', 'description', 'content_html', 'content_text']);
         });
 
         // Load localized version of mail templates (akin to localized CMS content files)
@@ -398,19 +398,21 @@ class Plugin extends PluginBase
     /**
      * Helper method to extend the provided model with translation support
      */
-    public function extendModel($model, array $translatableAttributes = [])
+    public function extendModel($model, string $type, array $translatableAttributes = [])
     {
         if (!$model->propertyExists('translatable')) {
             $model->addDynamicProperty('translatable', []);
         }
         $model->translatable = array_merge($model->translatable, $translatableAttributes);
-        if (!$model->isClassExtendedWith('Winter\Translate\Behaviors\TranslatablePageUrl')) {
-            $model->extendClassWith('Winter\Translate\Behaviors\TranslatablePageUrl');
-        }
-        if (!$model->isClassExtendedWith('Winter\Translate\Behaviors\TranslatablePage')) {
-            $model->extendClassWith('Winter\Translate\Behaviors\TranslatablePage');
-        }
-        if ($model instanceof Model) {
+
+        if ($type === 'page') {
+            if (!$model->isClassExtendedWith('Winter\Translate\Behaviors\TranslatablePageUrl')) {
+                $model->extendClassWith('Winter\Translate\Behaviors\TranslatablePageUrl');
+            }
+            if (!$model->isClassExtendedWith('Winter\Translate\Behaviors\TranslatablePage')) {
+                $model->extendClassWith('Winter\Translate\Behaviors\TranslatablePage');
+            }
+        } elseif ($type === 'model') {
             if (!$model->isClassExtendedWith('Winter\Translate\Behaviors\TranslatableModel')) {
                 $model->extendClassWith('Winter\Translate\Behaviors\TranslatableModel');
             }
