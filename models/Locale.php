@@ -2,6 +2,7 @@
 
 namespace Winter\Translate\Models;
 
+use App;
 use ApplicationException;
 use Cache;
 use Config;
