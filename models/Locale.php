@@ -101,7 +101,13 @@ class Locale extends Model
             return self::$defaultLocale;
         }
 
-        if ($forceDefault = Config::get('winter.translate::forceDefaultLocale')) {
+        $forceDefault = Config::get('winter.translate::forceDefaultLocale');
+        if (!$forceDefault && !App::hasDatabase()) {
+            // If a database is not available, the default locale is always the app locale
+            $forceDefault = Config::get('app.locale');
+        }
+
+        if ($forceDefault) {
             $locale = new self;
             $locale->name = $locale->code = $forceDefault;
             $locale->is_default = $locale->is_enabled = true;
