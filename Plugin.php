@@ -201,7 +201,7 @@ class Plugin extends PluginBase
      */
     protected function extendCmsModule(): void
     {
-
+        // Verify that the CMS module is installed and enabled before extending it
         if (!class_exists('\Cms\Classes\Page') || !in_array('Cms', config('cms.loadModules'))) {
             return;
         }
