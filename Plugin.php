@@ -201,6 +201,11 @@ class Plugin extends PluginBase
      */
     protected function extendCmsModule(): void
     {
+
+        if (!class_exists('\Cms\Classes\Page') || !in_array('Cms', config('cms.loadModules'))) {
+            return;
+        }
+        
         /*
          * Handle translated page URLs
          */
