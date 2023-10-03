@@ -5,6 +5,7 @@
 .field-multilingual.field-multilingual-repeater .ml-btn{top:5px;height:auto;transform:translateY(-100%);border-radius:.375rem}
 .field-multilingual.field-multilingual-textarea .ml-dropdown-menu{top:28px;right:1px}
 .field-multilingual.field-multilingual-richeditor .ml-dropdown-menu{top:74px;right:1px}
+.field-multilingual.field-multilingual-markdowneditor .ml-btn{top:41px}
 .field-multilingual.field-multilingual-markdowneditor .ml-dropdown-menu{top:74px;right:1px}
 .field-multilingual.field-multilingual-repeater .ml-dropdown-menu,
 .field-multilingual.field-multilingual-nestedform .ml-dropdown-menu{top:2px;right:0}
