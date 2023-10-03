@@ -9,16 +9,16 @@
         z-index: 2;
         position: absolute;
         top: 1px;
+        bottom: 1px;
         right: 1px;
-
-        height: calc(100% - 2px);
-        max-height: 38px;
-
+        
         width: auto;
         max-width: 44px;
+        max-height: 38px;
 
         color: lighten(@multilingual-btn-color, 15%);
         background-color: #F8F6F3;
+        box-shadow: none;
 
         font-size: 11px;
         letter-spacing: 1px;
@@ -64,9 +64,6 @@
     }
 
     &.field-multilingual-markdowneditor {
-        .ml-btn {
-            top: 41px;
-        }
         .ml-dropdown-menu {
             top: 74px;
             right: 1px;
