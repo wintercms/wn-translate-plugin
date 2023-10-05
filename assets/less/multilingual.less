@@ -43,7 +43,8 @@
     }
 
     &.field-multilingual-repeater .ml-btn {
-        top: 5px; /* counter padding-top .field-repeater */
+        top: 3px;
+        bottom: auto;
         height: auto;
         transform: translateY(-100%);
         border-radius: .375rem;
@@ -57,9 +58,14 @@
     }
 
     &.field-multilingual-richeditor {
+        .editor-write {
+            margin-right: 2rem;
+        }
+        
         .ml-btn {
-            top: 3px;
-            bottom: auto;
+            top: 41px;
+            border-radius: 0;
+            border-bottom-left-radius: .375rem;
         }
 
         .ml-dropdown-menu {
@@ -69,14 +75,18 @@
     }
 
     &.field-multilingual-markdowneditor {
+        .editor-write {
+            margin-right: 2rem;
+        }
+
         .ml-btn {
-            right: 76px;
-            background-color: transparent;
+            top: 41px;
+            border-radius: 0;
+            border-bottom-left-radius: .375rem;
         }
 
         .ml-dropdown-menu {
-            top: 36px;
-            right: 76px;
+            top: 80px;
         }
     }
 
