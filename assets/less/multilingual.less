@@ -37,11 +37,6 @@
         }
     }
 
-    textarea + .ml-btn {
-        border-bottom-right-radius: 0px;
-        border-bottom-left-radius: .375rem;
-    }
-
     &.field-multilingual-repeater .ml-btn {
         top: 3px;
         bottom: auto;
@@ -51,6 +46,15 @@
     }
 
     &.field-multilingual-textarea {
+        textarea {
+            padding-right: 2rem;
+        }
+
+        textarea + .ml-btn {
+            border-bottom-right-radius: 0px;
+            border-bottom-left-radius: .375rem;
+        }
+        
         .ml-dropdown-menu {
             top: 28px;
             right: 1px;
@@ -95,6 +99,12 @@
         .ml-dropdown-menu {
             top: 2px;
             right: 0;
+        }
+    }
+
+    &.field-multilingual-mediafinder {
+        .ml-btn {
+            border-radius: .375rem;
         }
     }
 }
