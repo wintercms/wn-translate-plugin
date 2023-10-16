@@ -92,6 +92,7 @@
         }
 
         var height = $toolbar.outerHeight(true)
+        if (!height) return
         $btn.css('top', height)
         $dropdown.css('top', height + 34)
     }
