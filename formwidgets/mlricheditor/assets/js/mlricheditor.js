@@ -92,8 +92,8 @@
         }
 
         var height = $toolbar.outerHeight(true)
-        $btn.css('top', height + 6)
-        $dropdown.css('top', height + 40)
+        $btn.css('top', height)
+        $dropdown.css('top', height + 34)
     }
 
     // MLRICHEDITOR PLUGIN DEFINITION
