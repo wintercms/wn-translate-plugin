@@ -85,7 +85,8 @@
     MLRichEditor.prototype.updateLayout = function() {
         var $toolbar = $('.fr-toolbar', this.$el),
             $btn = $('.ml-btn[data-active-locale]:first', this.$el),
-            $dropdown = $('.ml-dropdown-menu[data-locale-dropdown]:first', this.$el)
+            $dropdown = $('.ml-dropdown-menu[data-locale-dropdown]:first', this.$el),
+            $element = $('.fr-element', this.$el)
 
         if (!$toolbar.length) {
             return
@@ -95,6 +96,14 @@
         if (!height) return
         $btn.css('top', height)
         $dropdown.css('top', height + 34)
+
+        var scrollHeight = $element.prop('scrollHeight')
+        var offsetHeight = $element.outerHeight()
+        if (scrollHeight > offsetHeight) {
+            $element.css('padding-right', 40)
+            $btn.css('right', 16)
+            $dropdown.css('right', 14)
+        }
     }
 
     // MLRICHEDITOR PLUGIN DEFINITION
