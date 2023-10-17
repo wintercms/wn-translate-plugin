@@ -97,8 +97,8 @@
         $btn.css('top', height)
         $dropdown.css('top', height + 34)
 
-        var scrollHeight = $element.prop('scrollHeight')
-        var offsetHeight = $element.outerHeight()
+        var scrollHeight = $element.prop('scrollHeight') // int
+        var offsetHeight = Math.round($element.outerHeight()); // round the float
         if (scrollHeight > offsetHeight) {
             $element.css('padding-right', 40)
             $btn.css('right', 16)
