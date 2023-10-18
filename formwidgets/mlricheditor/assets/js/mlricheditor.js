@@ -102,9 +102,8 @@
         var elementHeight = $element.outerHeight()
 
         setMLButtonPosition()
-        $element.on('keydown', setMLButtonPosition)
-        $element.on('keyup', setMLButtonPosition)
-
+        $element.on('keydown keyup', setMLButtonPosition)
+        
         function setMLButtonPosition() {
             var scrollHeight = $element[0].scrollHeight
             var showScrollbar = scrollHeight > elementHeight
