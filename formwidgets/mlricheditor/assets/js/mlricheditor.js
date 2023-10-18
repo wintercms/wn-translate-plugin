@@ -93,17 +93,41 @@
         }
 
         var height = $toolbar.outerHeight(true)
-        if (!height) return
-        $btn.css('top', height)
-        $dropdown.css('top', height + 34)
-
-        var scrollHeight = $element.prop('scrollHeight') // int
-        var offsetHeight = Math.round($element.outerHeight()); // round the float
-        if (scrollHeight > offsetHeight) {
-            $element.css('padding-right', 40)
-            $btn.css('right', 16)
-            $dropdown.css('right', 14)
+        if (height) {
+            $btn.css('top', height)
+            $dropdown.css('top', height + 34)
         }
+
+        // set ML button position
+        var hasScrollbar = false
+        var scrollbarWidth = 0
+        var elementHeight = $element.outerHeight()
+
+        setMLButtonPosition()
+        $element.on('keydown', setMLButtonPosition)
+        $element.on('keyup', setMLButtonPosition)
+
+        function setMLButtonPosition() {
+            var scrollHeight = $element[0].scrollHeight
+            var showScrollbar = scrollHeight > elementHeight
+
+            if (!hasScrollbar && showScrollbar) {
+
+                hasScrollbar = true
+                if (!scrollbarWidth) scrollbarWidth = $element[0].offsetWidth - $element[0].clientWidth
+
+                $element.css('padding-right', scrollbarWidth + 23)
+                $btn.css('right', scrollbarWidth - 1)
+                $dropdown.css('right', scrollbarWidth - 2)
+
+            } else if (hasScrollbar && !showScrollbar) {
+                hasScrollbar = false
+                $element.css('padding-right', '')
+                $btn.css('right', '')
+                $dropdown.css('right', '')
+            }
+        }
+        
     }
 
     // MLRICHEDITOR PLUGIN DEFINITION
