@@ -88,14 +88,12 @@
             $dropdown = $('.ml-dropdown-menu[data-locale-dropdown]:first', this.$el),
             $element = $('.fr-element', this.$el)
 
-        if (!$toolbar.length) {
-            return
-        }
-
-        var height = $toolbar.outerHeight(true)
-        if (height) {
-            $btn.css('top', height)
-            $dropdown.css('top', height + 34)
+        if ($toolbar.length) {
+            var height = $toolbar.outerHeight(true)
+            if (height) {
+                $btn.css('top', height)
+                $dropdown.css('top', height + 34)
+            }
         }
 
         // set ML button position
