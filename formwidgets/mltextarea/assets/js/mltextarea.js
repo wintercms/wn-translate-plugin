@@ -8,9 +8,9 @@ function updateTextareaLayout($element) {
     // set ML button position
     const elementHeight = $element.offsetHeight
     const scrollHeight = $element.scrollHeight
-    const showScrollbar = (scrollHeight - elementHeight) > 0 ? true : false
+    const hasScrollbar = (scrollHeight - elementHeight) > 0 ? true : false
 
-    if (showScrollbar) {
+    if (hasScrollbar) {
         const scrollbarWidth = $element.offsetWidth - $element.clientWidth
         $element.style.paddingRight = `${scrollbarWidth + 23}px`
         $btn.style.right = `${scrollbarWidth -1}px`
