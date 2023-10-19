@@ -67,14 +67,12 @@
         this.options = null
 
         BaseProto.dispose.call(this)
-        console.log('DISPOSE')
     }
 
     MLMarkdownEditor.prototype.onSetLocale = function(e, locale, localeValue) {
         if (typeof localeValue === 'string' && this.$markdownEditor.data('oc.markdownEditor')) {
             this.$markdownEditor.markdownEditor('setContent', localeValue);
         }
-        console.log('SET LOCALE')
     }
 
     MLMarkdownEditor.prototype.onChangeContent = function(ev, markdowneditor, value) {
