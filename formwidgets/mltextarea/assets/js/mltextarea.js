@@ -13,8 +13,8 @@ function updateTextareaLayout($element) {
     if (hasScrollbar) {
         const scrollbarWidth = $element.offsetWidth - $element.clientWidth
         $element.style.paddingRight = `${scrollbarWidth + 23}px`
-        $btn.style.right = `${scrollbarWidth -1}px`
-        $dropdown.style.right = `${scrollbarWidth -2}px`
+        $btn.style.right = `${scrollbarWidth - 1}px`
+        $dropdown.style.right = `${scrollbarWidth - 2}px`
     } else {
         $element.style.paddingRight = ''
         $btn.style.right = ''
