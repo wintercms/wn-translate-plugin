@@ -67,12 +67,14 @@
         this.options = null
 
         BaseProto.dispose.call(this)
+        console.log('DISPOSE')
     }
 
     MLMarkdownEditor.prototype.onSetLocale = function(e, locale, localeValue) {
         if (typeof localeValue === 'string' && this.$markdownEditor.data('oc.markdownEditor')) {
             this.$markdownEditor.markdownEditor('setContent', localeValue);
         }
+        console.log('SET LOCALE')
     }
 
     MLMarkdownEditor.prototype.onChangeContent = function(ev, markdowneditor, value) {
@@ -106,6 +108,10 @@
             $input.on('keydown keyup', setMLButtonPosition)
             
             function setMLButtonPosition() {
+
+                // make sure container is displayed (fix previewmode)
+                $container.css('display', 'initial')
+
                 var scrollbarWidth = $scrollbar[0].offsetWidth - 5
 
                 if (scrollbarWidth >= 0) {
@@ -117,6 +123,10 @@
                     $btn.css('right', '')
                     $dropdown.css('right', '')
                 }
+
+                // reset container
+                $container.css('display', '')
+
             }
             
         }
