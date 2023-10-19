@@ -99,8 +99,8 @@
         if (this.$markdownEditor.hasClass('mode-tab')) {
 
             var $container = $('.editor-write', this.$el),
-            $scrollbar = $('.ace_scrollbar', this.$el),
-            $input = $('.ace_text-input', this.$el)
+                $scrollbar = $('.ace_scrollbar', this.$el),
+                $input = $('.ace_text-input', this.$el)
         
             setMLButtonPosition()
             $input.on('keydown keyup', setMLButtonPosition)
