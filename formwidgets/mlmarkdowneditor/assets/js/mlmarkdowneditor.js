@@ -51,6 +51,7 @@
         $(window).on('resize', this.proxy(this.updateLayout))
         $(window).on('oc.updateUi', this.proxy(this.updateLayout))
         this.$el.one('dispose-control', this.proxy(this.dispose))
+        
     }
 
     MLMarkdownEditor.prototype.dispose = function() {
@@ -99,6 +100,7 @@
         if (this.$markdownEditor.hasClass('mode-tab')) {
 
             var $container = $('.editor-write', this.$el),
+                $previewContainer = $('.editor-preview', this.$el),
                 $scrollbar = $('.ace_scrollbar', this.$el),
                 $input = $('.ace_text-input', this.$el)
         
@@ -111,6 +113,7 @@
                 $container.css('display', 'initial')
 
                 var scrollbarWidth = $scrollbar[0].offsetWidth - 5
+                if (scrollbarWidth === -5) scrollbarWidth = $previewContainer[0].offsetWidth - $previewContainer[0].clientWidth
 
                 if (scrollbarWidth >= 0) {
                     $container.css('padding-right', scrollbarWidth + 23)
