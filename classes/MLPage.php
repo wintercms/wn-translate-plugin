@@ -20,8 +20,8 @@ class MLPage
     {
         $result = CmsPage::resolveMenuItem($item, $url, $theme);
 
-        if ($result) {
-            $page = CmsPage::loadCached($theme, $item->reference);
+        if ($result && ($page = CmsPage::loadCached($theme, $item->reference))) {
+
             $locales = Locale::listEnabled();
             $defaultLocale = Locale::getDefault();
 
