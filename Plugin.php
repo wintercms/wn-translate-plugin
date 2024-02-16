@@ -412,8 +412,6 @@ class Plugin extends PluginBase
                 $model->extendClassWith('Winter\Translate\Behaviors\TranslatableModel');
             }
         }
-        if ($translatableAttributes) {
-            $model->addTranslatableAttributes($translatableAttributes);
-        }
+        $model->addTranslatableAttributes($translatableAttributes);
     }
 }
