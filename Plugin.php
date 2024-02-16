@@ -400,6 +400,7 @@ class Plugin extends PluginBase
      */
     public function extendModel($model, string $type, array $translatableAttributes = [])
     {
+        $model->addDynamicProperty('translatable', []);
         if ($type === 'page') {
             if (!$model->isClassExtendedWith('Winter\Translate\Behaviors\TranslatablePageUrl')) {
                 $model->extendClassWith('Winter\Translate\Behaviors\TranslatablePageUrl');
@@ -412,6 +413,8 @@ class Plugin extends PluginBase
                 $model->extendClassWith('Winter\Translate\Behaviors\TranslatableModel');
             }
         }
-        $model->addTranslatableAttributes($translatableAttributes);
+        if ($translatableAttributes) {
+            $model->addTranslatableAttributes($translatableAttributes);
+        }
     }
 }
