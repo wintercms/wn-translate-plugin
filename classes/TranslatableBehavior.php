@@ -108,7 +108,7 @@ abstract class TranslatableBehavior extends ExtensionBase
     {
         $attributes = is_array($attributes) ? $attributes : func_get_args();
 
-        if (!isset($this->model->translatable)) {
+        if (!$this->model->propertyExists('translatable')) {
             $this->model->addDynamicProperty('translatable', $attributes);
         } else {
             $this->model->translatable = array_merge($this->model->translatable, $attributes);
