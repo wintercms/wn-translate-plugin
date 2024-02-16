@@ -212,14 +212,14 @@ class Plugin extends PluginBase
          * Add translation support to theme settings
          */
         ThemeData::extend(function ($model) {
-            $this->extendModel($model, 'model');
-
             $model->bindEvent('model.afterFetch', function() use ($model) {
+                $translatable = [];
                 foreach ($model->getFormFields() as $id => $field) {
                     if (!empty($field['translatable'])) {
-                        $model->translatable[] = $id;
+                        $translatable[] = $id;
                     }
                 }
+                $this->extendModel($model, 'model', $translatable);
             });
         });
 
@@ -401,9 +401,10 @@ class Plugin extends PluginBase
     public function extendModel($model, string $type, array $translatableAttributes = [])
     {
         if (!$model->propertyExists('translatable')) {
-            $model->addDynamicProperty('translatable', []);
+            $model->addDynamicProperty('translatable', $translatableAttributes);
+        } else {
+            $model->translatable = array_merge($model->translatable, $translatableAttributes);
         }
-        $model->translatable = array_merge($model->translatable, $translatableAttributes);
 
         if ($type === 'page') {
             if (!$model->isClassExtendedWith('Winter\Translate\Behaviors\TranslatablePageUrl')) {
