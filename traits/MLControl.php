@@ -157,6 +157,9 @@ trait MLControl
         }
         elseif ($this->objectMethodExists($this->model, 'getAttributeTranslated') && $this->defaultLocale->code != $locale) {
             $value = $this->model->noFallbackLocale()->getAttributeTranslated($key, $locale);
+            if (!$value && $this->objectMethodExists($this->model, 'getJsonAttributeTranslated')) {
+                $value = $this->model->getJsonAttributeTranslated($this->formField->getName(), $locale);
+            }
         }
         else {
             $value = $this->formField->value;
@@ -178,6 +181,12 @@ trait MLControl
         $field->type = $this->getFallbackType();
 
         return $field;
+    }
+
+    public function getLocaleFieldName($code)
+    {
+        $names = HtmlHelper::nameToArray($this->formField->arrayName);
+        return $this->formField->getName('RLTranslate[' . $code . '][' . implode('][', $names) . ']');
     }
 
     /**
@@ -221,7 +230,7 @@ trait MLControl
             return $values;
         }
 
-        $fieldName = implode('.', HtmlHelper::nameToArray($this->fieldName));
+        $fieldName = implode('.', HtmlHelper::nameToArray($this->formField->getName()));
         $isJson = $this->isLocaleFieldJsonable();
 
         foreach ($data as $locale => $_data) {

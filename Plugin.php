@@ -144,6 +144,7 @@ class Plugin extends PluginBase
             \Winter\Translate\FormWidgets\MLRichEditor::class => 'mlricheditor',
             \Winter\Translate\FormWidgets\MLMarkdownEditor::class => 'mlmarkdowneditor',
             \Winter\Translate\FormWidgets\MLRepeater::class => 'mlrepeater',
+            \Winter\Translate\FormWidgets\MLRepeaterFields::class => 'mlrepeaterfields',
             \Winter\Translate\FormWidgets\MLMediaFinder::class => 'mlmediafinder',
             \Winter\Translate\FormWidgets\MLNestedForm::class => 'mlnestedform',
         ];

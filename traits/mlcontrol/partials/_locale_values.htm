@@ -6,7 +6,7 @@
     ?>
     <input
         type="hidden"
-        name="<?= $field->getName('RLTranslate['.$code.']') ?>"
+        name="<?= $this->getLocaleFieldName($code) ?>"
         value="<?= e($value) ?>"
         data-locale-value="<?= $code ?>"
         <?= $field->getAttributes() ?>

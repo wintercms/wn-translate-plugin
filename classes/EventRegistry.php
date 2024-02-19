@@ -10,6 +10,7 @@ use File;
 use Str;
 use System\Classes\MailManager;
 use System\Classes\PluginManager;
+use Winter\Storm\Html\Helper as HtmlHelper;
 use Winter\Translate\Classes\ThemeScanner;
 use Winter\Translate\Classes\Translator;
 use Winter\Translate\Models\Locale as LocaleModel;
@@ -128,7 +129,19 @@ class EventRegistry
         }
 
 
-        if (!$model->hasTranslatableAttributes() || $widget->isNested) {
+        if (!$model->hasTranslatableAttributes()) {
+            return;
+        }
+
+        if ($widget->isNested) {
+            $nameArray = HtmlHelper::nameToArray($widget->arrayName);
+            array_shift($nameArray); // remove parent
+            array_pop($nameArray); // remove repeater index
+
+            $parentName = array_shift($nameArray);
+            $parentName .= '[' . implode('][', $nameArray) . ']';
+
+            $widget->fields = $this->processFormMLFields($widget->fields, $model, $parentName);
             return;
         }
 
@@ -151,7 +164,7 @@ class EventRegistry
      * @param  Model $model
      * @return array
      */
-    protected function processFormMLFields($fields, $model)
+    protected function processFormMLFields($fields, $model, $parent = null)
     {
         $typesMap = [
             'markdown'    => 'mlmarkdowneditor',
@@ -173,7 +186,8 @@ class EventRegistry
         }
 
         foreach ($fields as $name => $config) {
-            $fieldName = $name;
+            $fieldName = $parent ? sprintf("%s[%s]", $parent, $name) : $name;
+
             if (str_contains($name, '@')) {
                 // apply to fields with any context
                 list($fieldName, $context) = explode('@', $name);
@@ -183,10 +197,10 @@ class EventRegistry
             }
 
             $type = array_get($config, 'type', 'text');
-
             if (array_key_exists($type, $typesMap)) {
                 $fields[$name]['type'] = $typesMap[$type];
             }
+
         }
 
         return $fields;
