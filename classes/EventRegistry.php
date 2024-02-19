@@ -134,14 +134,7 @@ class EventRegistry
         }
 
         if ($widget->isNested) {
-            $nameArray = HtmlHelper::nameToArray($widget->arrayName);
-            array_shift($nameArray); // remove parent
-            array_pop($nameArray); // remove repeater index
-
-            $parentName = array_shift($nameArray);
-            $parentName .= '[' . implode('][', $nameArray) . ']';
-
-            $widget->fields = $this->processFormMLFields($widget->fields, $model, $parentName);
+            $widget->fields = $this->processFormMLFields($widget->fields, $model, $this->getWidgetName($widget));
             return;
         }
 
@@ -156,6 +149,19 @@ class EventRegistry
         if (!empty($widget->secondaryTabs['fields'])) {
             $widget->secondaryTabs['fields'] = $this->processFormMLFields($widget->secondaryTabs['fields'], $model);
         }
+    }
+
+    protected function getWidgetName($widget)
+    {
+        $nameArray = HtmlHelper::nameToArray($widget->arrayName);
+
+        array_shift($nameArray); // remove parenta model
+        array_pop($nameArray); // remove repeater index
+
+        $parentName = array_shift($nameArray);
+        $parentName .= '[' . implode('][', $nameArray) . ']';
+
+        return $parentName;
     }
 
     /**

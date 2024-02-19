@@ -24,13 +24,32 @@ class MLRepeater extends Repeater
      */
     protected $defaultAlias = 'mlrepeater';
 
+    protected $translateFields = false;
     /**
      * {@inheritDoc}
      */
     public function init()
     {
         parent::init();
+
+        $this->fillFromConfig(['translateFields']);
         $this->initLocale();
+
+        if ($this->translateFields && $this->model) {
+            $this->model->extend(function () {
+                $this->addDynamicMethod('getJsonAttributeTranslated', function ($key, $locale) {
+                    $names = HtmlHelper::nameToArray($key);
+                    array_shift($names); // remove model
+
+                    $array = array_shift($names);
+                    $field = array_pop($names);
+
+                    if ($array && $field && $names) {
+                        return array_get($this->{$array}, implode('.', $names) . '.locale' . ucfirst($field) . '.' . $locale);
+                    }
+                });
+            });
+        }
     }
 
     /**
@@ -42,7 +61,7 @@ class MLRepeater extends Repeater
         $parentContent = parent::render();
         $this->actAsParent(false);
 
-        if (!$this->isAvailable) {
+        if (!$this->isAvailable || $this->translateFields) {
             return $parentContent;
         }
 
@@ -62,9 +81,36 @@ class MLRepeater extends Repeater
      */
     public function getSaveValue($value)
     {
-        $this->rewritePostValues();
+        if (!$this->translateFields) {
+            $this->rewritePostValues();
+        }
 
         return $this->getLocaleSaveValue(is_array($value) ? array_values($value) : $value);
+    }
+
+    public function getLocaleSaveValue($value)
+    {
+        if (!$this->translateFields) {
+            return parent::getLocaleSaveValue(is_array($value) ? array_values($value) : $value);
+        }
+
+        $fieldName = implode('.', HtmlHelper::nameToArray($this->formField->getName()));
+
+        foreach (post('RLTranslate') as $locale => $_data) {
+            $items = array_get($_data, $fieldName, []);
+            foreach ($items as $index => $item) {
+                foreach ($item as $field => $fieldValue) {
+                    if ($locale === $this->defaultLocale->code) {
+                        $value[$index][$field] = $fieldValue;
+                    } else {
+                        $key = sprintf("locale%s", ucfirst($field));
+                        $value[$index][$key][$locale] = $fieldValue;
+                    }
+                }
+            }
+        }
+
+        return $value;
     }
 
     /**
@@ -76,7 +122,7 @@ class MLRepeater extends Repeater
         parent::loadAssets();
         $this->actAsParent(false);
 
-        if (Locale::isAvailable()) {
+        if (Locale::isAvailable() && !$this->translateFields) {
             $this->loadLocaleAssets();
             $this->addJs('js/mlrepeater.js');
         }
