@@ -24,7 +24,10 @@ class MLRepeater extends Repeater
      */
     protected $defaultAlias = 'mlrepeater';
 
-    protected $translateFields = false;
+    /**
+     * The repeater translation mode (repeater|fields)
+     */
+    protected $translationMode = 'repeater';
 
     /**
      * {@inheritDoc}
@@ -32,11 +35,11 @@ class MLRepeater extends Repeater
     public function init()
     {
         parent::init();
-
-        $this->fillFromConfig(['translateFields']);
         $this->initLocale();
 
-        if ($this->translateFields && $this->model) {
+        $this->fillFromConfig(['translationMode']);
+
+        if ($this->translationMode === 'fields' && $this->model) {
             $this->model->extend(function () {
                 $this->addDynamicMethod('getJsonAttributeTranslated', function ($key, $locale) {
                     $names = HtmlHelper::nameToArray($key);
@@ -64,7 +67,7 @@ class MLRepeater extends Repeater
         $parentContent = parent::render();
         $this->actAsParent(false);
 
-        if (!$this->isAvailable || $this->translateFields) {
+        if (!$this->isAvailable || $this->translationMode === 'fields') {
             return $parentContent;
         }
 
@@ -84,36 +87,31 @@ class MLRepeater extends Repeater
      */
     public function getSaveValue($value)
     {
-        if (!$this->translateFields) {
-            $this->rewritePostValues();
-        }
+        $value = is_array($value) ? array_values($value) : $value;
 
-        return $this->getLocaleSaveValue(is_array($value) ? array_values($value) : $value);
-    }
+        // process internal fields translations
+        if ($this->translationMode === 'fields') {
+            $fieldName = implode('.', HtmlHelper::nameToArray($this->formField->getName()));
 
-    public function getLocaleSaveValue($value)
-    {
-        if (!$this->translateFields) {
-            return parent::getLocaleSaveValue(is_array($value) ? array_values($value) : $value);
-        }
-
-        $fieldName = implode('.', HtmlHelper::nameToArray($this->formField->getName()));
-
-        foreach (post('RLTranslate') as $locale => $_data) {
-            $items = array_get($_data, $fieldName, []);
-            foreach ($items as $index => $item) {
-                foreach ($item as $field => $fieldValue) {
-                    if ($locale === $this->defaultLocale->code) {
-                        $value[$index][$field] = $fieldValue;
-                    } else {
-                        $key = sprintf("locale%s", ucfirst($field));
-                        $value[$index][$key][$locale] = $fieldValue;
+            foreach (post('RLTranslate') as $locale => $_data) {
+                $items = array_get($_data, $fieldName, []);
+                foreach ($items as $index => $item) {
+                    foreach ($item as $field => $fieldValue) {
+                        if ($locale === $this->defaultLocale->code) {
+                            $value[$index][$field] = $fieldValue;
+                        } else {
+                            $key = sprintf("locale%s", ucfirst($field));
+                            $value[$index][$key][$locale] = $fieldValue;
+                        }
                     }
                 }
             }
+            return $value;
         }
 
-        return $value;
+        // we translate the repeater formwidget itself ($this->translationMode === 'repeater')
+        $this->rewritePostValues();
+        return $this->getLocaleSaveValue($value);
     }
 
     /**
@@ -125,7 +123,7 @@ class MLRepeater extends Repeater
         parent::loadAssets();
         $this->actAsParent(false);
 
-        if (Locale::isAvailable() && !$this->translateFields) {
+        if (Locale::isAvailable() && $this->translationMode === 'repeater') {
             $this->loadLocaleAssets();
             $this->addJs('js/mlrepeater.js');
         }
