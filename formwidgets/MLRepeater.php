@@ -25,6 +25,7 @@ class MLRepeater extends Repeater
     protected $defaultAlias = 'mlrepeater';
 
     protected $translateFields = false;
+
     /**
      * {@inheritDoc}
      */
@@ -41,11 +42,13 @@ class MLRepeater extends Repeater
                     $names = HtmlHelper::nameToArray($key);
                     array_shift($names); // remove model
 
-                    $array = array_shift($names);
+                    $arrayName = array_shift($names);
                     $field = array_pop($names);
 
-                    if ($array && $field && $names) {
-                        return array_get($this->{$array}, implode('.', $names) . '.locale' . ucfirst($field) . '.' . $locale);
+                    if ($arrayName && $field) {
+                        $names[] = 'locale' . ucfirst($field);
+                        $names[] = $locale;
+                        return array_get($this->{$arrayName}, implode('.', $names));
                     }
                 });
             });
