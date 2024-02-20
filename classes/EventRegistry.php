@@ -134,7 +134,9 @@ class EventRegistry
         }
 
         if ($widget->isNested) {
-            $widget->fields = $this->processFormMLFields($widget->fields, $model, $this->getWidgetName($widget));
+            if (isset($widget->config->translationMode) && $widget->config->translationMode === 'fields') {
+                $widget->fields = $this->processFormMLFields($widget->fields, $model, $this->getWidgetName($widget));
+            }
             return;
         }
 
@@ -198,9 +200,12 @@ class EventRegistry
                 // apply to fields with any context
                 list($fieldName, $context) = explode('@', $name);
             }
-            if (!array_key_exists($fieldName, $translatable)) {
+            if (! (array_get($config, 'translatable') || array_key_exists($fieldName, $translatable)) ) {
+                // field is not in model's translatable array and its translatable config is false
                 continue;
             }
+
+            // field is in model's translatable array or its translatable config is true
 
             $type = array_get($config, 'type', 'text');
             if (array_key_exists($type, $typesMap)) {

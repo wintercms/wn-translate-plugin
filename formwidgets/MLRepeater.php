@@ -34,10 +34,12 @@ class MLRepeater extends Repeater
      */
     public function init()
     {
+        $this->fillFromConfig(['translationMode']);
+        // make the translationMode available to the repeater items formwidgets
+        $this->config->form['translationMode'] = $this->translationMode;
+
         parent::init();
         $this->initLocale();
-
-        $this->fillFromConfig(['translationMode']);
 
         if ($this->translationMode === 'fields' && $this->model) {
             $this->model->extend(function () {
