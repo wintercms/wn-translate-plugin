@@ -200,12 +200,9 @@ class EventRegistry
                 // apply to fields with any context
                 list($fieldName, $context) = explode('@', $name);
             }
-            if (! (array_get($config, 'translatable') || array_key_exists($fieldName, $translatable)) ) {
-                // field is not in model's translatable array and its translatable config is false
+            if (!array_key_exists($fieldName, $translatable)) {
                 continue;
             }
-
-            // field is in model's translatable array or its translatable config is true
 
             $type = array_get($config, 'type', 'text');
             if (array_key_exists($type, $typesMap)) {
