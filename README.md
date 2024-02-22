@@ -241,19 +241,21 @@ There are ways to get and set attributes without changing the context.
 
 The MLRepeater formwidget now supports translating its internal fields instead of translating the repeater field itself. You need to use the `translationMode: fields` field config to do so.
 
-    class User
-    {
-        public $implement = ['Winter.Translate.Behaviors.TranslatableModel'];
+```php
+class User
+{
+    public $implement = ['Winter.Translate.Behaviors.TranslatableModel'];
 
-        public $jsonable = ['data'];
+    public $jsonable = ['data'];
 
-        public $translatable = [
-            'data[contacts]',
-            'data[contacts][title]',
-        ];
-    }
+    public $translatable = [
+        'data[contacts]',
+        'data[contacts][title]',
+    ];
+}
+```
 
-    models/user/fields.json:
+models/user/fields.json:
 ```yaml
 fields:
   data[contacts]:
