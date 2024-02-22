@@ -46,14 +46,8 @@ class MLRepeater extends Repeater
                 $this->addDynamicMethod('getJsonAttributeTranslated', function ($key, $locale) {
                     $names = HtmlHelper::nameToArray($key);
                     array_shift($names); // remove model
-
-                    $arrayName = array_shift($names);
-                    $field = array_pop($names);
-
-                    if ($arrayName && $field) {
-                        $names[] = 'locale' . ucfirst($field);
-                        $names[] = $locale;
-                        return array_get($this->{$arrayName}, implode('.', $names));
+                    if ($arrayName = array_shift($names)) {
+                        return array_get($this->lang($locale)->{$arrayName}, implode('.', $names));
                     }
                 });
             });
@@ -91,29 +85,10 @@ class MLRepeater extends Repeater
     {
         $value = is_array($value) ? array_values($value) : $value;
 
-        // process internal fields translations
-        if ($this->translationMode === 'fields') {
-            $fieldName = implode('.', HtmlHelper::nameToArray($this->formField->getName()));
-
-            foreach (post('RLTranslate') as $locale => $_data) {
-                $items = array_get($_data, $fieldName, []);
-                foreach ($items as $index => $item) {
-                    foreach ($item as $field => $fieldValue) {
-                        if ($locale === $this->defaultLocale->code) {
-                            $value[$index][$field] = $fieldValue;
-                        } else {
-                            $key = sprintf("locale%s", ucfirst($field));
-                            $value[$index][$key][$locale] = $fieldValue;
-                        }
-                    }
-                }
-            }
-            return $value;
+        if ($this->translationMode === 'repeater') {
+            $this->rewritePostValues();
         }
-
-        // we translate the repeater formwidget itself ($this->translationMode === 'repeater')
-        $this->rewritePostValues();
-        return $this->getLocaleSaveValue($value);
+        return $this->getLocaleSaveValue(is_array($value) ? array_values($value) : $value);
     }
 
     /**

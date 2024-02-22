@@ -235,7 +235,7 @@ trait MLControl
 
         foreach ($data as $locale => $_data) {
             $value = array_get($_data, $fieldName);
-            $values[$locale] = $isJson ? json_decode($value, true) : $value;
+            $values[$locale] = ($isJson && is_string($value)) ? json_decode($value, true) : $value;
         }
 
         return $values;
