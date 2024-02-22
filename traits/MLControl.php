@@ -155,6 +155,9 @@ trait MLControl
         if ($this->objectMethodExists($this->model, $mutateMethod)) {
             $value = $this->model->$mutateMethod($locale);
         }
+        elseif ($this->isFieldParentJsonable() && $this->defaultLocale->code != $locale) {
+            $value = $this->model->getJsonAttributeTranslated($this->formField->getName(), $locale);
+        }
         elseif ($this->objectMethodExists($this->model, 'getAttributeTranslated') && $this->defaultLocale->code != $locale) {
             $value = $this->model->noFallbackLocale()->getAttributeTranslated($key, $locale);
             if (!$value && $this->objectMethodExists($this->model, 'getJsonAttributeTranslated')) {
@@ -248,6 +251,19 @@ trait MLControl
     public function getFallbackType()
     {
         return defined('static::FALLBACK_TYPE') ? static::FALLBACK_TYPE : 'text';
+    }
+
+    public function isFieldParentJsonable()
+    {
+        $names = HtmlHelper::nameToArray($this->formField->getName());
+        array_shift($names); //remove model name
+        $arrayName = array_shift($names);
+
+        if (method_exists($this->model, 'isJsonable') && $this->model->isJsonable($arrayName)) { 
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
