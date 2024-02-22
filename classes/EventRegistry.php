@@ -162,9 +162,7 @@ class EventRegistry
 
         $parentName = array_shift($nameArray);
 
-        if ($widget->model instanceof \Cms\Models\ThemeData) {
-            return $parentName;
-        } else {
+        if ($nameArray) {
             $parentName .= '[' . implode('][', $nameArray) . ']';
         }
 
