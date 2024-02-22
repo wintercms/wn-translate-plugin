@@ -218,6 +218,13 @@ class Plugin extends PluginBase
                     if (!empty($field['translatable'])) {
                         $translatable[] = $id;
                     }
+                    if (@$field['type'] === 'repeater') {
+                        foreach (array_get($field, 'form.fields') as $name => $config) {
+                            if (array_get($config, 'translatable')) {
+                                $translatable[] = sprintf("%s[%s]", $id, $name);
+                            }
+                        }
+                    }
                 }
                 $this->extendModel($model, 'model', $translatable);
             });

@@ -157,11 +157,16 @@ class EventRegistry
     {
         $nameArray = HtmlHelper::nameToArray($widget->arrayName);
 
-        array_shift($nameArray); // remove parenta model
+        array_shift($nameArray); // remove parent model
         array_pop($nameArray); // remove repeater index
 
         $parentName = array_shift($nameArray);
-        $parentName .= '[' . implode('][', $nameArray) . ']';
+
+        if ($widget->model instanceof \Cms\Models\ThemeData) {
+            return $parentName;
+        } else {
+            $parentName .= '[' . implode('][', $nameArray) . ']';
+        }
 
         return $parentName;
     }
