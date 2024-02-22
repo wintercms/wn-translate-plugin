@@ -83,17 +83,19 @@ class MLRepeater extends Repeater
      */
     public function getSaveValue($value)
     {
-        $results = $value;
+        $value = is_array($value) ? array_values($value) : $value;
 
         if ($this->translationMode === 'repeater') {
             $this->rewritePostValues();
-            $results = $this->getLocaleSaveValue(is_array($value) ? array_values($value) : $value);
+            $value = $this->getLocaleSaveValue($value);
         } elseif ($this->translationMode === 'fields') {
-            $localeValues = $this->getLocaleSaveValue(is_array($value) ? array_values($value) : $value);
-            $results = array_merge($value, $localeValues);
+            $localeValues = $this->getLocaleSaveValue($value);
+            foreach ($value as $index => &$_data) {
+                $_data = array_merge($_data, $localeValues[$index]);
+            }
         }
 
-        return $results;
+        return $value;
     }
 
     /**
