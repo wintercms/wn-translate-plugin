@@ -253,9 +253,9 @@ $user->getAttributeTranslated('name', 'fr');
 $user->setAttributeTranslated('name', 'Jean-Claude', 'fr');
 ```
 
-## Translation of repeater internal fields (translationMode = "fields")
+## Repeater formwidget internal fields translation
 
-The MLRepeater formwidget now supports translating its internal fields instead of translating the repeater field itself. You need to use the `translationMode: fields` field config to do so.
+It is now possible to independently translate the fields defined within a repeater formwidget by setting its `translationMode` config to `fields` (see example below)
 
 ```php
 class User
