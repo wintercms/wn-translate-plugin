@@ -203,12 +203,10 @@ class EventRegistry
             if (!array_key_exists($fieldName, $translatable)) {
                 continue;
             }
-
             $type = array_get($config, 'type', 'text');
             if (array_key_exists($type, $typesMap)) {
                 $fields[$name]['type'] = $typesMap[$type];
             }
-
         }
 
         return $fields;

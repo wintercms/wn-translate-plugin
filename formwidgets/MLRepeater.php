@@ -83,8 +83,6 @@ class MLRepeater extends Repeater
      */
     public function getSaveValue($value)
     {
-        $value = is_array($value) ? array_values($value) : $value;
-
         if ($this->translationMode === 'repeater') {
             $this->rewritePostValues();
         }
