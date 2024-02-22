@@ -237,6 +237,38 @@ There are ways to get and set attributes without changing the context.
     // Sets a single translated attribute for a language
     $user->setAttributeTranslated('name', 'Jean-Claude', 'fr');
     
+## Translation of repeater internal fields (translationMode = "fields")
+
+The MLRepeater formwidget now supports translating its internal fields instead of translating the repeater field itself. You need to use the `translationMode: fields` field config to do so.
+
+    class User
+    {
+        public $implement = ['Winter.Translate.Behaviors.TranslatableModel'];
+
+        public $jsonable = ['data'];
+
+        public $translatable = [
+            'data[contacts]',
+            'data[contacts][title]',
+        ];
+    }
+
+    models/user/fields.json:
+```yaml
+fields:
+  data[contacts]:
+    type: repeater
+    translationMode: fields
+    form:
+      fields:
+        name:
+          label: Name
+        title:
+          label: Job Title
+        phone:
+          label: Phone number
+```
+        
 ## Theme data translation
 
 It is also possible to translate theme customisation options. Just mark your form fields with `translatable` property and the plugin will take care about everything else:
