@@ -170,6 +170,7 @@ class EventRegistry
      * Helper function to replace standard fields with multi lingual equivalents
      * @param  array $fields
      * @param  Model $model
+     * @param  string $parent
      * @return array
      */
     protected function processFormMLFields($fields, $model, $parent = null)

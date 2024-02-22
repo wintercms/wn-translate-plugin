@@ -163,9 +163,6 @@ trait MLControl
         }
         elseif ($this->objectMethodExists($this->model, 'getAttributeTranslated') && $this->defaultLocale->code != $locale) {
             $value = $this->model->noFallbackLocale()->getAttributeTranslated($key, $locale);
-            if (!$value && $this->objectMethodExists($this->model, 'getJsonAttributeTranslated')) {
-                $value = $this->model->getJsonAttributeTranslated($this->formField->getName(), $locale);
-            }
         }
         else {
             $value = $this->formField->value;
