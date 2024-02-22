@@ -155,7 +155,10 @@ trait MLControl
         if ($this->objectMethodExists($this->model, $mutateMethod)) {
             $value = $this->model->$mutateMethod($locale);
         }
-        elseif ($this->isFieldParentJsonable() && $this->defaultLocale->code != $locale) {
+        elseif ($this->defaultLocale->code != $locale && $this->isFieldParentJsonable() &&
+                $this->objectMethodExists($this->model, 'getJsonAttributeTranslated')
+        )
+        {
             $value = $this->model->getJsonAttributeTranslated($this->formField->getName(), $locale);
         }
         elseif ($this->objectMethodExists($this->model, 'getAttributeTranslated') && $this->defaultLocale->code != $locale) {
@@ -256,13 +259,15 @@ trait MLControl
     public function isFieldParentJsonable()
     {
         $names = HtmlHelper::nameToArray($this->formField->arrayName);
-        $arrayName = $names[1];
+        if (count($names) >= 2) {
+            // $names[0] is the Model, $names[1] is the top array name
+            $arrayName = $names[1];
 
-        if (method_exists($this->model, 'isJsonable') && $this->model->isJsonable($arrayName)) { 
-            return true;
-        } else {
-            return false;
+            if (method_exists($this->model, 'isJsonable') && $this->model->isJsonable($arrayName)) {
+                return true;
+            }
         }
+        return false;
     }
 
     /**
