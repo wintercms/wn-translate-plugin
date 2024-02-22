@@ -88,7 +88,8 @@ class MLRepeater extends Repeater
         if ($this->translationMode === 'repeater') {
             $this->rewritePostValues();
             $value = $this->getLocaleSaveValue($value);
-        } elseif ($this->translationMode === 'fields') {
+        }
+        elseif ($this->translationMode === 'fields') {
             $localeValues = $this->getLocaleSaveValue($value);
             if ($value) {
                 foreach ($value as $index => &$_data) {

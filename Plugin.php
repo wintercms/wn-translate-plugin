@@ -214,14 +214,14 @@ class Plugin extends PluginBase
         ThemeData::extend(function ($model) {
             $model->bindEvent('model.afterFetch', function() use ($model) {
                 $translatable = [];
-                foreach ($model->getFormFields() as $id => $field) {
-                    if (!empty($field['translatable'])) {
-                        $translatable[] = $id;
+                foreach ($model->getFormFields() as $fieldName => $fieldConfig) {
+                    if (array_get($fieldConfig, 'translatable', false)) {
+                        $translatable[] = $fieldName;
                     }
-                    if (@$field['type'] === 'repeater') {
-                        foreach (array_get($field, 'form.fields') as $name => $config) {
-                            if (array_get($config, 'translatable')) {
-                                $translatable[] = sprintf("%s[%s]", $id, $name);
+                    if (array_get($fieldConfig, 'type', 'text') === 'repeater') {
+                        foreach (array_get($fieldConfig, 'form.fields', []) as $repeaterFieldName => $repeaterFieldConfig) {
+                            if (array_get($repeaterFieldConfig, 'translatable', false)) {
+                                $translatable[] = sprintf("%s[%s]", $fieldName, $repeaterFieldName);
                             }
                         }
                     }
