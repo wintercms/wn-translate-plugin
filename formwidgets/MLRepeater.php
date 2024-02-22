@@ -90,8 +90,12 @@ class MLRepeater extends Repeater
             $value = $this->getLocaleSaveValue($value);
         } elseif ($this->translationMode === 'fields') {
             $localeValues = $this->getLocaleSaveValue($value);
-            foreach ($value as $index => &$_data) {
-                $_data = array_merge($_data, $localeValues[$index]);
+            if ($value) {
+                foreach ($value as $index => &$_data) {
+                    $_data = array_merge($_data, $localeValues[$index]);
+                }
+            } else {
+                $value = $localeValues;
             }
         }
 
