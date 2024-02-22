@@ -30,104 +30,113 @@ A visitor can select a language by prefixing the language code to the URL, this 
 ## Language Picker Component
 
 A visitor can select their chosen language using the `LocalePicker` component. This component will display a simple dropdown that changes the page language depending on the selection.
+```
+title = "Home"
+url = "/"
 
-    title = "Home"
-    url = "/"
+[localePicker]
+==
 
-    [localePicker]
-    ==
-
-    <h3>{{ 'Please select your language:'|_ }}</h3>
-    {% component 'localePicker' %}
+<h3>{{ 'Please select your language:'|_ }}</h3>
+{% component 'localePicker' %}
+```
 
 If translated, the text above will appear as whatever language is selected by the user. The dropdown is very basic and is intended to be restyled. A simpler example might be:
+```
+[...]
+==
 
-    [...]
-    ==
-
-    <p>
-        Switch language to:
-        <a href="javascript:;" data-request="onSwitchLocale" data-request-data="locale: 'en'">English</a>,
-        <a href="javascript:;" data-request="onSwitchLocale" data-request-data="locale: 'ru'">Russian</a>
-    </p>
+<p>
+    Switch language to:
+    <a href="javascript:;" data-request="onSwitchLocale" data-request-data="locale: 'en'">English</a>,
+    <a href="javascript:;" data-request="onSwitchLocale" data-request-data="locale: 'ru'">Russian</a>
+</p>
+```
 
 ## Message translation
 
 Message or string translation is the conversion of adhoc strings used throughout the site. A message can be translated with parameters.
+```twig
+{{ 'site.name'|_ }}
 
-    {{ 'site.name'|_ }}
+{{ 'Welcome to our website!'|_ }}
 
-    {{ 'Welcome to our website!'|_ }}
-
-    {{ 'Hello :name!'|_({ name: 'Friend' }) }}
+{{ 'Hello :name!'|_({ name: 'Friend' }) }}
+```
 
 A message can also be translated for a choice usage.
-
-    {{ 'There are no apples|There are :number applies!'|__(2, { number: 'two' }) }}
-
+```twig
+{{ 'There are no apples|There are :number applies!'|__(2, { number: 'two' }) }}
+```
 Or you set a locale manually by passing a second argument.
-
-    {{ 'this is always english'|_({}, 'en') }}
-
+```twig
+{{ 'this is always english'|_({}, 'en') }}
+```
 Themes can provide default values for these messages by defining a `translate` key in the `theme.yaml` file, located in the theme directory.
+```yaml
+name: My Theme
+# [...]
 
-    name: My Theme
-    # [...]
-
-    translate:
-        en:
-            site.name: 'My Website'
-            nav.home: 'Home'
-            nav.video: 'Video'
-            title.home: 'Welcome Home'
-            title.video: 'Screencast Video'
-
-You may also define the translations in a separate file, where the path is relative to the theme. The following definition will source the default messages from the file **config/lang.yaml** inside the theme.
-
-    name: My Theme
-    # [...]
-
-    translate: config/lang.yaml
-
-This is an example of **config/lang.yaml** file with two languages:
-
+translate:
     en:
         site.name: 'My Website'
         nav.home: 'Home'
         nav.video: 'Video'
         title.home: 'Welcome Home'
-    hr:
-        site.name: 'Moje web stranice'
-        nav.home: 'Početna'
-        nav.video: 'Video'
-        title.home: 'Dobrodošli'
+        title.video: 'Screencast Video'
+```
 
-You may also define the translations in a separate file per locale, where the path is relative to the theme. The following definition will source the default messages from the file **config/lang-en.yaml** inside the theme for the english locale and from the file **config/lang-fr.yaml** for the french locale.
+You may also define the translations in a separate file, where the path is relative to the theme. The following definition will source the default messages from the file **config/lang.yaml** inside the theme.
+```yaml
+name: My Theme
+# [...]
 
-    name: My Theme
-    # [...]
-
-    translate:
-	en: config/lang-en.yaml
-	fr: config/lang-fr.yaml
-
-This is an example for the **config/lang-en.yaml** file:
-
+translate: config/lang.yaml
+```
+This is an example of **config/lang.yaml** file with two languages:
+```yaml
+en:
     site.name: 'My Website'
     nav.home: 'Home'
     nav.video: 'Video'
     title.home: 'Welcome Home'
+hr:
+    site.name: 'Moje web stranice'
+    nav.home: 'Početna'
+    nav.video: 'Video'
+    title.home: 'Dobrodošli'
+```
+
+You may also define the translations in a separate file per locale, where the path is relative to the theme. The following definition will source the default messages from the file **config/lang-en.yaml** inside the theme for the english locale and from the file **config/lang-fr.yaml** for the french locale.
+```yaml
+name: My Theme
+# [...]
+
+translate:
+    en: config/lang-en.yaml
+    fr: config/lang-fr.yaml
+```
+
+This is an example for the **config/lang-en.yaml** file:
+```yaml
+site.name: 'My Website'
+nav.home: 'Home'
+nav.video: 'Video'
+title.home: 'Welcome Home'
+```
 
 In order to make these default values reflected to your frontend site, go to **Settings -> Translate messages** in the backend and hit **Scan for messages**. They will also be loaded automatically when the theme is activated.
 
 The same operation can be performed with the `translate:scan` artisan command. It may be worth including it in a deployment script to automatically fetch updated messages:
+```bash
+php artisan translate:scan
+```
 
-    php artisan translate:scan
-    
 Add the `--purge` option to clear old messages first:
-    
-    php artisan translate:scan --purge
-    
+```bash    
+php artisan translate:scan --purge
+```
+
 ## Content translation
 
 This plugin activates a feature in the CMS that allows content files to use language suffixes, for example:
@@ -355,53 +364,53 @@ The word "Contact" in French is the same so a translated URL is not given, or ne
 
 It's possible to translate URL parameters by listening to the `translate.localePicker.translateParams` event, which is fired when switching languages.
 ```php
-    Event::listen('translate.localePicker.translateParams', function($page, $params, $oldLocale, $newLocale) {
-        if ($page->baseFileName == 'your-page-filename') {
-            return YourModel::translateParams($params, $oldLocale, $newLocale);
-        }
-    });
+Event::listen('translate.localePicker.translateParams', function($page, $params, $oldLocale, $newLocale) {
+    if ($page->baseFileName == 'your-page-filename') {
+        return YourModel::translateParams($params, $oldLocale, $newLocale);
+    }
+});
 ```
 
 In YourModel, one possible implementation might look like this:
 ```php
-    public static function translateParams($params, $oldLocale, $newLocale) {
-        $newParams = $params;
-        foreach ($params as $paramName => $paramValue) {
-            $records = self::transWhere($paramName, $paramValue, $oldLocale)->first();
-            if ($records) {
-                $records->translateContext($newLocale);
-                $newParams[$paramName] = $records->$paramName;
-            }
+public static function translateParams($params, $oldLocale, $newLocale) {
+    $newParams = $params;
+    foreach ($params as $paramName => $paramValue) {
+        $records = self::transWhere($paramName, $paramValue, $oldLocale)->first();
+        if ($records) {
+            $records->translateContext($newLocale);
+            $newParams[$paramName] = $records->$paramName;
         }
-        return $newParams;
     }
+    return $newParams;
+}
 ```
 
 ## Query string translation
 
 It's possible to translate query string parameters by listening to the `translate.localePicker.translateQuery` event, which is fired when switching languages.
 ```php
-    Event::listen('translate.localePicker.translateQuery', function($page, $params, $oldLocale, $newLocale) {
-        if ($page->baseFileName == 'your-page-filename') {
-            return YourModel::translateParams($params, $oldLocale, $newLocale);
-        }
-    });
+Event::listen('translate.localePicker.translateQuery', function($page, $params, $oldLocale, $newLocale) {
+    if ($page->baseFileName == 'your-page-filename') {
+        return YourModel::translateParams($params, $oldLocale, $newLocale);
+    }
+});
 ```
 
 For a possible implementation of the `YourModel::translateParams` method look at the example under `URL parameter translation` from above.
 
 ## Extend theme scan
 ```php
-      Event::listen('winter.translate.themeScanner.afterScan', function (ThemeScanner $scanner) {
-           ...
-      });
+Event::listen('winter.translate.themeScanner.afterScan', function (ThemeScanner $scanner) {
+     ...
+});
 ```
 
 ## Settings model translation
 
 It's possible to translate your settings model like any other model. To retrieve translated values use:
 ```php
-    Settings::instance()->getAttributeTranslated('your_attribute_name');
+Settings::instance()->getAttributeTranslated('your_attribute_name');
 ```
 
 ## Conditionally extending plugins
@@ -410,27 +419,27 @@ It's possible to translate your settings model like any other model. To retrieve
 
 It is possible to conditionally extend a plugin's models to support translation by placing an `@` symbol before the behavior definition. This is a soft implement will only use `TranslatableModel` if the Translate plugin is installed, otherwise it will not cause any errors.
 ```php
+/**
+ * Blog Post Model
+ */
+class Post extends Model
+{
+
+    [...]
+
     /**
-     * Blog Post Model
+     * Softly implement the TranslatableModel behavior.
      */
-    class Post extends Model
-    {
+    public $implement = ['@Winter.Translate.Behaviors.TranslatableModel'];
 
-        [...]
+    /**
+     * @var array Attributes that support translation, if available.
+     */
+    public $translatable = ['title'];
 
-        /**
-         * Softly implement the TranslatableModel behavior.
-         */
-        public $implement = ['@Winter.Translate.Behaviors.TranslatableModel'];
+    [...]
 
-        /**
-         * @var array Attributes that support translation, if available.
-         */
-        public $translatable = ['title'];
-
-        [...]
-
-    }
+}
 ```
 
 The back-end forms will automatically detect the presence of translatable fields and replace their controls for multilingual equivalents.
@@ -439,23 +448,23 @@ The back-end forms will automatically detect the presence of translatable fields
 
 Since the Twig filter will not be available all the time, we can pipe them to the native Laravel translation methods instead. This ensures translated messages will always work on the front end.
 ```php
-    /**
-     * Register new Twig variables
-     * @return array
-     */
-    public function registerMarkupTags()
-    {
-        // Check the translate plugin is installed
-        if (!class_exists('Winter\Translate\Behaviors\TranslatableModel'))
-            return;
+/**
+ * Register new Twig variables
+ * @return array
+ */
+public function registerMarkupTags()
+{
+    // Check the translate plugin is installed
+    if (!class_exists('Winter\Translate\Behaviors\TranslatableModel'))
+        return;
 
-        return [
-            'filters' => [
-                '_' => ['Lang', 'get'],
-                '__' => ['Lang', 'choice'],
-            ]
-        ];
-    }
+    return [
+        'filters' => [
+            '_' => ['Lang', 'get'],
+            '__' => ['Lang', 'choice'],
+        ]
+    ];
+}
 ```
 
 # User Interface
@@ -468,49 +477,49 @@ Users can switch between locales by clicking on the locale indicator on the righ
 
 It is possible to use the front-end language switcher without using jQuery or the Winter CMS AJAX Framework by making the AJAX API request yourself manually. The following is an example of how to do that.
 ```javascript
-    document.querySelector('#languageSelect').addEventListener('change', function () {
-        const details = {
-            _session_key: document.querySelector('input[name="_session_key"]').value,
-            _token: document.querySelector('input[name="_token"]').value,
-            locale: this.value
+document.querySelector('#languageSelect').addEventListener('change', function () {
+    const details = {
+        _session_key: document.querySelector('input[name="_session_key"]').value,
+        _token: document.querySelector('input[name="_token"]').value,
+        locale: this.value
+    }
+
+    let formBody = []
+
+    for (var property in details) {
+        let encodedKey = encodeURIComponent(property)
+        let encodedValue = encodeURIComponent(details[property])
+        formBody.push(encodedKey + '=' + encodedValue)
+    }
+
+    formBody = formBody.join('&')
+
+    fetch(location.href + '/', {
+        method: 'POST',
+        body: formBody,
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+            'X-WINTER-REQUEST-HANDLER': 'onSwitchLocale',
+            'X-WINTER-REQUEST-PARTIALS': '',
+            'X-Requested-With': 'XMLHttpRequest'
         }
-
-        let formBody = []
-
-        for (var property in details) {
-            let encodedKey = encodeURIComponent(property)
-            let encodedValue = encodeURIComponent(details[property])
-            formBody.push(encodedKey + '=' + encodedValue)
-        }
-
-        formBody = formBody.join('&')
-
-        fetch(location.href + '/', {
-            method: 'POST',
-            body: formBody,
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-                'X-WINTER-REQUEST-HANDLER': 'onSwitchLocale',
-                'X-WINTER-REQUEST-PARTIALS': '',
-                'X-Requested-With': 'XMLHttpRequest'
-            }
-        })
-        .then(res => res.json())
-        .then(res => window.location.replace(res.X_WINTER_REDIRECT))
-        .catch(err => console.log(err))
     })
+    .then(res => res.json())
+    .then(res => window.location.replace(res.X_WINTER_REDIRECT))
+    .catch(err => console.log(err))
+})
 ```
 
 The HTML:
 ```twig
-    {{ form_open() }}
-        <select id="languageSelect">
-            <option value="none" hidden></option>
-            {% for code, name in locales %}
-                {% if code != activeLocale %}
-                    <option value="{{code}}" name="locale">{{code | upper }}</option>
-                {% endif %}
-            {% endfor %}
-        </select>
-    {{ form_close() }}
+{{ form_open() }}
+    <select id="languageSelect">
+        <option value="none" hidden></option>
+        {% for code, name in locales %}
+            {% if code != activeLocale %}
+                <option value="{{code}}" name="locale">{{code | upper }}</option>
+            {% endif %}
+        {% endfor %}
+    </select>
+{{ form_close() }}
 ```
