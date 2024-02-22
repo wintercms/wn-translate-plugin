@@ -255,9 +255,8 @@ trait MLControl
 
     public function isFieldParentJsonable()
     {
-        $names = HtmlHelper::nameToArray($this->formField->getName());
-        array_shift($names); //remove model name
-        $arrayName = array_shift($names);
+        $names = HtmlHelper::nameToArray($this->formField->arrayName);
+        $arrayName = $names[1];
 
         if (method_exists($this->model, 'isJsonable') && $this->model->isJsonable($arrayName)) { 
             return true;
