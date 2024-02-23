@@ -260,7 +260,10 @@ trait MLControl
             // $names[0] is the Model, $names[1] is the top array name
             $arrayName = $names[1];
 
-            if (method_exists($this->model, 'isJsonable') && $this->model->isJsonable($arrayName)) {
+            if ($this->model->isClassExtendedWith('System\Behaviors\SettingsModel') ||
+                method_exists($this->model, 'isJsonable') && $this->model->isJsonable($arrayName)
+            )
+            {
                 return true;
             }
         }

@@ -36,7 +36,9 @@ class MLRepeater extends Repeater
     {
         $this->fillFromConfig(['translationMode']);
         // make the translationMode available to the repeater items formwidgets
-        $this->config->form['translationMode'] = $this->translationMode;
+        if (isset($this->config->form)) {
+            $this->config->form['translationMode'] = $this->translationMode;
+        }
 
         parent::init();
         $this->initLocale();
@@ -75,6 +77,15 @@ class MLRepeater extends Repeater
     {
         parent::prepareVars();
         $this->prepareLocaleVars();
+    }
+
+    // make the translationMode available to the repeater groups formwidgets
+    protected function getGroupFormFieldConfig($code)
+    {
+        $config = parent::getGroupFormFieldConfig($code);
+        $config['translationMode'] = $this->translationMode;
+
+        return $config;
     }
 
     /**
