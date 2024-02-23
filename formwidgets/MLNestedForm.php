@@ -22,12 +22,36 @@ class MLNestedForm extends NestedForm
     protected $defaultAlias = 'mlnestedform';
 
     /**
+     * The repeater translation mode (default|fields)
+     */
+    protected $translationMode = 'default';
+
+    /**
      * {@inheritDoc}
      */
     public function init()
     {
+        $this->fillFromConfig(['translationMode']);
+
+        // make the translationMode available to the nestedform formwidgets
+        if (isset($this->config->form)) {
+            $this->config->form['translationMode'] = $this->translationMode;
+        }
+
         parent::init();
         $this->initLocale();
+
+        if ($this->translationMode === 'fields' && $this->model) {
+            $this->model->extend(function () {
+                $this->addDynamicMethod('getJsonAttributeTranslated', function ($key, $locale) {
+                    $names = HtmlHelper::nameToArray($key);
+                    array_shift($names); // remove model
+                    if ($arrayName = array_shift($names)) {
+                        return array_get($this->lang($locale)->{$arrayName}, implode('.', $names));
+                    }
+                });
+            });
+        }
     }
 
     /**
@@ -39,7 +63,7 @@ class MLNestedForm extends NestedForm
         $parentContent = parent::render();
         $this->actAsParent(false);
 
-        if (!$this->isAvailable) {
+        if ($this->translationMode === 'fields' || !$this->isAvailable) {
             return $parentContent;
         }
 
@@ -50,7 +74,9 @@ class MLNestedForm extends NestedForm
     public function prepareVars()
     {
         parent::prepareVars();
-        $this->prepareLocaleVars();
+        if ($this->translationMode === 'default') {
+            $this->prepareLocaleVars();
+        }
     }
 
     /**
@@ -59,8 +85,15 @@ class MLNestedForm extends NestedForm
      */
     public function getSaveValue($value)
     {
-        $this->rewritePostValues();
-        return $this->getLocaleSaveValue($value);
+        if ($this->translationMode === 'default') {
+            $this->rewritePostValues();
+            $value = $this->getLocaleSaveValue($value);
+        }
+        elseif ($this->translationMode === 'fields') {
+            $localeValue = $this->getLocaleSaveValue($value);
+            $value = array_replace_recursive($value, $localeValue);
+        }
+        return $value;
     }
 
     /**
@@ -72,7 +105,7 @@ class MLNestedForm extends NestedForm
         parent::loadAssets();
         $this->actAsParent(false);
 
-        if (Locale::isAvailable()) {
+        if (Locale::isAvailable() && $this->translationMode === 'default') {
             $this->loadLocaleAssets();
             $this->addJs('js/mlnestedform.js');
         }

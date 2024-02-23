@@ -156,10 +156,13 @@ class EventRegistry
     protected function getWidgetName($widget)
     {
         $nameArray = HtmlHelper::nameToArray($widget->arrayName);
+        foreach ($nameArray as $index => $name) {
+            if (is_numeric($name)) {
+                unset($nameArray[$index]);
+            }
+        }
 
         array_shift($nameArray); // remove parent model
-        array_pop($nameArray); // remove repeater index
-
         $parentName = array_shift($nameArray);
 
         if ($nameArray) {
@@ -198,12 +201,14 @@ class EventRegistry
         }
 
         foreach ($fields as $name => $config) {
-            $fieldName = $parent ? sprintf("%s[%s]", $parent, $name) : $name;
-
+            $fieldName = $name;
             if (str_contains($name, '@')) {
                 // apply to fields with any context
                 list($fieldName, $context) = explode('@', $name);
             }
+
+            $fieldName = $parent ? sprintf("%s[%s]", $parent, $fieldName) : $fieldName;
+
             if (!array_key_exists($fieldName, $translatable)) {
                 continue;
             }

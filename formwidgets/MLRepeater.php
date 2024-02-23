@@ -25,9 +25,9 @@ class MLRepeater extends Repeater
     protected $defaultAlias = 'mlrepeater';
 
     /**
-     * The repeater translation mode (repeater|fields)
+     * The repeater translation mode (default|fields)
      */
-    protected $translationMode = 'repeater';
+    protected $translationMode = 'default';
 
     /**
      * {@inheritDoc}
@@ -65,7 +65,7 @@ class MLRepeater extends Repeater
         $parentContent = parent::render();
         $this->actAsParent(false);
 
-        if (!$this->isAvailable || $this->translationMode === 'fields') {
+        if ($this->translationMode === 'fields' || !$this->isAvailable) {
             return $parentContent;
         }
 
@@ -76,7 +76,9 @@ class MLRepeater extends Repeater
     public function prepareVars()
     {
         parent::prepareVars();
-        $this->prepareLocaleVars();
+        if ($this->translationMode === 'default') {
+            $this->prepareLocaleVars();
+        }
     }
 
     // make the translationMode available to the repeater groups formwidgets
@@ -96,21 +98,14 @@ class MLRepeater extends Repeater
     {
         $value = is_array($value) ? array_values($value) : $value;
 
-        if ($this->translationMode === 'repeater') {
+        if ($this->translationMode === 'default') {
             $this->rewritePostValues();
             $value = $this->getLocaleSaveValue($value);
         }
         elseif ($this->translationMode === 'fields') {
-            $localeValues = $this->getLocaleSaveValue($value);
-            if ($value) {
-                foreach ($value as $index => &$_data) {
-                    $_data = array_merge($_data, $localeValues[$index]);
-                }
-            } else {
-                $value = $localeValues;
-            }
+            $localeValue = $this->getLocaleSaveValue($value);
+            $value = array_replace_recursive($value, $localeValue);
         }
-
         return $value;
     }
 
@@ -123,7 +118,7 @@ class MLRepeater extends Repeater
         parent::loadAssets();
         $this->actAsParent(false);
 
-        if (Locale::isAvailable() && $this->translationMode === 'repeater') {
+        if (Locale::isAvailable() && $this->translationMode === 'default') {
             $this->loadLocaleAssets();
             $this->addJs('js/mlrepeater.js');
         }
