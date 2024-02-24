@@ -218,10 +218,11 @@ class Plugin extends PluginBase
                     if (array_get($fieldConfig, 'translatable', false)) {
                         $translatable[] = $fieldName;
                     }
-                    if (array_get($fieldConfig, 'type', 'text') === 'repeater') {
-                        foreach (array_get($fieldConfig, 'form.fields', []) as $repeaterFieldName => $repeaterFieldConfig) {
-                            if (array_get($repeaterFieldConfig, 'translatable', false)) {
-                                $translatable[] = sprintf("%s[%s]", $fieldName, $repeaterFieldName);
+                    $type = array_get($fieldConfig, 'type', 'text');
+                    if (in_array($type, ['repeater','nestedform'])) {
+                        foreach (array_get($fieldConfig, 'form.fields', []) as $subFieldName => $subFieldConfig) {
+                            if (array_get($subFieldConfig, 'translatable', false)) {
+                                $translatable[] = sprintf("%s[%s]", $fieldName, $subFieldName);
                             }
                         }
                     }
