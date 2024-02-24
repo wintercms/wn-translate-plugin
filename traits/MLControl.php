@@ -188,8 +188,14 @@ trait MLControl
 
     public function getLocaleFieldName($code)
     {
-        $names = HtmlHelper::nameToArray($this->formField->arrayName);
-        return $this->formField->getName('RLTranslate[' . $code . '][' . implode('][', $names) . ']');
+        if ($this->isLongFormNeeded()) {
+            $names = HtmlHelper::nameToArray($this->formField->arrayName);
+            $name = $this->formField->getName('RLTranslate[' . $code . '][' . implode('][', $names) . ']');
+        } else {
+            $name = $this->formField->getName('RLTranslate['.$code.']');
+        }
+
+        return $name;
     }
 
     /**
@@ -233,12 +239,16 @@ trait MLControl
             return $values;
         }
 
-        $fieldName = implode('.', HtmlHelper::nameToArray($this->formField->getName()));
+        if ($this->isLongFormNeeded()) {
+            $fieldName = implode('.', HtmlHelper::nameToArray($this->formField->getName()));
+        } else {
+            $fieldName = implode('.', HtmlHelper::nameToArray($this->fieldName));
+        }
         $isJson = $this->isLocaleFieldJsonable();
 
         foreach ($data as $locale => $_data) {
             $value = array_get($_data, $fieldName);
-            $values[$locale] = ($isJson && is_string($value)) ? json_decode($value, true) : $value;
+            $values[$locale] = $isJson && is_string($value) ? json_decode($value, true) : $value;
         }
 
         return $values;
@@ -308,5 +318,18 @@ trait MLControl
         }
 
         return method_exists($object, $method);
+    }
+
+    /**
+     * determine if fieldName needs long form
+     *
+     * @return boolean
+     */
+    protected function isLongFormNeeded()
+    {
+        $type = array_get($this->formField->config, 'type');
+        $mode = array_get($this->formField->config, 'translationMode', 'default');
+
+        return (!in_array($type, ['mlrepeater','mlnestedform']) || $mode === "fields");
     }
 }

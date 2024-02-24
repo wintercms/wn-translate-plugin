@@ -98,13 +98,12 @@ class MLRepeater extends Repeater
     {
         $value = is_array($value) ? array_values($value) : $value;
 
-        if ($this->translationMode === 'default') {
-            $this->rewritePostValues();
-            $value = $this->getLocaleSaveValue($value);
-        }
-        elseif ($this->translationMode === 'fields') {
+        if ($this->translationMode === 'fields') {
             $localeValue = $this->getLocaleSaveValue($value);
             $value = array_replace_recursive($value ?? [], $localeValue ?? []);
+        } else {
+            $this->rewritePostValues();
+            $value = $this->getLocaleSaveValue($value);
         }
         return $value;
     }
