@@ -135,7 +135,7 @@ class EventRegistry
 
         if ($widget->isNested) {
             if (@$widget->config->translationMode === 'fields') {
-                $widget->fields = $this->processFormMLFields($widget->fields, $model, $this->getWidgetName($widget));
+                $widget->fields = $this->processFormMLFields($widget->fields, $model, $this->getWidgetLongName($widget));
             }
             return;
         }
@@ -153,7 +153,7 @@ class EventRegistry
         }
     }
 
-    protected function getWidgetName($widget)
+    protected function getWidgetLongName($widget)
     {
         $nameArray = HtmlHelper::nameToArray($widget->arrayName);
         foreach ($nameArray as $index => $name) {

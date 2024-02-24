@@ -104,7 +104,7 @@ class MLRepeater extends Repeater
         }
         elseif ($this->translationMode === 'fields') {
             $localeValue = $this->getLocaleSaveValue($value);
-            $value = array_replace_recursive($value, $localeValue);
+            $value = array_replace_recursive($value ?? [], $localeValue ?? []);
         }
         return $value;
     }
