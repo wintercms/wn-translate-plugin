@@ -22,7 +22,7 @@ class MLNestedForm extends NestedForm
     protected $defaultAlias = 'mlnestedform';
 
     /**
-     * The repeater translation mode (default|fields)
+     * The nestedform translation mode (default|fields)
      */
     protected $translationMode = 'default';
 
