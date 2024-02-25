@@ -265,6 +265,7 @@ class User
     public $jsonable = ['data'];
 
     public $translatable = [
+        'data',
         'data[contacts]',
         'data[contacts][title]',
     ];
