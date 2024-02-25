@@ -253,9 +253,9 @@ $user->getAttributeTranslated('name', 'fr');
 $user->setAttributeTranslated('name', 'Jean-Claude', 'fr');
 ```
 
-## Repeater formwidget internal fields translation
+## Repeater/NestedForm formwidget internal fields translation
 
-It is now possible to independently translate the fields defined within a repeater formwidget by setting its `translationMode` config to `fields` (see example below)
+It is now possible to independently translate the fields defined within a repeater/nestedform formwidget by setting its `translationMode` config to `fields` (see example below)
 
 ```php
 class User
@@ -275,7 +275,7 @@ models/user/fields.json:
 ```yaml
 fields:
   data[contacts]:
-    type: repeater
+    type: repeater (or nestedform)
     translationMode: fields
     form:
       fields:
