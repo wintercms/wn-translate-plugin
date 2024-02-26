@@ -219,7 +219,7 @@ class Plugin extends PluginBase
                         $translatable[] = $fieldName;
                     }
                     $type = array_get($fieldConfig, 'type', 'text');
-                    if (in_array($type, ['repeater','nestedform'])) {
+                    if (in_array($type, ['repeater', 'nestedform'])) {
                         foreach (array_get($fieldConfig, 'form.fields', []) as $subFieldName => $subFieldConfig) {
                             if (array_get($subFieldConfig, 'translatable', false)) {
                                 $translatable[] = sprintf("%s[%s]", $fieldName, $subFieldName);
