@@ -133,7 +133,7 @@ class EventRegistry
             return;
         }
 
-        if ($widget->isNested) {
+        if ($widget->isNested && !empty($widget->fields)) {
             if (($widget->config->translationMode ?? 'default') === 'fields') {
                 $widget->fields = $this->processFormMLFields($widget->fields, $model, $this->getWidgetLongName($widget));
             }
