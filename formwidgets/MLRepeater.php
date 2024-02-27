@@ -109,6 +109,37 @@ class MLRepeater extends Repeater
     }
 
     /**
+     * Returns an array of translated values for this field
+     * @return array
+     */
+    public function getLocaleSaveData()
+    {
+        $values = [];
+        $data = post('RLTranslate');
+
+        if (!is_array($data)) {
+            return $values;
+        }
+
+        if ($this->isLongFormNeeded()) {
+            $fieldName = implode('.', HtmlHelper::nameToArray($this->formField->getName()));
+        } else {
+            $fieldName = implode('.', HtmlHelper::nameToArray($this->fieldName));
+        }
+
+        foreach ($data as $locale => $_data) {
+            $i = 0;
+            $content = array_get($_data, $fieldName);
+            foreach ($content as $index => $value) {
+                // we reindex to fix item reordering index issues
+                $values[$locale][$i++] = $value;
+            }
+        }
+
+        return $values;
+    }
+
+    /**
      * {@inheritDoc}
      */
     protected function loadAssets()
