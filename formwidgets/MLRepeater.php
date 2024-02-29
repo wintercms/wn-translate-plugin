@@ -45,7 +45,7 @@ class MLRepeater extends Repeater
 
         if ($this->translationMode === 'fields' && $this->model) {
             $this->model->extend(function () {
-                $this->addDynamicMethod('getJsonAttributeTranslated', function ($key, $locale) {
+                $this->addDynamicMethod('WinterTranslateGetJsonAttributeTranslated', function ($key, $locale) {
                     $names = HtmlHelper::nameToArray($key);
                     array_shift($names); // remove model
                     if ($arrayName = array_shift($names)) {
