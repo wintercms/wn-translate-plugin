@@ -127,12 +127,18 @@ class MLRepeater extends Repeater
             $fieldName = implode('.', HtmlHelper::nameToArray($this->fieldName));
         }
 
+        $isJson = $this->isLocaleFieldJsonable();
+
         foreach ($data as $locale => $_data) {
             $i = 0;
             $content = array_get($_data, $fieldName);
-            foreach ($content as $index => $value) {
-                // we reindex to fix item reordering index issues
-                $values[$locale][$i++] = $value;
+            if (is_array($content)) {
+                foreach ($content as $index => $value) {
+                    // we reindex to fix item reordering index issues
+                    $values[$locale][$i++] = $value;
+                }
+            } else {
+                $values[$locale] = $isJson && is_string($content) ? json_decode($content, true) : $content;
             }
         }
 
