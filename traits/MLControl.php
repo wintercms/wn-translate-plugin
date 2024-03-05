@@ -159,7 +159,7 @@ trait MLControl
                 $this->objectMethodExists($this->model, 'WinterTranslateGetJsonAttributeTranslated')
         )
         {
-            $value = $this->model->getJsonAttributeTranslated($this->formField->getName(), $locale);
+            $value = $this->model->WinterTranslateGetJsonAttributeTranslated($this->formField->getName(), $locale);
         }
         elseif ($this->objectMethodExists($this->model, 'getAttributeTranslated') && $this->defaultLocale->code != $locale) {
             $value = $this->model->noFallbackLocale()->getAttributeTranslated($key, $locale);
