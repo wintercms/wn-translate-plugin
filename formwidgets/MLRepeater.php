@@ -118,6 +118,12 @@ class MLRepeater extends Repeater
         $data = post('RLTranslate');
 
         if (!is_array($data)) {
+            if ($this->translationMode === 'fields') {
+                foreach (Locale::listEnabled() as $code => $name) {
+                    // force translations removal from db
+                    $values[$code] = [];
+                }
+            }
             return $values;
         }
 
