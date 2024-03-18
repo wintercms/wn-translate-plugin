@@ -83,8 +83,26 @@ abstract class TranslatableBehavior extends ExtensionBase
             }
         });
 
-        $this->model->bindEvent('model.saveInternal', function() {
+        $this->model->bindEvent('model.getValidationAttributes', function ($attributes) {
+            if (($locale = $this->translateContext()) !== $this->translatableDefault) {
+                foreach ($this->getTranslateDirty($locale) as $key => $value) {
+                    if (!empty($value)) {
+                        $attributes[$key] = $value;
+                    }
+                }
+                return $attributes;
+            }
+        }, 1000);
+
+        $this->model->bindEvent('model.saveInternal', function () {
             $this->syncTranslatableAttributes();
+
+            if (method_exists($this->model, 'validate')) {
+                foreach ($this->getDirtyLocales() as $locale) {
+                    $this->translateContext($locale);
+                    $this->model->validate();
+                }
+            }
         });
     }
 
@@ -316,25 +334,24 @@ abstract class TranslatableBehavior extends ExtensionBase
     }
 
     /**
-     * Changes the active language for this model
-     * @param  string $context
-     * @return void
+     * Change the active language for this model
+     * @param  string|null $context
+     * @return string
      */
-    public function translateContext($context = null)
+    public function translateContext($context = null): string
     {
-        if ($context === null) {
-            return $this->translatableContext;
+        if ($context) {
+            $this->translatableContext = $context;
         }
-
-        $this->translatableContext = $context;
+        return $this->translatableContext;
     }
 
     /**
-     * Shorthand for translateContext method, and chainable.
-     * @param  string $context
+     * Chainable shorthand for translateContext method
+     * @param  string|null $context
      * @return self
      */
-    public function lang($context = null)
+    public function lang($context = null): self
     {
         $this->translateContext($context);
 
