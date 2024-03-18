@@ -8,6 +8,7 @@
         type="hidden"
         name="<?= $field->getName('RLTranslate['.$code.']') ?>"
         value="<?= e($value) ?>"
+        autocomplete="off"
         data-locale-value="<?= $code ?>"
         <?= $field->getAttributes() ?>
     />
