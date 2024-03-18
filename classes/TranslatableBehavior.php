@@ -317,25 +317,20 @@ abstract class TranslatableBehavior extends ExtensionBase
     }
 
     /**
-     * Changes the active language for this model
-     * @param  string $context
-     * @return void
+     * Change the active language for this model
      */
-    public function translateContext($context = null)
+    public function translateContext(string|null $context = null): string
     {
-        if ($context === null) {
-            return $this->translatableContext;
+        if ($context) {
+            $this->translatableContext = $context;
         }
-
-        $this->translatableContext = $context;
+        return $this->translatableContext;
     }
 
     /**
-     * Shorthand for translateContext method, and chainable.
-     * @param  string $context
-     * @return self
+     * Chainable shorthand for translateContext method
      */
-    public function lang($context = null)
+    public function lang(string|null $context = null): self
     {
         $this->translateContext($context);
 
