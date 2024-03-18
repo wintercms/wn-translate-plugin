@@ -305,12 +305,12 @@ tabs:
 
 ## Fallback attribute values
 
-By default, untranslated attributes will fall back to the default locale. This behavior can be disabled by calling the `noFallbackLocale` method.
+By default, untranslated attributes will fall back to the default locale. This behavior can be disabled by calling the `setTranslatableUseFallback()` method.
 
 ```php
 $user = User::first();
 
-$user->noFallbackLocale()->lang('fr');
+$user->setTranslatableUseFallback(false)->lang('fr');
 
 // Returns NULL if there is no French translation
 $user->name;

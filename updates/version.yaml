@@ -126,3 +126,11 @@
     - "Fix translations conflicting between nested fields and translatable root fields of the same name."
 "2.1.3": "Fixed issue with translatable models"
 "2.1.4": "Fixed issue with broken imports in the backend Locales controller."
+"2.1.5":
+    - "Add support for translatable nested forms"
+    - "Add validation for translated string"
+    - "Add setTranslatableUseFallback() / deprecate noFallbackLocale()"
+    - "Only extend cms page if cms module is enabled"
+    - "Prevent browser autofill for hidden locale inputs"
+    - "System MailTemplate model is now translatable"
+    - "Make fields using @context translatable"

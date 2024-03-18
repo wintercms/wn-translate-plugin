@@ -78,6 +78,24 @@ class TranslatableCmsObjectTest extends \Winter\Translate\Tests\TranslatePluginT
         $this->assertEquals('Awww yiss', $obj->markup);
     }
 
+    /**
+     * @since 2.1.5
+     */
+    public function testGetTranslationValueUseFallbackFalse()
+    {
+        $obj = FeatureModel::first();
+
+        $this->assertEquals('Awww yiss', $obj->markup);
+
+        $obj->setTranslatableUseFallback(false)->translateContext('fr');
+
+        $this->assertEquals(null, $obj->markup);
+    }
+
+    /**
+     * @deprecated 2.1.5
+     * @see testGetTranslationValueUseFallbackFalse()
+     */
     public function testGetTranslationValueNoFallback()
     {
         $obj = FeatureModel::first();
