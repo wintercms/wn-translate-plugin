@@ -39,6 +39,26 @@ class TranslatablePageTest extends \Winter\Translate\Tests\TranslatePluginTestCa
         parent::tearDown();
     }
 
+    /**
+     * @since 2.1.5
+     */
+    public function testUseFallbackFalse()
+    {
+        $page = TranslatablePage::create([
+            'fileName' => 'translatable',
+            'title' => 'english title',
+            'url' => '/test',
+        ]);
+        $page->translateContext('fr');
+        $this->assertEquals('english title', $page->title);
+        $page->setTranslatableUseFallback(false)->translateContext('fr');
+        $this->assertEquals(null, $page->title);
+    }
+
+    /**
+     * @deprecated 2.1.5
+     * @see testUseFallbackFalse()
+     */
     public function testUseFallback()
     {
         $page = TranslatablePage::create([

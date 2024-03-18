@@ -156,7 +156,7 @@ trait MLControl
             $value = $this->model->$mutateMethod($locale);
         }
         elseif ($this->objectMethodExists($this->model, 'getAttributeTranslated') && $this->defaultLocale->code != $locale) {
-            $value = $this->model->noFallbackLocale()->getAttributeTranslated($key, $locale);
+            $value = $this->model->setTranslatableUseFallback(false)->getAttributeTranslated($key, $locale);
         }
         else {
             $value = $this->formField->value;
