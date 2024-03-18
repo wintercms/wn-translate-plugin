@@ -318,8 +318,10 @@ abstract class TranslatableBehavior extends ExtensionBase
 
     /**
      * Change the active language for this model
+     * @param  string|null $context
+     * @return string
      */
-    public function translateContext(string|null $context = null): string
+    public function translateContext($context = null): string
     {
         if ($context) {
             $this->translatableContext = $context;
@@ -329,8 +331,10 @@ abstract class TranslatableBehavior extends ExtensionBase
 
     /**
      * Chainable shorthand for translateContext method
+     * @param  string|null $context
+     * @return self
      */
-    public function lang(string|null $context = null): self
+    public function lang($context = null): self
     {
         $this->translateContext($context);
 
