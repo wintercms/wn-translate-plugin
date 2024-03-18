@@ -8,6 +8,7 @@
         type="hidden"
         name="<?= $this->getLocaleFieldName($code) ?>"
         value="<?= e($value) ?>"
+        autocomplete="off"
         data-locale-value="<?= $code ?>"
         <?= $field->getAttributes() ?>
     />
