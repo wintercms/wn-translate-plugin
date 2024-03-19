@@ -97,39 +97,40 @@
         }
 
         // set ML button position
-        if (this.$markdownEditor.hasClass('mode-tab')) {
-
-            var $container = $('.editor-write', this.$el),
-                $previewContainer = $('.editor-preview', this.$el),
-                $scrollbar = $('.ace_scrollbar', this.$el),
-                $input = $('.ace_text-input', this.$el)
-        
+        var $container = $('.editor-write', this.$el),
+            $previewContainer = $('.editor-preview', this.$el),
+            $scrollbar = $('.ace_scrollbar', this.$el),
+            $input = $('.ace_text-input', this.$el)
+    
+        // fix exit fullscreen
+        setTimeout(function() {
             setMLButtonPosition()
-            $input.on('keydown keyup', setMLButtonPosition)
-            
-            function setMLButtonPosition() {
+        }, 0)
 
-                // make sure container is displayed (fix previewmode)
-                $container.css('display', 'initial')
+        // input listener
+        $input.on('keydown keyup', setMLButtonPosition)
+        
+        function setMLButtonPosition() {
 
-                var scrollbarWidth = $scrollbar[0].offsetWidth - 5
-                if (scrollbarWidth === -5) scrollbarWidth = $previewContainer[0].offsetWidth - $previewContainer[0].clientWidth
+            // make sure container is displayed (fix previewmode)
+            $container.css('display', 'initial')
 
-                if (scrollbarWidth >= 0) {
-                    $container.css('padding-right', scrollbarWidth + 23)
-                    $btn.css('right', scrollbarWidth - 1)
-                    $dropdown.css('right', scrollbarWidth - 2)
-                } else {
-                    $container.css('padding-right', '')
-                    $btn.css('right', '')
-                    $dropdown.css('right', '')
-                }
+            var scrollbarWidth = $scrollbar[0].offsetWidth - 5
+            if (scrollbarWidth === -5) scrollbarWidth = $previewContainer[0].offsetWidth - $previewContainer[0].clientWidth
 
-                // reset container
-                $container.css('display', '')
-
+            if (scrollbarWidth >= 0) {
+                $container.css('padding-right', scrollbarWidth + 23)
+                $btn.css('right', scrollbarWidth - 1)
+                $dropdown.css('right', scrollbarWidth - 2)
+            } else {
+                $container.css('padding-right', '')
+                $btn.css('right', '')
+                $dropdown.css('right', '')
             }
-            
+
+            // reset container
+            $container.css('display', '')
+
         }
         
     }
