@@ -351,7 +351,7 @@ abstract class TranslatableBehavior extends ExtensionBase
      * @param  string|null $context
      * @return self
      */
-    public function lang($context = null): self
+    public function lang($context = null)
     {
         $this->translateContext($context);
 
