@@ -321,7 +321,7 @@ trait MLControl
      *
      * @return boolean
      */
-    protected function isLongFormNeeded()
+    public function isLongFormNeeded()
     {
         $type = array_get($this->formField->config, 'type');
         $mode = array_get($this->formField->config, 'translationMode', 'default');
@@ -329,7 +329,12 @@ trait MLControl
         return (!in_array($type, ['mlrepeater','mlnestedform']) || $mode === "fields");
     }
 
-    protected function getFieldName()
+    /**
+     * get the proper field name
+     *
+     * @return string
+     */
+    public function getFieldName()
     {
         if ($this->isLongFormNeeded()) {
             $fieldName = implode('.', HtmlHelper::nameToArray($this->formField->getName()));
