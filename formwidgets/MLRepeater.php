@@ -127,12 +127,7 @@ class MLRepeater extends Repeater
             return $values;
         }
 
-        if ($this->isLongFormNeeded()) {
-            $fieldName = implode('.', HtmlHelper::nameToArray($this->formField->getName()));
-        } else {
-            $fieldName = implode('.', HtmlHelper::nameToArray($this->fieldName));
-        }
-
+        $fieldName = $this->getFieldName();
         $isJson = $this->isLocaleFieldJsonable();
 
         foreach ($data as $locale => $_data) {
