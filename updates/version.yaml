@@ -134,3 +134,6 @@
     - "Prevent browser autofill for hidden locale inputs"
     - "System MailTemplate model is now translatable"
     - "Make fields using @context translatable"
+"2.1.6":
+    - "Improve ML button styling"
+    - "Fix TranslatableBehavior::lang method signature"
