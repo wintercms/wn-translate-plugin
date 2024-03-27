@@ -257,6 +257,8 @@ $user->setAttributeTranslated('name', 'Jean-Claude', 'fr');
 
 It is now possible to independently translate the fields defined within a repeater/nestedform formwidget by setting its `translationMode` config to `fields` (see example below)
 
+Note: fields can be marked as translatable either within the Model's `$translatable` array or within the fields.yaml file by adding `translatable: true` to any field config
+
 ```php
 class User
 {
@@ -265,7 +267,6 @@ class User
     public $jsonable = ['data'];
 
     public $translatable = [
-        'data',
         'data[contacts]',
         'data[contacts][title]',
     ];
@@ -277,6 +278,7 @@ models/user/fields.yaml:
 fields:
   data[contacts]:
     type: repeater (or nestedform)
+    translatable: true
     translationMode: fields
     form:
       fields:
@@ -284,6 +286,7 @@ fields:
           label: Name
         title:
           label: Job Title
+          translatable: true
         phone:
           label: Phone number
 ```
