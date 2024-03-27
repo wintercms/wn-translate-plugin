@@ -61,10 +61,6 @@ abstract class TranslatableBehavior extends ExtensionBase
 
         $this->initTranslatableContext();
 
-        if (! isset($model->translatable)) {
-            $model->addDynamicProperty('translatable', []);
-        }
-
         $this->model->bindEvent('model.beforeGetAttribute', function ($key) use ($model) {
             if ($this->isTranslatable($key)) {
                 $value = $this->getAttributeTranslated($key);
@@ -380,7 +376,7 @@ abstract class TranslatableBehavior extends ExtensionBase
     {
         $translatable = [];
 
-        foreach ($this->model->translatable as $attribute) {
+        foreach ($this->model->translatable ?? [] as $attribute) {
             $translatable[] = is_array($attribute) ? array_shift($attribute) : $attribute;
         }
 
