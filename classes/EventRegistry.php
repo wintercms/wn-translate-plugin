@@ -128,11 +128,6 @@ class EventRegistry
             return;
         }
 
-
-        if (!$model->hasTranslatableAttributes()) {
-            return;
-        }
-
         if ($widget->isNested && !empty($widget->fields)) {
             if (($widget->config->translationMode ?? 'default') === 'fields') {
                 $widget->fields = $this->processFormMLFields($widget->fields, $model, $this->getWidgetLongName($widget));
@@ -202,6 +197,8 @@ class EventRegistry
 
         foreach ($fields as $name => $config) {
             $fieldName = $name;
+            $fieldTranslatable = false;
+
             if (str_contains($name, '@')) {
                 // apply to fields with any context
                 list($fieldName, $context) = explode('@', $name);
@@ -209,7 +206,11 @@ class EventRegistry
 
             $fieldName = $parent ? sprintf("%s[%s]", $parent, $fieldName) : $fieldName;
 
-            if (!array_key_exists($fieldName, $translatable)) {
+            if (array_get($config, 'translatable', false)) {
+                $model->addTranslatableAttributes($fieldName);
+                $fieldTranslatable = true;
+            }
+            if (!$fieldTranslatable && !array_key_exists($fieldName, $translatable)) {
                 continue;
             }
             $type = array_get($config, 'type', 'text');
