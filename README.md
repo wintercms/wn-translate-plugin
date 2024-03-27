@@ -272,7 +272,7 @@ class User
 }
 ```
 
-models/user/fields.json:
+models/user/fields.yaml:
 ```yaml
 fields:
   data[contacts]:
