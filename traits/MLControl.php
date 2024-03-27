@@ -155,6 +155,12 @@ trait MLControl
         if ($this->objectMethodExists($this->model, $mutateMethod)) {
             $value = $this->model->$mutateMethod($locale);
         }
+        elseif ($this->defaultLocale->code != $locale && $this->isFieldParentJsonable() &&
+                $this->objectMethodExists($this->model, 'WinterTranslateGetJsonAttributeTranslated')
+        )
+        {
+            $value = $this->model->WinterTranslateGetJsonAttributeTranslated($this->formField->getName(), $locale);
+        }
         elseif ($this->objectMethodExists($this->model, 'getAttributeTranslated') && $this->defaultLocale->code != $locale) {
             $value = $this->model->setTranslatableUseFallback(false)->getAttributeTranslated($key, $locale);
         }
@@ -178,6 +184,18 @@ trait MLControl
         $field->type = $this->getFallbackType();
 
         return $field;
+    }
+
+    public function getLocaleFieldName($code)
+    {
+        if ($this->isLongFormNeeded()) {
+            $names = HtmlHelper::nameToArray($this->formField->arrayName);
+            $name = $this->formField->getName('RLTranslate[' . $code . '][' . implode('][', $names) . ']');
+        } else {
+            $name = $this->formField->getName('RLTranslate['.$code.']');
+        }
+
+        return $name;
     }
 
     /**
@@ -221,12 +239,12 @@ trait MLControl
             return $values;
         }
 
-        $fieldName = implode('.', HtmlHelper::nameToArray($this->fieldName));
+        $fieldName = $this->getLongFieldName();
         $isJson = $this->isLocaleFieldJsonable();
 
         foreach ($data as $locale => $_data) {
             $value = array_get($_data, $fieldName);
-            $values[$locale] = $isJson ? json_decode($value, true) : $value;
+            $values[$locale] = $isJson && is_string($value) ? json_decode($value, true) : $value;
         }
 
         return $values;
@@ -239,6 +257,23 @@ trait MLControl
     public function getFallbackType()
     {
         return defined('static::FALLBACK_TYPE') ? static::FALLBACK_TYPE : 'text';
+    }
+
+    public function isFieldParentJsonable()
+    {
+        $names = HtmlHelper::nameToArray($this->formField->arrayName);
+        if (count($names) >= 2) {
+            // $names[0] is the Model, $names[1] is the top array name
+            $arrayName = $names[1];
+
+            if ($this->model->isClassExtendedWith('System\Behaviors\SettingsModel') ||
+                method_exists($this->model, 'isJsonable') && $this->model->isJsonable($arrayName)
+            )
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -279,5 +314,33 @@ trait MLControl
         }
 
         return method_exists($object, $method);
+    }
+
+    /**
+     * determine if fieldName needs long form
+     *
+     * @return boolean
+     */
+    public function isLongFormNeeded()
+    {
+        $type = array_get($this->formField->config, 'type');
+        $mode = array_get($this->formField->config, 'translationMode', 'default');
+
+        return (!in_array($type, ['mlrepeater','mlnestedform']) || $mode === "fields");
+    }
+
+    /**
+     * get the proper field name
+     *
+     * @return string
+     */
+    public function getLongFieldName()
+    {
+        if ($this->isLongFormNeeded()) {
+            $fieldName = implode('.', HtmlHelper::nameToArray($this->formField->getName()));
+        } else {
+            $fieldName = implode('.', HtmlHelper::nameToArray($this->fieldName));
+        }
+        return $fieldName;
     }
 }
