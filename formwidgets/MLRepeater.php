@@ -127,7 +127,7 @@ class MLRepeater extends Repeater
             return $values;
         }
 
-        $fieldName = $this->getFieldName();
+        $fieldName = $this->getLongFieldName();
         $isJson = $this->isLocaleFieldJsonable();
 
         foreach ($data as $locale => $_data) {

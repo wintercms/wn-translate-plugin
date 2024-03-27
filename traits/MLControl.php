@@ -239,7 +239,7 @@ trait MLControl
             return $values;
         }
 
-        $fieldName = $this->getFieldName();
+        $fieldName = $this->getLongFieldName();
         $isJson = $this->isLocaleFieldJsonable();
 
         foreach ($data as $locale => $_data) {
@@ -334,7 +334,7 @@ trait MLControl
      *
      * @return string
      */
-    public function getFieldName()
+    public function getLongFieldName()
     {
         if ($this->isLongFormNeeded()) {
             $fieldName = implode('.', HtmlHelper::nameToArray($this->formField->getName()));
