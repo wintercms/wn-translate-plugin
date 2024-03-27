@@ -176,6 +176,15 @@ class EventRegistry
      */
     protected function processFormMLFields($fields, $model, $parent = null)
     {
+        if ($parent) {
+            $nameArray = HtmlHelper::nameToArray($parent);
+            $topArrayName = array_shift($nameArray);
+            if ($topArrayName && $model->isJsonable($topArrayName)) {
+                // make jsonable field translatable so its value can be localized
+                $model->addTranslatableAttributes($topArrayName);
+            }
+        }
+
         $typesMap = [
             'markdown'    => 'mlmarkdowneditor',
             'mediafinder' => 'mlmediafinder',
