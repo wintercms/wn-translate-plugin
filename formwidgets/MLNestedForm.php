@@ -35,7 +35,8 @@ class MLNestedForm extends NestedForm
 
         // make the translationMode available to the nestedform formwidgets
         if (isset($this->config->form)) {
-            $this->config->form['translationMode'] = $this->translationMode;
+            $this->config->form = $this->makeConfig($this->config->form);
+            $this->config->form->translationMode = $this->translationMode;
         }
 
         parent::init();
