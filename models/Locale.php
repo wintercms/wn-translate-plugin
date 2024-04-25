@@ -100,7 +100,7 @@ class Locale extends Model
         $this->newQuery()->where('id', $this->id)->update(['is_default' => true]);
         $this->newQuery()->where('id', '<>', $this->id)->update(['is_default' => false]);
 
-        static::$defaultLocale = $this;
+        self::$defaultLocale = null;
         Cache::forget('winter.translate.defaultLocale');
     }
 
