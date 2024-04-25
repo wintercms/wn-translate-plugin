@@ -31,6 +31,15 @@ class Locale extends Model
         'name' => 'required',
     ];
 
+    /**
+     * @var array Attributes that are mass assignable
+     */
+    public $fillable = [
+        'code',
+        'name',
+        'is_enabled',
+    ];
+
     public $timestamps = false;
 
     /**
