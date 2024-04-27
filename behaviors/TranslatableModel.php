@@ -29,13 +29,15 @@ class TranslatableModel extends TranslatableBehavior
             'name' => 'model',
         ];
 
-        if (!in_array( 'Winter\Storm\Database\Traits\SoftDelete', class_uses_recursive(get_class($this->model)))) {
-            $this->model->bindEvent('model.afterDelete', [$this, 'afterModelDelete']);
-        }
+        $this->model->bindEvent('model.afterDelete', [$this, 'afterModelDelete']);
     }
 
     public function afterModelDelete()
     {
+        if (method_exists($this->model, 'isSoftDelete') && $this->model->isSoftDelete()) {
+            return;
+        }
+
         // delete translation attributes for this record
         Db::table('winter_translate_attributes')
             ->where('model_id', $this->model->getKey())
