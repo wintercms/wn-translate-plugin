@@ -38,16 +38,19 @@ class TranslatableModel extends TranslatableBehavior
             return;
         }
 
+        $model_id' = $this->model->getKey();
+        $model_type' = $this->getClass();
+
         // delete translation attributes for this record
         Db::table('winter_translate_attributes')
-            ->where('model_id', $this->model->getKey())
-            ->where('model_type', $this->getClass())
+            ->where('model_id', $model_id)
+            ->where('model_type', $model_type)
             ->delete();
 
         // delete translation indexes for this record
         Db::table('winter_translate_indexes')
-            ->where('model_id', $this->model->getKey())
-            ->where('model_type', $this->getClass())
+            ->where('model_id', $model_id)
+            ->where('model_type', $model_type)
             ->delete();
     }
 
