@@ -34,7 +34,7 @@ class TranslatableModel extends TranslatableBehavior
 
     public function afterModelDelete()
     {
-        if (method_exists($this->model, 'isSoftDelete') && $this->model->isSoftDelete()) {
+        if ($this->model->methodExists('isSoftDelete') && $this->model->isSoftDelete()) {
             return;
         }
 
