@@ -38,8 +38,8 @@ class TranslatableModel extends TranslatableBehavior
             return;
         }
 
-        $model_id' = $this->model->getKey();
-        $model_type' = $this->getClass();
+        $model_id = $this->model->getKey();
+        $model_type = $this->getClass();
 
         // delete translation attributes for this record
         Db::table('winter_translate_attributes')
