@@ -190,7 +190,7 @@ trait MLControl
     {
         $suffix = '';
         
-        if ($this->isLongFormNeeded() && empty($this->formField->arrayName)) {
+        if ($this->isLongFormNeeded() && !empty($this->formField->arrayName)) {
             $names = HtmlHelper::nameToArray($this->formField->arrayName);
             $suffix = '[' . implode('][', $names) . ']';
         }
