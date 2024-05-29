@@ -188,14 +188,14 @@ trait MLControl
 
     public function getLocaleFieldName($code)
     {
-        if ($this->isLongFormNeeded()) {
+        $suffix = '';
+        
+        if ($this->isLongFormNeeded() && !empty($this->formField->arrayName)) {
             $names = HtmlHelper::nameToArray($this->formField->arrayName);
-            $name = $this->formField->getName('RLTranslate[' . $code . '][' . implode('][', $names) . ']');
-        } else {
-            $name = $this->formField->getName('RLTranslate['.$code.']');
+            $suffix = '[' . implode('][', $names) . ']';
         }
 
-        return $name;
+        return $this->formField->getName('RLTranslate['.$code.']' . $suffix);
     }
 
     /**
