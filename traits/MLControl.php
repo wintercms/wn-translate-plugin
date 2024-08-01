@@ -146,6 +146,10 @@ trait MLControl
     {
         $key = $this->valueFrom ?: $this->fieldName;
 
+        if (!empty($this->formField->arrayName)) {
+            $key = $this->formField->arrayName.'['.$key.']';
+        }
+
         /*
          * Get the translated values from the model
          */
@@ -205,6 +209,10 @@ trait MLControl
     {
         $localeData = $this->getLocaleSaveData();
         $key = $this->valueFrom ?: $this->fieldName;
+
+        if (!empty($this->formField->arrayName)) {
+            $key = $this->formField->arrayName.'['.$key.']';
+        }
 
         /*
          * Set the translated values to the model
