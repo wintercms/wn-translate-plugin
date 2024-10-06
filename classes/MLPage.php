@@ -31,7 +31,7 @@ class MLPage
                 $alternateLinks[$locale] = Url::to($pageUrl);
             }
 
-            if ($alternateLinks) {
+            if (count($alternateLinks) > 1) {
                 $result['alternateLinks'] = $alternateLinks;
             }
         }
