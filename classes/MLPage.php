@@ -19,10 +19,9 @@ class MLPage
     public static function resolveMenuItem(object $item, string $url, Theme $theme): ?array
     {
         $result = CmsPage::resolveMenuItem($item, $url, $theme);
+        $locales = Locale::listEnabled();
 
-        if ($result && ($page = CmsPage::loadCached($theme, $item->reference))) {
-
-            $locales = Locale::listEnabled();
+        if (count($locales) > 1 && $result && ($page = CmsPage::loadCached($theme, $item->reference))) {
             $defaultLocale = Locale::getDefault();
 
             $alternateLinks = [];
@@ -31,7 +30,7 @@ class MLPage
                 $alternateLinks[$locale] = Url::to($pageUrl);
             }
 
-            if (count($alternateLinks) > 1) {
+            if ($alternateLinks) {
                 $result['alternateLinks'] = $alternateLinks;
             }
         }
