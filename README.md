@@ -1,22 +1,32 @@
-# Translation plugin
+# Translate Plugin
 
-Enables multi-lingual sites.
+Adds multi-lingual / localization capabilities to the frontends of Winter CMS websites.
 
-## Getting started
+Supports:
+- Frontend Language Picker component
+- Static string/message localizations
+- CMS Content files localizations
+- Mail template localizations
+- Model attribute localizations
+- Theme Data & Settings localizations
+- URL & URL attribute localizations
+- Simple UX in backend for providing localized values
+- Easy integration with external plugins
 
-Use composer to install the plugin:
+## Installation
+
+This plugin is available for installation via [Composer](http://getcomposer.org/).
 
 ```bash
 composer require winter/wn-translate-plugin
 ```
 
-Then, run the migrations to ensure the plugin is enabled:
+After installing the plugin you will need to run the migrations and (if you are using a [public folder](https://wintercms.com/docs/develop/docs/setup/configuration#using-a-public-folder)) [republish your public directory](https://wintercms.com/docs/develop/docs/console/setup-maintenance#mirror-public-files).
 
 ```bash
-php artisan winter:up
+php artisan migrate
 ```
 
-If you are using a [public folder](https://wintercms.com/docs/setup/configuration#public-folder) then you will also need to regenerate it with `php artisan winter:mirror public --relative`
 ## Selecting a language
 
 Different languages can be set up in the back-end area, with a single default language selected. This activates the use of the language on the front-end and in the back-end UI.
