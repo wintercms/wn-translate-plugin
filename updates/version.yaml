@@ -137,3 +137,7 @@
 "2.1.6":
     - "Improve ML button styling"
     - "Fix TranslatableBehavior::lang method signature"
+"2.1.7":
+    - "Only set alternateLinks if more than one locale is used"
+    - "Cleanup after model is deleted"
+    - "Add missing french translations"
