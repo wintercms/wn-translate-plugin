@@ -78,7 +78,11 @@ class TranslatablePage extends TranslatableBehavior
 
             if ($locale != $this->translatableDefault) {
                 $translated = $this->getAttributeTranslated($attr, $locale);
-                $localeAttr = ($translated ?: $this->translatableUseFallback) ? $localeAttr : null;
+                if ($translated) {
+                    $localeAttr = $translated;
+                } elseif (!$this->translatableUseFallback) {
+                    $localeAttr = null;
+                }
             }
 
             $this->model[$attr] = $localeAttr;
