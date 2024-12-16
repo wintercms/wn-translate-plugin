@@ -61,6 +61,9 @@ class TranslatablePageUrl extends ExtensionBase
     {
         if ($this->model instanceof \Winter\Pages\Classes\Page) {
             array_set($this->model->attributes, 'viewBag.url', $value);
+            
+            // the url must also be set using the viewBag itself as setting it in the attributes array will actually not change it in the viewBag
+            $this->model->getViewBag()->setProperty('url', $value);
         }
         else {
             $this->model->url = $value;
