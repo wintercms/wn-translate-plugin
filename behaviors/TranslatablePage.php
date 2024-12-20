@@ -23,7 +23,7 @@ class TranslatablePage extends TranslatableBehavior
     {
         parent::__construct($model);
 
-        $this->model->bindEvent('model.afterFetch', function() {
+        $this->model->bindEventOnce('model.afterFetch', function() {
             $this->translatableOriginals = $this->getModelAttributes();
 
             if (!App::runningInBackend()) {
