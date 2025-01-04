@@ -141,3 +141,5 @@
     - "Only set alternateLinks if more than one locale is used"
     - "Cleanup after model is deleted"
     - "Add missing french translations"
+"2.2.0":
+    - "Fix translating pages on Winter v1.2.7+"
