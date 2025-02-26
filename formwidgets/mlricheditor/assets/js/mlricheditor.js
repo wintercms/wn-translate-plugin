@@ -85,15 +85,46 @@
     MLRichEditor.prototype.updateLayout = function() {
         var $toolbar = $('.fr-toolbar', this.$el),
             $btn = $('.ml-btn[data-active-locale]:first', this.$el),
-            $dropdown = $('.ml-dropdown-menu[data-locale-dropdown]:first', this.$el)
+            $dropdown = $('.ml-dropdown-menu[data-locale-dropdown]:first', this.$el),
+            $element = $('.fr-element', this.$el)
 
-        if (!$toolbar.length) {
-            return
+        if ($toolbar.length) {
+            var height = $toolbar.outerHeight(true)
+            if (height) {
+                $btn.css('top', height)
+                $dropdown.css('top', height + 34)
+            }
         }
 
-        var height = $toolbar.outerHeight(true)
-        $btn.css('top', height + 6)
-        $dropdown.css('top', height + 40)
+        // set ML button position
+        var hasScrollbar = false
+        var scrollbarWidth = 0
+        var elementHeight = $element.outerHeight()
+
+        setMLButtonPosition()
+        $element.on('keydown keyup', setMLButtonPosition)
+        
+        function setMLButtonPosition() {
+            var scrollHeight = $element[0].scrollHeight
+            var showScrollbar = scrollHeight > elementHeight
+
+            if (!hasScrollbar && showScrollbar) {
+
+                hasScrollbar = true
+                if (!scrollbarWidth) scrollbarWidth = $element[0].offsetWidth - $element[0].clientWidth
+
+                $element.css('padding-right', scrollbarWidth + 23)
+                $btn.css('right', scrollbarWidth - 1)
+                $dropdown.css('right', scrollbarWidth - 2)
+
+            } else if (hasScrollbar && !showScrollbar) {
+                hasScrollbar = false
+                $element.css('padding-right', '')
+                $btn.css('right', '')
+                $dropdown.css('right', '')
+            }
+        }
+        
     }
 
     // MLRICHEDITOR PLUGIN DEFINITION

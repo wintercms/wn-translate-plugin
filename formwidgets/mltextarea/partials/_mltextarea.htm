@@ -15,6 +15,7 @@
             placeholder="<?= e(trans($field->placeholder)) ?>"
             class="form-control field-textarea size-<?= $field->size ?>"
             autocomplete="off"
+            oninput="updateTextareaLayout(this)"
             <?= $field->getAttributes() ?>><?= e($field->value) ?></textarea>
 
         <button

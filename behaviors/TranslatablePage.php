@@ -23,7 +23,7 @@ class TranslatablePage extends TranslatableBehavior
     {
         parent::__construct($model);
 
-        $this->model->bindEvent('model.afterFetch', function() {
+        $this->model->bindEventOnce('model.afterFetch', function() {
             $this->translatableOriginals = $this->getModelAttributes();
 
             if (!App::runningInBackend()) {
@@ -78,7 +78,11 @@ class TranslatablePage extends TranslatableBehavior
 
             if ($locale != $this->translatableDefault) {
                 $translated = $this->getAttributeTranslated($attr, $locale);
-                $localeAttr = ($translated ?: $this->translatableUseFallback) ? $localeAttr : null;
+                if ($translated) {
+                    $localeAttr = $translated;
+                } elseif (!$this->translatableUseFallback) {
+                    $localeAttr = null;
+                }
             }
 
             $this->model[$attr] = $localeAttr;

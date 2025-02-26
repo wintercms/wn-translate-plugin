@@ -46,7 +46,12 @@
         this.$el.on('setLocale.oc.multilingual', this.proxy(this.onSetLocale))
         this.$textarea.on('changeContent.oc.markdowneditor', this.proxy(this.onChangeContent))
 
+        this.updateLayout()
+
+        $(window).on('resize', this.proxy(this.updateLayout))
+        $(window).on('oc.updateUi', this.proxy(this.updateLayout))
         this.$el.one('dispose-control', this.proxy(this.dispose))
+        
     }
 
     MLMarkdownEditor.prototype.dispose = function() {
@@ -75,6 +80,64 @@
         this.$el.multiLingual('setLocaleValue', value)
     }
 
+    MLMarkdownEditor.prototype.updateLayout = function() {
+        var $toolbar = $('.control-toolbar', this.$el),
+            $btn = $('.ml-btn[data-active-locale]:first', this.$el),
+            $dropdown = $('.ml-dropdown-menu[data-locale-dropdown]:first', this.$el),
+            $container = $('.editor-write', this.$el),
+            $scrollbar = $('.ace_scrollbar', this.$el),
+            $input = $('.ace_text-input', this.$el)
+
+        if ($toolbar.length) {
+            var height = $toolbar.outerHeight(true)
+            if (height) {
+                $btn.css('top', height + 0.5)
+                $dropdown.css('top', height + 34)
+            }
+        }
+
+        // set ML button position
+        var $container = $('.editor-write', this.$el),
+            $previewContainer = $('.editor-preview', this.$el),
+            $scrollbar = $('.ace_scrollbar', this.$el),
+            $input = $('.ace_text-input', this.$el)
+    
+        // fix exit fullscreen
+        setTimeout(function() {
+            setMLButtonPosition()
+        }, 0)
+
+        // input listener
+        $input.on('keydown keyup', setMLButtonPosition)
+        
+        function setMLButtonPosition() {
+
+            // make sure container is displayed (fix previewmode)
+            $container.css('display', 'initial')
+
+            var scrollbarWidth = $scrollbar[0].offsetWidth - 5
+            if (scrollbarWidth === -5) scrollbarWidth = $previewContainer[0].offsetWidth - $previewContainer[0].clientWidth
+
+            if (scrollbarWidth >= 0) {
+                $container.css('padding-right', scrollbarWidth + 23)
+                $btn.css('right', scrollbarWidth - 1)
+                $dropdown.css('right', scrollbarWidth - 2)
+            } else {
+                $container.css('padding-right', '')
+                $btn.css('right', '')
+                $dropdown.css('right', '')
+            }
+
+            // reset container
+            $container.css('display', '')
+
+        }
+        
+    }
+
+    // MLMARKDOWNEDITOR PLUGIN DEFINITION
+    // ============================
+
     var old = $.fn.mlMarkdownEditor
 
     $.fn.mlMarkdownEditor = function (option) {
@@ -94,10 +157,16 @@
 
     $.fn.mlMarkdownEditor.Constructor = MLMarkdownEditor;
 
+    // MLMARKDOWNEDITOR NO CONFLICT
+    // =================
+
     $.fn.mlMarkdownEditor.noConflict = function () {
         $.fn.mlMarkdownEditor = old
         return this
     }
+
+    // MLMARKDOWNEDITOR DATA-API
+    // ===============
 
     $(document).render(function (){
         $('[data-control="mlmarkdowneditor"]').mlMarkdownEditor()

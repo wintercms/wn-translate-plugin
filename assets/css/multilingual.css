@@ -1,17 +1,17 @@
 .field-multilingual{position:relative}
-.field-multilingual .ml-btn{background:transparent;position:absolute;color:#7b7b7b;text-transform:uppercase;font-size:11px;letter-spacing:1px;width:44px;padding-right:0;-webkit-box-shadow:none;box-shadow:none;text-shadow:none;z-index:2}
+.field-multilingual .ml-btn{z-index:2;position:absolute;top:1px;bottom:1px;right:1px;width:auto;max-width:44px;max-height:38px;color:#7b7b7b;background-color:#F8F6F3;box-shadow:none;font-size:11px;letter-spacing:1px;text-transform:uppercase;margin:0 !important;padding:0 12px;border-top-left-radius:0;border-bottom-left-radius:0;transition:color 420ms ease}
 .field-multilingual .ml-btn:hover{color:#555}
-.field-multilingual.field-multilingual-text .form-control{padding-right:44px}
-.field-multilingual.field-multilingual-text .ml-btn{right:4px;top:50%;margin-top:-44px;height:88px}
-.field-multilingual.field-multilingual-textarea textarea{padding-right:30px}
-.field-multilingual.field-multilingual-textarea .ml-btn{right:13px;top:5px;width:24px;text-align:right;padding-left:4px}
-.field-multilingual.field-multilingual-textarea .ml-dropdown-menu{top:39px;right:1px}
-.field-multilingual.field-multilingual-richeditor .ml-btn{top:43px;right:25px;text-align:right}
-.field-multilingual.field-multilingual-richeditor .ml-dropdown-menu{top:74px;right:12px}
-.field-multilingual.field-multilingual-markdowneditor .ml-btn{top:43px;right:25px;text-align:right}
-.field-multilingual.field-multilingual-markdowneditor .ml-dropdown-menu{top:74px !important;right:12px}
-.field-multilingual.field-multilingual-repeater .ml-btn,
-.field-multilingual.field-multilingual-nestedform .ml-btn{top:-27px;right:11px;text-align:right}
+.field-multilingual.field-multilingual-repeater .ml-btn{top:3px;bottom:auto;height:auto;transform:translateY(-100%);border-radius:.375rem}
+.field-multilingual.field-multilingual-textarea textarea{padding-right:2rem}
+.field-multilingual.field-multilingual-textarea .ml-btn{border-bottom-right-radius:0;border-bottom-left-radius:.375rem}
+.field-multilingual.field-multilingual-textarea .ml-dropdown-menu{top:28px;right:1px}
+.field-multilingual.field-multilingual-richeditor .ml-btn{border-radius:0;border-bottom-left-radius:.375rem}
+.field-multilingual.field-multilingual-richeditor .ml-dropdown-menu{top:28px;right:1px}
+.field-multilingual.field-multilingual-markdowneditor .mode-tab .editor-write{padding-right:2rem}
+.field-multilingual.field-multilingual-markdowneditor .mode-split .editor-preview{padding-right:2rem}
+.field-multilingual.field-multilingual-markdowneditor .editor-code{padding-right:inherit}
+.field-multilingual.field-multilingual-markdowneditor .ml-btn{border-radius:0;border-bottom-left-radius:.375rem}
+.field-multilingual.field-multilingual-markdowneditor .ml-dropdown-menu{top:28px;right:1px}
 .field-multilingual.field-multilingual-repeater .ml-dropdown-menu,
 .field-multilingual.field-multilingual-nestedform .ml-dropdown-menu{top:0;right:0}
 .field-multilingual.field-multilingual-repeater.is-empty,

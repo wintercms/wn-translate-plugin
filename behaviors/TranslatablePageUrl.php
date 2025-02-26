@@ -48,7 +48,7 @@ class TranslatablePageUrl extends ExtensionBase
 
         $this->initTranslatableContext();
 
-        $this->model->bindEvent('model.afterFetch', function() {
+        $this->model->bindEventOnce('model.afterFetch', function() {
             $this->translatableDefaultUrl = $this->getModelUrl();
 
             if (!App::runningInBackend()) {

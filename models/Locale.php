@@ -31,6 +31,15 @@ class Locale extends Model
         'name' => 'required',
     ];
 
+    /**
+     * @var array Attributes that are mass assignable
+     */
+    public $fillable = [
+        'code',
+        'name',
+        'is_enabled',
+    ];
+
     public $timestamps = false;
 
     /**
@@ -90,6 +99,9 @@ class Locale extends Model
 
         $this->newQuery()->where('id', $this->id)->update(['is_default' => true]);
         $this->newQuery()->where('id', '<>', $this->id)->update(['is_default' => false]);
+
+        self::$defaultLocale = null;
+        Cache::forget('winter.translate.defaultLocale');
     }
 
     /**

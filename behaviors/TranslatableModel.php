@@ -26,8 +26,32 @@ class TranslatableModel extends TranslatableBehavior
 
         $model->morphMany['translations'] = [
             'Winter\Translate\Models\Attribute',
-            'name' => 'model'
+            'name' => 'model',
         ];
+
+        $this->model->bindEvent('model.afterDelete', [$this, 'afterModelDelete']);
+    }
+
+    public function afterModelDelete()
+    {
+        if ($this->model->methodExists('isSoftDelete') && $this->model->isSoftDelete()) {
+            return;
+        }
+
+        $model_id = $this->model->getKey();
+        $model_type = $this->getClass();
+
+        // delete translation attributes for this record
+        Db::table('winter_translate_attributes')
+            ->where('model_id', $model_id)
+            ->where('model_type', $model_type)
+            ->delete();
+
+        // delete translation indexes for this record
+        Db::table('winter_translate_indexes')
+            ->where('model_id', $model_id)
+            ->where('model_type', $model_type)
+            ->delete();
     }
 
     /**

@@ -1,22 +1,32 @@
-# Translation plugin
+# Translate Plugin
 
-Enables multi-lingual sites.
+Adds multi-lingual / localization capabilities to the frontends of Winter CMS websites.
 
-## Getting started
+Supports:
+- Frontend Language Picker component
+- Static string/message localizations
+- CMS Content files localizations
+- Mail template localizations
+- Model attribute localizations
+- Theme Data & Settings localizations
+- URL & URL attribute localizations
+- Simple UX in backend for providing localized values
+- Easy integration with external plugins
 
-Use composer to install the plugin:
+## Installation
+
+This plugin is available for installation via [Composer](http://getcomposer.org/).
 
 ```bash
 composer require winter/wn-translate-plugin
 ```
 
-Then, run the migrations to ensure the plugin is enabled:
+After installing the plugin you will need to run the migrations and (if you are using a [public folder](https://wintercms.com/docs/develop/docs/setup/configuration#using-a-public-folder)) [republish your public directory](https://wintercms.com/docs/develop/docs/console/setup-maintenance#mirror-public-files).
 
 ```bash
-php artisan winter:up
+php artisan migrate
 ```
 
-If you are using a [public folder](https://wintercms.com/docs/setup/configuration#public-folder) then you will also need to regenerate it with `php artisan winter:mirror public --relative`
 ## Selecting a language
 
 Different languages can be set up in the back-end area, with a single default language selected. This activates the use of the language on the front-end and in the back-end UI.
@@ -30,22 +40,22 @@ A visitor can select a language by prefixing the language code to the URL, this 
 ## Language Picker Component
 
 A visitor can select their chosen language using the `LocalePicker` component. This component will display a simple dropdown that changes the page language depending on the selection.
-```
+
+```twig
 title = "Home"
 url = "/"
 
 [localePicker]
 ==
-
 <h3>{{ 'Please select your language:'|_ }}</h3>
 {% component 'localePicker' %}
 ```
 
 If translated, the text above will appear as whatever language is selected by the user. The dropdown is very basic and is intended to be restyled. A simpler example might be:
-```
+
+```twig
 [...]
 ==
-
 <p>
     Switch language to:
     <a href="javascript:;" data-request="onSwitchLocale" data-request-data="locale: 'en'">English</a>,
@@ -56,23 +66,29 @@ If translated, the text above will appear as whatever language is selected by th
 ## Message translation
 
 Message or string translation is the conversion of adhoc strings used throughout the site. A message can be translated with parameters.
+
 ```twig
-{{ 'site.name'|_ }}
+{{ 'site.name' | _ }}
 
-{{ 'Welcome to our website!'|_ }}
+{{ 'Welcome to our website!' | _ }}
 
-{{ 'Hello :name!'|_({ name: 'Friend' }) }}
+{{ 'Hello :name!' | _({ name: 'Friend' }) }}
 ```
 
 A message can also be translated for a choice usage.
+
 ```twig
-{{ 'There are no apples|There are :number applies!'|__(2, { number: 'two' }) }}
+{{ 'There are no apples|There are :number applies!' | __(2, { number: 'two' }) }}
 ```
+
 Or you set a locale manually by passing a second argument.
+
 ```twig
-{{ 'this is always english'|_({}, 'en') }}
+{{ 'this is always english' | _({}, 'en') }}
 ```
+
 Themes can provide default values for these messages by defining a `translate` key in the `theme.yaml` file, located in the theme directory.
+
 ```yaml
 name: My Theme
 # [...]
@@ -87,13 +103,16 @@ translate:
 ```
 
 You may also define the translations in a separate file, where the path is relative to the theme. The following definition will source the default messages from the file **config/lang.yaml** inside the theme.
+
 ```yaml
 name: My Theme
 # [...]
 
 translate: config/lang.yaml
 ```
+
 This is an example of **config/lang.yaml** file with two languages:
+
 ```yaml
 en:
     site.name: 'My Website'
@@ -108,6 +127,7 @@ hr:
 ```
 
 You may also define the translations in a separate file per locale, where the path is relative to the theme. The following definition will source the default messages from the file **config/lang-en.yaml** inside the theme for the english locale and from the file **config/lang-fr.yaml** for the french locale.
+
 ```yaml
 name: My Theme
 # [...]
@@ -118,6 +138,7 @@ translate:
 ```
 
 This is an example for the **config/lang-en.yaml** file:
+
 ```yaml
 site.name: 'My Website'
 nav.home: 'Home'
@@ -128,15 +149,17 @@ title.home: 'Welcome Home'
 In order to make these default values reflected to your frontend site, go to **Settings -> Translate messages** in the backend and hit **Scan for messages**. They will also be loaded automatically when the theme is activated.
 
 The same operation can be performed with the `translate:scan` artisan command. It may be worth including it in a deployment script to automatically fetch updated messages:
+
 ```bash
 php artisan translate:scan
 ```
-
+    
 Add the `--purge` option to clear old messages first:
-```bash    
+
+```bash 
 php artisan translate:scan --purge
 ```
-
+    
 ## Content translation
 
 This plugin activates a feature in the CMS that allows content files to use language suffixes, for example:
@@ -153,26 +176,83 @@ This plugin activates a feature in the CMS that allows Mail template files to us
 * **mail-notify-ru.htm** will contain the mail template in Russian.
 * **mail-notify-fr.htm** will contain the mail template in French.
 
+## Model translation
+
+Models can have their attributes translated by using the `Winter.Translate.Behaviors.TranslatableModel` behavior and specifying which attributes to translate in the class.
+
+```php
+class User extends Model
+{
+    public $implement = ['Winter.Translate.Behaviors.TranslatableModel'];
+
+    public $translatable = ['name'];
+}
+```
+
+The attribute will then contain the default language value and other language code values can be created by using the `translateContext()` method.
+
+```php
+$user = User::first();
+
+// Outputs the name in the default language
+echo $user->name;
+
+$user->translateContext('fr');
+
+// Outputs the name in French
+echo $user->name;
+```
+
+You may use the same process for setting values.
+
+```php
+$user = User::first();
+
+// Sets the name in the default language
+$user->name = 'English';
+
+$user->translateContext('fr');
+
+// Sets the name in French
+$user->name = 'Anglais';
+```
+
+The `lang()` method is a shorthand version of `translateContext()` and is also chainable.
+
+```php
+// Outputs the name in French
+echo $user->lang('fr')->name;
+```
+
+This can be useful inside a Twig template.
+
+```twig
+{{ user.lang('fr').name }}
+```
+
+There are ways to get and set attributes without changing the context.
+
+```php
+// Gets a single translated attribute for a language
+$user->getAttributeTranslated('name', 'fr');
+
+// Sets a single translated attribute for a language
+$user->setAttributeTranslated('name', 'Jean-Claude', 'fr');
+```
+
 ## Extending a plugin with translatable fields
+
 If you are extending a plugin and want the added fields in the backend to be translatable, you have to use the '[backend.form.extendFieldsBefore](https://wintercms.com/docs/events/event/backend.form.extendFieldsBefore)' and tell which fields you want to be translatable by pushing them to the array.
 
 ```php
 public function boot() {
     Event::listen('backend.form.extendFieldsBefore', function($widget) {
-
-        // Only apply this listener when the Page controller is being used
-        if (!$widget->getController() instanceof \Winter\Pages\Controllers\Index) {
-            return;
-        }
-
-        // Only apply this listener when the Page model is being modified
-        if (!$widget->model instanceof \Winter\Pages\Classes\Page) {
-            return;
-        }
-
-        // Only apply this listener when the Form widget in question is a root-level
-        // Form widget (not a repeater, nestedform, etc)
-        if ($widget->isNested) {
+        // Only apply listener to the Index controller, Page model, and when the formwidget isn't nested
+        if (
+            !($widget->getController() instanceof \Winter\Pages\Controllers\Index)
+            || !($widget->model instanceof \Winter\Pages\Classes\Page)
+            || $widget->isNested
+        ) {
             return;
         }
 
@@ -194,116 +274,20 @@ public function boot() {
     });
 }
 ```
-## Model translation
-
-Models can have their attributes translated by using the `Winter.Translate.Behaviors.TranslatableModel` behavior and specifying which attributes to translate in the class.
-
-```php
-class User
-{
-    public $implement = ['Winter.Translate.Behaviors.TranslatableModel'];
-
-    public $translatable = ['name'];
-}
-```
-
-The attribute will then contain the default language value and other language code values can be created by using the `translateContext()` method.
-```php
-$user = User::first();
-
-// Outputs the name in the default language
-echo $user->name;
-
-$user->translateContext('fr');
-
-// Outputs the name in French
-echo $user->name;
-```
-
-You may use the same process for setting values.
-```php
-$user = User::first();
-
-// Sets the name in the default language
-$user->name = 'English';
-
-$user->translateContext('fr');
-
-// Sets the name in French
-$user->name = 'Anglais';
-```
-
-The `lang()` method is a shorthand version of `translateContext()` and is also chainable.
-```php
-// Outputs the name in French
-echo $user->lang('fr')->name;
-```
-
-This can be useful inside a Twig template.
-```twig
-{{ user.lang('fr').name }}
-```
-
-There are ways to get and set attributes without changing the context.
-```php
-// Gets a single translated attribute for a language
-$user->getAttributeTranslated('name', 'fr');
-
-// Sets a single translated attribute for a language
-$user->setAttributeTranslated('name', 'Jean-Claude', 'fr');
-```
-
-## Repeater/NestedForm formwidget internal fields translation
-
-It is now possible to independently translate the fields defined within a repeater/nestedform formwidget by setting its `translationMode` config to `fields` (see example below)
-
-Note: fields can be marked as translatable either within the Model's `$translatable` array or within the fields.yaml file by adding `translatable: true` to any field config
-
-```php
-class User
-{
-    public $implement = ['Winter.Translate.Behaviors.TranslatableModel'];
-
-    public $jsonable = ['data'];
-
-    public $translatable = [
-        'data[contacts]',
-        'data[contacts][title]',
-    ];
-}
-```
-
-models/user/fields.yaml:
-```yaml
-fields:
-  data[contacts]:
-    type: repeater (or nestedform)
-    translatable: true
-    translationMode: fields
-    form:
-      fields:
-        name:
-          label: Name
-        title:
-          label: Job Title
-          translatable: true
-        phone:
-          label: Phone number
-```
-        
+    
 ## Theme data translation
 
 It is also possible to translate theme customisation options. Just mark your form fields with `translatable` property and the plugin will take care about everything else:
 
 ```yaml
 tabs:
-  fields:
-    website_name:
-      tab: Info
-      label: Website Name
-      type: text
-      default: Your website name
-      translatable: true    
+    fields:
+        website_name:
+            tab: Info
+            label: Website Name
+            type: text
+            default: Your website name
+            translatable: true
 ```
 
 ## Fallback attribute values
@@ -331,11 +315,13 @@ public $translatable = [
 ```
 
 Once an attribute is indexed, you may use the `transWhere` method to apply a basic query to the model.
+
 ```php
-    Post::transWhere('slug', 'hello-world')->first();
+Post::transWhere('slug', 'hello-world')->first();
 ```
 
 The `transWhere` method accepts a third argument to explicitly pass a locale value, otherwise it will be detected from the environment.
+
 ```php
 Post::transWhere('slug', 'hello-world', 'en')->first();
 ```
@@ -350,12 +336,14 @@ Pages in the CMS support translating the URL property. Assuming you have 3 langu
 
 There is a page with the following content:
 
-    url = "/contact"
+```twig
+url = "/contact"
 
-    [viewBag]
-    localeUrl[ru] = "/контакт"
-    ==
-    <p>Page content</p>
+[viewBag]
+localeUrl[ru] = "/контакт"
+==
+<p>Page content</p>
+```
 
 The word "Contact" in French is the same so a translated URL is not given, or needed. If the page has no URL override specified, then the default URL will be used. Pages will not be duplicated for a given language.
 
@@ -367,6 +355,7 @@ The word "Contact" in French is the same so a translated URL is not given, or ne
 ## URL parameter translation
 
 It's possible to translate URL parameters by listening to the `translate.localePicker.translateParams` event, which is fired when switching languages.
+
 ```php
 Event::listen('translate.localePicker.translateParams', function($page, $params, $oldLocale, $newLocale) {
     if ($page->baseFileName == 'your-page-filename') {
@@ -376,6 +365,7 @@ Event::listen('translate.localePicker.translateParams', function($page, $params,
 ```
 
 In YourModel, one possible implementation might look like this:
+
 ```php
 public static function translateParams($params, $oldLocale, $newLocale) {
     $newParams = $params;
@@ -393,6 +383,7 @@ public static function translateParams($params, $oldLocale, $newLocale) {
 ## Query string translation
 
 It's possible to translate query string parameters by listening to the `translate.localePicker.translateQuery` event, which is fired when switching languages.
+
 ```php
 Event::listen('translate.localePicker.translateQuery', function($page, $params, $oldLocale, $newLocale) {
     if ($page->baseFileName == 'your-page-filename') {
@@ -404,15 +395,17 @@ Event::listen('translate.localePicker.translateQuery', function($page, $params, 
 For a possible implementation of the `YourModel::translateParams` method look at the example under `URL parameter translation` from above.
 
 ## Extend theme scan
+
 ```php
 Event::listen('winter.translate.themeScanner.afterScan', function (ThemeScanner $scanner) {
-     ...
+    // ...
 });
 ```
 
 ## Settings model translation
 
 It's possible to translate your settings model like any other model. To retrieve translated values use:
+
 ```php
 Settings::instance()->getAttributeTranslated('your_attribute_name');
 ```
@@ -422,6 +415,7 @@ Settings::instance()->getAttributeTranslated('your_attribute_name');
 #### Models
 
 It is possible to conditionally extend a plugin's models to support translation by placing an `@` symbol before the behavior definition. This is a soft implement will only use `TranslatableModel` if the Translate plugin is installed, otherwise it will not cause any errors.
+
 ```php
 /**
  * Blog Post Model
@@ -429,7 +423,7 @@ It is possible to conditionally extend a plugin's models to support translation 
 class Post extends Model
 {
 
-    [...]
+    // [...]
 
     /**
      * Softly implement the TranslatableModel behavior.
@@ -441,7 +435,7 @@ class Post extends Model
      */
     public $translatable = ['title'];
 
-    [...]
+    // [...]
 
 }
 ```
@@ -451,6 +445,7 @@ The back-end forms will automatically detect the presence of translatable fields
 #### Messages
 
 Since the Twig filter will not be available all the time, we can pipe them to the native Laravel translation methods instead. This ensures translated messages will always work on the front end.
+
 ```php
 /**
  * Register new Twig variables
@@ -480,6 +475,7 @@ Users can switch between locales by clicking on the locale indicator on the righ
 ## Integration without jQuery and Winter CMS Framework files
 
 It is possible to use the front-end language switcher without using jQuery or the Winter CMS AJAX Framework by making the AJAX API request yourself manually. The following is an example of how to do that.
+
 ```javascript
 document.querySelector('#languageSelect').addEventListener('change', function () {
     const details = {
@@ -515,6 +511,7 @@ document.querySelector('#languageSelect').addEventListener('change', function ()
 ```
 
 The HTML:
+
 ```twig
 {{ form_open() }}
     <select id="languageSelect">

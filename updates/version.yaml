@@ -134,3 +134,12 @@
     - "Prevent browser autofill for hidden locale inputs"
     - "System MailTemplate model is now translatable"
     - "Make fields using @context translatable"
+"2.1.6":
+    - "Improve ML button styling"
+    - "Fix TranslatableBehavior::lang method signature"
+"2.1.7":
+    - "Only set alternateLinks if more than one locale is used"
+    - "Cleanup after model is deleted"
+    - "Add missing french translations"
+"2.2.0":
+    - "Fix translating pages on Winter v1.2.7+"

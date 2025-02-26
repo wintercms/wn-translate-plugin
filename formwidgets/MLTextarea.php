@@ -62,6 +62,7 @@ class MLTextarea extends FormWidgetBase
     protected function loadAssets()
     {
         $this->loadLocaleAssets();
+        $this->addJs('js/mltextarea.js');
     }
 
 }

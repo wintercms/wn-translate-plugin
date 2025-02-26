@@ -6,107 +6,108 @@
     position: relative;
 
     .ml-btn {
-        background: transparent;
+        z-index: 2;
         position: absolute;
+        top: 1px;
+        bottom: 1px;
+        right: 1px;
+        
+        width: auto;
+        max-width: 44px;
+        max-height: 38px;
+
         color: lighten(@multilingual-btn-color, 15%);
-        text-transform: uppercase;
+        background-color: #F8F6F3;
+        box-shadow: none;
+
         font-size: 11px;
         letter-spacing: 1px;
-        width: 44px;
-        padding-right: 0;
-        .box-shadow(none);
-        text-shadow: none;
-        z-index: 2;
+        text-transform: uppercase;
+
+        margin: 0 !important;
+        padding: 0 12px;
+
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+        
+        transition: color 420ms ease;
 
         &:hover {
             color: @multilingual-btn-color;
         }
     }
 
-    &.field-multilingual-text {
-        .form-control {
-            padding-right: 44px;
-        }
-        .ml-btn {
-            right: 4px;
-            top: 50%;
-            margin-top: -44px;
-            height: 88px;
-        }
+    &.field-multilingual-repeater .ml-btn {
+        top: 3px;
+        bottom: auto;
+        height: auto;
+        transform: translateY(-100%);
+        border-radius: .375rem;
     }
 
     &.field-multilingual-textarea {
         textarea {
-            // increase padding on the right so that the textarea content does not overlap with the language button
-            padding-right: 30px;
+            padding-right: 2rem;
         }
 
         .ml-btn {
-            right: 13px;
-            top: 5px;
-            width: 24px;
-            text-align: right;
-            padding-left: 4px;
+            border-bottom-right-radius: 0px;
+            border-bottom-left-radius: .375rem;
         }
-
+        
         .ml-dropdown-menu {
-            top: 39px;
+            top: 28px;
             right: 1px;
         }
     }
 
     &.field-multilingual-richeditor {
         .ml-btn {
-            top: 43px;
-            right: 25px;
-            text-align: right;
+            border-radius: 0;
+            border-bottom-left-radius: .375rem;
         }
 
         .ml-dropdown-menu {
-            top: 74px;
-            right: 12px;
+            top: 28px;
+            right: 1px;
         }
     }
 
     &.field-multilingual-markdowneditor {
+        .mode-tab .editor-write {
+            padding-right: 2rem;
+        }
+
+        .mode-split .editor-preview {
+            padding-right: 2rem;
+        }
+
+        .editor-code {
+            padding-right: inherit;
+        }
+
         .ml-btn {
-            top: 43px;
-            right: 25px;
-            text-align: right;
+            border-radius: 0;
+            border-bottom-left-radius: .375rem;
         }
 
         .ml-dropdown-menu {
-            top: 74px !important;
-            right: 12px;
+            top: 28px;
+            right: 1px;
         }
     }
 
     &.field-multilingual-repeater,
     &.field-multilingual-nestedform {
-        .ml-btn {
-            top: -27px;
-            right: 11px;
-            text-align: right;
-        }
-
         .ml-dropdown-menu {
-            top: 0;
+            top: 2px;
             right: 0;
         }
+    }
 
-        &.is-empty {
-            padding-top: 5px;
-
-            .ml-btn {
-                top: -10px;
-                right: 5px;
-                text-align: right;
-            }
-
-            .ml-dropdown-menu {
-                top: 15px;
-                right: -7px;
-            }
+    &.field-multilingual-mediafinder {
+        .ml-btn {
+            border-radius: .375rem;
         }
     }
 }
@@ -114,20 +115,14 @@
 .fancy-layout {
     .form-tabless-fields .field-multilingual {
         .ml-btn {
-            color: rgba(255,255,255,.8);
-
-            &:hover {
-                color: rgba(255,255,255,1);
-            }
+            background-color: rgba(248, 246, 243, 0.75)
         }
     }
-    .field-multilingual-text input.form-control {
-        padding-right: 44px;
-    }
 }
 
-.help-block.before-field + .field-multilingual.field-multilingual-textarea {
-    .ml-btn {
-        top: -41px;
-    }
-}
+// ?? CHECK THIS
+// .help-block.before-field + .field-multilingual.field-multilingual-textarea {
+//     .ml-btn {
+//         top: -41px;
+//     }
+// }
