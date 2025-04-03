@@ -139,6 +139,7 @@ class Plugin extends PluginBase
     public function registerFormWidgets(): array
     {
         return [
+            \Winter\Translate\FormWidgets\MLBlocks::class => 'mlblocks',
             \Winter\Translate\FormWidgets\MLText::class => 'mltext',
             \Winter\Translate\FormWidgets\MLTextarea::class => 'mltextarea',
             \Winter\Translate\FormWidgets\MLRichEditor::class => 'mlricheditor',
