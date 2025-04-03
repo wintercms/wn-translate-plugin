@@ -62,6 +62,10 @@ class MLBlocks extends Blocks
      */
     public function getSaveValue($value)
     {
+        if (!is_array($value) || !$value) {
+            return null;
+        }
+
         $this->rewritePostValues();
 
         return $this->getLocaleSaveValue(is_array($value) ? array_values($value) : $value);
