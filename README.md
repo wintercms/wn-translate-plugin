@@ -133,8 +133,8 @@ name: My Theme
 # [...]
 
 translate:
-en: config/lang-en.yaml
-fr: config/lang-fr.yaml
+    en: config/lang-en.yaml
+    fr: config/lang-fr.yaml
 ```
 
 This is an example for the **config/lang-en.yaml** file:
@@ -476,7 +476,7 @@ Users can switch between locales by clicking on the locale indicator on the righ
 
 It is possible to use the front-end language switcher without using jQuery or the Winter CMS AJAX Framework by making the AJAX API request yourself manually. The following is an example of how to do that.
 
-```js
+```javascript
 document.querySelector('#languageSelect').addEventListener('change', function () {
     const details = {
         _session_key: document.querySelector('input[name="_session_key"]').value,
