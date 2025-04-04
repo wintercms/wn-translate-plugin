@@ -154,6 +154,7 @@ class EventRegistry
     protected function processFormMLFields($fields, $model)
     {
         $typesMap = [
+            'blocks'      => 'mlblocks',
             'markdown'    => 'mlmarkdowneditor',
             'mediafinder' => 'mlmediafinder',
             'nestedform'  => 'mlnestedform',
