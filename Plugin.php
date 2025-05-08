@@ -220,9 +220,17 @@ class Plugin extends PluginBase
         ThemeData::extend(function ($model) {
             $model->bindEvent('model.afterFetch', function() use ($model) {
                 $translatable = [];
-                foreach ($model->getFormFields() as $id => $field) {
-                    if (!empty($field['translatable'])) {
-                        $translatable[] = $id;
+                foreach ($model->getFormFields() as $fieldName => $fieldConfig) {
+                    if (array_get($fieldConfig, 'translatable', false)) {
+                        $translatable[] = $fieldName;
+                    }
+                    $type = array_get($fieldConfig, 'type', 'text');
+                    if (in_array($type, ['repeater', 'nestedform'])) {
+                        foreach (array_get($fieldConfig, 'form.fields', []) as $subFieldName => $subFieldConfig) {
+                            if (array_get($subFieldConfig, 'translatable', false)) {
+                                $translatable[] = sprintf("%s[%s]", $fieldName, $subFieldName);
+                            }
+                        }
                     }
                 }
                 $this->extendModel($model, 'model', $translatable);

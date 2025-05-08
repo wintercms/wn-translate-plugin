@@ -10,6 +10,7 @@ use File;
 use Str;
 use System\Classes\MailManager;
 use System\Classes\PluginManager;
+use Winter\Storm\Html\Helper as HtmlHelper;
 use Winter\Translate\Classes\ThemeScanner;
 use Winter\Translate\Classes\Translator;
 use Winter\Translate\Models\Locale as LocaleModel;
@@ -127,8 +128,10 @@ class EventRegistry
             return;
         }
 
-
-        if (!$model->hasTranslatableAttributes() || $widget->isNested) {
+        if ($widget->isNested && !empty($widget->fields)) {
+            if (($widget->config->translationMode ?? 'default') === 'fields') {
+                $widget->fields = $this->processFormMLFields($widget->fields, $model, $this->getWidgetLongName($widget));
+            }
             return;
         }
 
@@ -145,14 +148,43 @@ class EventRegistry
         }
     }
 
+    protected function getWidgetLongName($widget)
+    {
+        $nameArray = HtmlHelper::nameToArray($widget->arrayName);
+        foreach ($nameArray as $index => $name) {
+            if (is_numeric($name)) {
+                unset($nameArray[$index]);
+            }
+        }
+
+        array_shift($nameArray); // remove parent model
+        $parentName = array_shift($nameArray);
+
+        if ($nameArray) {
+            $parentName .= '[' . implode('][', $nameArray) . ']';
+        }
+
+        return $parentName;
+    }
+
     /**
      * Helper function to replace standard fields with multi lingual equivalents
      * @param  array $fields
      * @param  Model $model
+     * @param  string $parent
      * @return array
      */
-    protected function processFormMLFields($fields, $model)
+    protected function processFormMLFields($fields, $model, $parent = null)
     {
+        if ($parent) {
+            $nameArray = HtmlHelper::nameToArray($parent);
+            $topArrayName = array_shift($nameArray);
+            if ($topArrayName && $model->isJsonable($topArrayName)) {
+                // make jsonable field translatable so its value can be localized
+                $model->addTranslatableAttributes($topArrayName);
+            }
+        }
+
         $typesMap = [
             'blocks'      => 'mlblocks',
             'markdown'    => 'mlmarkdowneditor',
@@ -175,16 +207,23 @@ class EventRegistry
 
         foreach ($fields as $name => $config) {
             $fieldName = $name;
+            $fieldTranslatable = false;
+
             if (str_contains($name, '@')) {
                 // apply to fields with any context
                 list($fieldName, $context) = explode('@', $name);
             }
-            if (!array_key_exists($fieldName, $translatable)) {
+
+            $fieldName = $parent ? sprintf("%s[%s]", $parent, $fieldName) : $fieldName;
+
+            if (array_get($config, 'translatable', false)) {
+                $model->addTranslatableAttributes($fieldName);
+                $fieldTranslatable = true;
+            }
+            if (!$fieldTranslatable && !array_key_exists($fieldName, $translatable)) {
                 continue;
             }
-
             $type = array_get($config, 'type', 'text');
-
             if (array_key_exists($type, $typesMap)) {
                 $fields[$name]['type'] = $typesMap[$type];
             }

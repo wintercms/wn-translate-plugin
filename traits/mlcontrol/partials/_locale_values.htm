@@ -2,11 +2,11 @@
 <?php foreach ($locales as $code => $name): ?>
     <?php
         $value = $this->getLocaleValue($code);
-        $value = $this->isLocaleFieldJsonable() ? json_encode($value) : $value;
+        $value = $this->isLocaleFieldJsonable() && is_array($value) ? json_encode($value) : $value;
     ?>
     <input
         type="hidden"
-        name="<?= $field->getName('RLTranslate['.$code.']') ?>"
+        name="<?= $this->getLocaleFieldName($code) ?>"
         value="<?= e($value) ?>"
         autocomplete="off"
         data-locale-value="<?= $code ?>"
