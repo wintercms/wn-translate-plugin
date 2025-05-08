@@ -141,7 +141,7 @@ class ThemeScanner
      * @param  string $content
      * @return array
      */
-    protected function parseContent($content)
+    public function parseContent($content)
     {
         $messages = [];
         if ($content) {
@@ -152,80 +152,28 @@ class ThemeScanner
     }
 
     /**
-     * Get an array of standard language filter tags
-     * @return array
-     */
-    protected function getFilters()
-    {
-        return [
-            '_',
-            '__',
-            'transRaw',
-            'transRawPlural',
-            'localeUrl'
-        ];
-    }
-
-    /**
-     * Get an array of Twig tokens
-     * @param  string $string
-     * @return array
-     */
-    protected function findTwigTokensInString($string)
-    {
-        $loader = new \Twig\Loader\ArrayLoader();
-        $env = new \Twig\Environment($loader);
-        $source = new \Twig\Source($string, 'test');
-
-        try {
-            $stream = $env->tokenize($source);
-        }
-        catch (\Exception $e) {
-            return [];
-        }
-
-        $tokens = [];
-        while (!$stream->isEOF()) {
-            $token = $stream->next();
-            $token->typeString = $token->typeToString($token->getType(), true);
-            $tokens[] = $token;
-        }
-        return $tokens;
-    }
-
-    /**
-     * Searches for strings to be translated within a given Twig string
+     * Process standard language filter tag (_|)
      * @param  string $content
      * @return array
      */
-    protected function processStandardTags($content)
+    public function processStandardTags($content)
     {
-        $tokens = $this->findTwigTokensInString($content);
+        $messages = [];
 
-        $translatable_strings = [];
-        $var_token_started = false;
-        for ($i = 0; $i < count($tokens); $i++) {
-            switch ($tokens[$i]->typeString) {
-                case 'VAR_START_TYPE':
-                    $var_token_started = true;
-                    continue 2;
-                case 'VAR_END_TYPE':
-                    $var_token_started = false;
-                    continue 2;
-            }
-            if (
-                $var_token_started
-                && $tokens[$i]->typeString === 'STRING_TYPE'
-                && $tokens[$i+1]->typeString === 'PUNCTUATION_TYPE'
-                && $tokens[$i+1]->getValue() === '|'
-                && $tokens[$i+2]->typeString === 'NAME_TYPE'
-                && in_array($tokens[$i+2]->getValue(), $this->getFilters())
-            ) {
-                $translatable_strings[] = stripslashes($tokens[$i]->getValue());
-                $i += 2;
-            }
-        }
+        $messages = self::getMessages(preg_quote("'"), $content);
 
-        return $translatable_strings;
+        return array_merge($messages, self::getMessages(preg_quote('"'), $content));
+    }
+
+    /**
+     * Apply regex on string to extract value to translate
+     * @param  string $quoteChar
+     * @return array
+     */
+    protected static function getMessages($quoteChar, $content)
+    {
+        preg_match_all('/\{\{\s*'.$quoteChar.'([^'.$quoteChar.']+)'.$quoteChar.'\s*\|\s*(?:localeUrl|transRaw|transRawPlural|_{1,2})(?:\(.*\)){0,1}\s*(?:\|[^|\s\}]+){0,}\s*\}\}/x', $content, $match);
+
+        return $match[1] ?? [];
     }
 }

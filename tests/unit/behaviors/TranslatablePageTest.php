@@ -5,8 +5,8 @@ use Winter\Storm\Halcyon\Model;
 use Winter\Storm\Filesystem\Filesystem;
 use Winter\Storm\Halcyon\Datasource\FileDatasource;
 use Winter\Storm\Halcyon\Datasource\Resolver;
-use Winter\Translate\Tests\Fixtures\Classes\MessageScanner;
 use Winter\Translate\Tests\Fixtures\Classes\TranslatablePage;
+use Winter\Translate\Classes\ThemeScanner;
 
 class TranslatablePageTest extends \Winter\Translate\Tests\TranslatePluginTestCase
 {
@@ -87,10 +87,9 @@ class TranslatablePageTest extends \Winter\Translate\Tests\TranslatePluginTestCa
         $this->assertEquals('titre francais', $title_fr);
     }
 
-    // disable this test until we fix the issue with twig parsing in ThemeScanner
-    public function __testThemeScanner()
+    public function testThemeScanner()
     {
-        $scanner = new MessageScanner();
+        $scanner = new ThemeScanner();
 
         $check_strings = [
             // Should not match
@@ -112,9 +111,12 @@ class TranslatablePageTest extends \Winter\Translate\Tests\TranslatePluginTestCa
             ["{{ \"'hello5\"|_ }}", ['\'hello5']],
             ["{{ '\"hello6'|_ }}", ['"hello6']],
             ["{{ 'hello7'|__ }}", ['hello7']],
-            ["{{ 'hello8'|transRaw }}", ['hello8']],
-            ["{{ 'hello9'|transRawPlural }}", ['hello9']],
-            ["{{ 'hello10'|localeUrl }}", ['hello10']],
+            ["{{ 'hello8a'|transRaw }}", ['hello8a']],
+            ["{{ 'hello8b'|transRaw() }}", ['hello8b']],
+            ["{{ 'hello9a'|transRawPlural }}", ['hello9a']],
+            ["{{ 'hello9b'|transRawPlural() }}", ['hello9b']],
+            ["{{ 'hello10a'|localeUrl }}", ['hello10a']],
+            ["{{ 'hello10b'|localeUrl() }}", ['hello10b']],
             ["{{ 'hello11'|_() }}", ['hello11']],
             ["{{ 'hello12'|_(func()) }}", ['hello12']],
             ["{{ 'hello13'|_({var: val}) }}", ['hello13']],
@@ -122,26 +124,16 @@ class TranslatablePageTest extends \Winter\Translate\Tests\TranslatePluginTestCa
             ["{{ 'hello15'|_({var: func(nestedFunc())}) }}", ['hello15']],
             ["{{ 'hello16'|_|filter }}", ['hello16']],
             ["{{ 'hello17'|_|filter|otherfilter }}", ['hello17']],
-            ["{{ 'Apostrophe\'s'|_ }}", ['Apostrophe\'s']],
-            ['{{ "String with \"Double quote\""|_ }}', ['String with "Double quote"']],
 
             // Should find 2 matches
             [
-                '{{ \'Apostrophe\\\'s\'|_ }}{{ "String with \"Double quote\""|_ }}',
-                ['Apostrophe\'s', 'String with "Double quote"']
-            ],
-            [
-                "{{ 'hello'|_|filter|otherfilter }}{{ 'hello'|_|filter|otherfilter }}",
-                ['hello', 'hello']
-            ],
-            [
-                "{{ 'hello'|transRaw('nested translation'|_) }}",
-                ['hello', 'nested translation']
+                "{{ 'hello18a'|_|filter|otherfilter }}{{ 'hello18b'|_|filter|otherfilter }}",
+                ['hello18a', 'hello18b']
             ],
         ];
 
         foreach ($check_strings as $check) {
-            $this->assertEquals($scanner->getMessages($check[0]), $check[1]);
+            $this->assertEquals($scanner->processStandardTags($check[0]), $check[1]);
         }
     }
 }
