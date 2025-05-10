@@ -69,6 +69,11 @@ class Locale extends Model
         }
     }
 
+    public function afterSave()
+    {
+        self::clearCache();
+    }
+
     public function beforeDelete()
     {
         if ($this->is_default) {
@@ -233,6 +238,8 @@ class Locale extends Model
      */
     public static function clearCache()
     {
+        self::$cacheListAvailable = null;
+        self::$cacheListEnabled = null;
         Cache::forget('winter.translate.locales');
         Cache::forget('winter.translate.defaultLocale');
     }
