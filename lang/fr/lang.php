@@ -17,6 +17,8 @@ return [
         'component_description' => "Injecte les alternatives linguistiques pour la page en tant qu'éléments hreflang"
     ],
     'locale' => [
+        'label' => 'Langue',
+        'label_plural' => 'Langues',
         'title' => 'Gestion des langues',
         'update_title' => 'Mettre à jour la langue',
         'create_title' => 'Ajouter une langue',
