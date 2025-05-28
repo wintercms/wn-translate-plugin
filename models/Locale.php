@@ -233,6 +233,8 @@ class Locale extends Model
      */
     public static function clearCache()
     {
+        self::$cacheListAvailable = null;
+        self::$cacheListEnabled = null;
         Cache::forget('winter.translate.locales');
         Cache::forget('winter.translate.defaultLocale');
     }
