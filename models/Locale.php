@@ -69,6 +69,11 @@ class Locale extends Model
         }
     }
 
+    public function afterSave()
+    {
+        self::clearCache();
+    }
+
     public function beforeDelete()
     {
         if ($this->is_default) {
