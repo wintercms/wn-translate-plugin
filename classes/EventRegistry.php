@@ -162,6 +162,7 @@ class EventRegistry
             'richeditor'  => 'mlricheditor',
             'text'        => 'mltext',
             'textarea'    => 'mltextarea',
+            'url'         => 'mlurl',
         ];
 
         $translatable = array_flip($model->getTranslatableAttributes());
