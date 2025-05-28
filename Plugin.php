@@ -140,13 +140,14 @@ class Plugin extends PluginBase
     {
         return [
             \Winter\Translate\FormWidgets\MLBlocks::class => 'mlblocks',
-            \Winter\Translate\FormWidgets\MLText::class => 'mltext',
-            \Winter\Translate\FormWidgets\MLTextarea::class => 'mltextarea',
-            \Winter\Translate\FormWidgets\MLRichEditor::class => 'mlricheditor',
             \Winter\Translate\FormWidgets\MLMarkdownEditor::class => 'mlmarkdowneditor',
-            \Winter\Translate\FormWidgets\MLRepeater::class => 'mlrepeater',
             \Winter\Translate\FormWidgets\MLMediaFinder::class => 'mlmediafinder',
             \Winter\Translate\FormWidgets\MLNestedForm::class => 'mlnestedform',
+            \Winter\Translate\FormWidgets\MLRepeater::class => 'mlrepeater',
+            \Winter\Translate\FormWidgets\MLRichEditor::class => 'mlricheditor',
+            \Winter\Translate\FormWidgets\MLText::class => 'mltext',
+            \Winter\Translate\FormWidgets\MLTextarea::class => 'mltextarea',
+            \Winter\Translate\FormWidgets\MLUrl::class => 'mlurl',
         ];
     }
 
