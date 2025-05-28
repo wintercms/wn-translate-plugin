@@ -1,4 +1,5 @@
 .field-multilingual{position:relative}
+.field-multilingual .form-control:focus{z-index:20}
 .field-multilingual .ml-btn{z-index:12;position:absolute;top:1px;bottom:1px;right:1px;width:auto;max-width:44px;max-height:38px;color:#7b7b7b;background-color:#F8F6F3;box-shadow:none;font-size:11px;letter-spacing:1px;text-transform:uppercase;margin:0 !important;padding:0 12px;border-top-left-radius:0;border-bottom-left-radius:0;transition:color 420ms ease}
 .field-multilingual .ml-btn:hover{color:#555}
 .field-multilingual.field-multilingual-repeater .ml-btn{top:3px;bottom:auto;height:auto;transform:translateY(-100%);border-radius:.375rem}
