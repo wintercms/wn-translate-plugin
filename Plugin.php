@@ -410,7 +410,7 @@ class Plugin extends PluginBase
         if (!$model->propertyExists('translatable')) {
             $model->addDynamicProperty('translatable', $translatableAttributes);
         } else {
-            $model->translatable = array_merge($model->translatable, $translatableAttributes);
+            $model->extendableSet('translatable', array_merge($model->translatable, $translatableAttributes));
         }
 
         if ($type === 'page') {
