@@ -372,7 +372,7 @@ public static function translateParams($params, $oldLocale, $newLocale) {
     foreach ($params as $paramName => $paramValue) {
         $record = self::transWhere($paramName, $paramValue, $oldLocale)->first();
         if ($record) {
-            $newParams['slug'] = $record->getAttributeTranslated('slug', $newLocale);
+            $newParams[$paramName] = $record->getAttributeTranslated($paramName, $newLocale);
         }
     }
     return $newParams;
