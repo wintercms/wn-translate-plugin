@@ -370,7 +370,7 @@ In YourModel, one possible implementation might look like this:
 public static function translateParams($params, $oldLocale, $newLocale) {
     $newParams = $params;
     foreach ($params as $paramName => $paramValue) {
-        $records = self::transWhere($paramName, $paramValue, $oldLocale)->first();
+        $record = self::transWhere($paramName, $paramValue, $oldLocale)->first();
         if ($records) {
             $newParams['slug'] = $record->getAttributeTranslated('slug', $newLocale);
         }
