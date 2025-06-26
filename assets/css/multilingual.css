@@ -17,3 +17,22 @@
 .field-multilingual.field-multilingual-nestedform .ml-dropdown-menu{top:2px;right:0}
 .field-multilingual.field-multilingual-mediafinder .ml-btn{border-radius:.375rem}
 .fancy-layout .form-tabless-fields .field-multilingual .ml-btn{background-color:rgba(248,246,243,0.75)}
+    .ml-dropdown {
+        position: absolute;
+        height: 100%;
+        width: 42px;
+        top: 0px;
+        right: 0px;
+    }
+
+    .ml-copy-dropdown {
+        height: 100%;
+        width: 42px;
+        position: absolute;
+        top: 0px;
+        right: 41px;
+    }
+
+    .ml-copy-dropdown > .ml-btn {
+        border-radius: 0px;
+    }

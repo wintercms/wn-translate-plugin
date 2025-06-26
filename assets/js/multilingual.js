@@ -1,6 +1,6 @@
 /*
  * Multi lingual control plugin
- * 
+ *
  * Data attributes:
  * - data-control="multilingual" - enables the plugin on an element
  * - data-default-locale="en" - default locale code
@@ -25,6 +25,7 @@
 
         this.$activeField  = null
         this.$activeButton = $('[data-active-locale]', this.$el)
+        this.$copyDropdown = $('ul.ml-copy-dropdown-menu', this.$el);
         this.$dropdown     = $('ul.ml-dropdown-menu', this.$el)
         this.$placeholder  = $(this.options.placeholderField)
 
@@ -34,6 +35,16 @@
         this.activeLocale = this.options.defaultLocale
         this.$activeField = this.getLocaleElement(this.activeLocale)
         this.$activeButton.text(this.activeLocale)
+
+        this.$copyDropdown.on('click', '[data-copy-locale]', function(_event) {
+            var currentLocale = self.activeLocale;
+            var targetLocale = $(this).data('copy-locale');
+
+            if (!targetLocale || currentLocale === targetLocale) return;
+
+            var sourceValue = self.getLocaleValue(currentLocale);
+            self.setLocaleValue(sourceValue, targetLocale);
+        });
 
         this.$dropdown.on('click', '[data-switch-locale]', this.$activeButton, function(event){
             var currentLocale = event.data.text();

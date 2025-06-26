@@ -15,7 +15,7 @@
         top: 1px;
         bottom: 1px;
         right: 1px;
-        
+
         width: auto;
         max-width: 44px;
         max-height: 38px;
@@ -33,12 +33,30 @@
 
         border-top-left-radius: 0;
         border-bottom-left-radius: 0;
-        
+
         transition: color 420ms ease;
 
         &:hover {
             color: @multilingual-btn-color;
         }
+    }
+
+    .ml-dropdown {
+        position: absolute;
+        height: 100%;
+        top: 0px;
+        right: 0px;
+    }
+
+    .ml-copy-dropdown {
+        height: 100%;
+        position: absolute;
+        top: 0px;
+        right: 0px;
+    }
+
+    .ml-copy-dropdown.ml-btn {
+        border-radius: 0px;
     }
 
     &.field-multilingual-repeater .ml-btn {
@@ -58,7 +76,7 @@
             border-bottom-right-radius: 0px;
             border-bottom-left-radius: .375rem;
         }
-        
+
         .ml-dropdown-menu {
             top: 28px;
             right: 1px;
