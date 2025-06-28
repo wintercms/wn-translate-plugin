@@ -25,7 +25,7 @@
 
         this.$activeField  = null
         this.$activeButton = $('[data-active-locale]', this.$el)
-        this.$copyDropdown = $('ul.ml-copy-dropdown-menu', this.$el);
+        this.$copyDropdown = $('ul.ml-copy-dropdown-menu', this.$el)
         this.$dropdown     = $('ul.ml-dropdown-menu', this.$el)
         this.$placeholder  = $(this.options.placeholderField)
 
@@ -37,13 +37,15 @@
         this.$activeButton.text(this.activeLocale)
 
         this.$copyDropdown.on('click', '[data-copy-locale]', function(_event) {
-            var currentLocale = self.activeLocale;
-            var targetLocale = $(this).data('copy-locale');
+            var currentLocale = self.activeLocale
+            var targetLocale = $(this).data('copy-locale')
 
             if (!targetLocale || currentLocale === targetLocale) return;
 
-            var sourceValue = self.getLocaleValue(currentLocale);
-            self.setLocaleValue(sourceValue, targetLocale);
+            var sourceValue = self.getLocaleValue(targetLocale)
+            self.setLocaleValue(sourceValue, currentLocale)
+            self.$activeField = sourceValue
+            self.$placeholder.val(sourceValue)
         });
 
         this.$dropdown.on('click', '[data-switch-locale]', this.$activeButton, function(event){
@@ -115,6 +117,7 @@
         this.$activeButton.text(locale)
 
         this.$placeholder.val(this.getLocaleValue(locale))
+        // TODO: this event doesn't seem to do anything \_('')_/
         this.$el.trigger('setLocale.oc.multilingual', [locale, this.getLocaleValue(locale)])
     }
 
