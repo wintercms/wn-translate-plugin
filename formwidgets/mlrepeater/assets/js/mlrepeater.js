@@ -58,6 +58,7 @@
         $(document).off('render', this.proxy(this.checkEmptyItems))
 
         this.$el.off('setLocale.oc.multilingual', this.proxy(this.onSetLocale))
+        this.$el.off('copyLocale.oc.multilingual', this.proxy(this.onCopyLocale))
 
         this.$el.off('dispose-control', this.proxy(this.dispose))
 
@@ -80,7 +81,7 @@
 
     MLRepeater.prototype.onCopyLocale = function(e, locale, localeValue) {
         var self = this,
-            previousLocale = this.locale
+            copyFromLocale = this.locale
 
         this.$el
             .addClass('loading-indicator-container size-form-field')
@@ -88,7 +89,7 @@
 
         this.$el.request(this.options.copyHandler, {
             data: {
-                _repeater_copy_locale: previousLocale,
+                _repeater_copy_locale: copyFromLocale,
             },
             success: function(data) {
                 self.$el.loadIndicator('hide')

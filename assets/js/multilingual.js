@@ -38,11 +38,11 @@
 
         this.$copyDropdown.on('click', '[data-copy-locale]', function(_event) {
             var currentLocale = self.activeLocale
-            var targetLocale = $(this).data('copy-locale')
+            var copyFromLocale = $(this).data('copy-locale')
 
-            if (!targetLocale || currentLocale === targetLocale) return;
+            if (!copyFromLocale || currentLocale === copyFromLocale) return;
 
-            self.copyLocale(targetLocale)
+            self.copyLocale(copyFromLocale)
         });
 
         this.$dropdown.on('click', '[data-switch-locale]', this.$activeButton, function(event){
@@ -108,13 +108,12 @@
         }
     }
 
-    MultiLingual.prototype.copyLocale = function(locale) {
-        var sourceValue = this.getLocaleValue(locale)
-        this.setLocaleValue(sourceValue)
-        this.$activeField = sourceValue
-        this.$placeholder.val(sourceValue)
+    MultiLingual.prototype.copyLocale = function(copyFromLocale) {
+        var copyFromLocaleValue = this.getLocaleValue(copyFromLocale)
+        this.$activeField.val(copyFromLocaleValue)
+        this.$placeholder.val(copyFromLocaleValue)
 
-        this.$el.trigger('copyLocale.oc.multilingual', [locale, this.getLocaleValue(locale)])
+        this.$el.trigger('copyLocale.oc.multilingual', [copyFromLocale, copyFromLocaleValue])
     }
 
     MultiLingual.prototype.setLocale = function(locale) {
