@@ -42,10 +42,7 @@
 
             if (!targetLocale || currentLocale === targetLocale) return;
 
-            var sourceValue = self.getLocaleValue(targetLocale)
-            self.setLocaleValue(sourceValue, currentLocale)
-            self.$activeField = sourceValue
-            self.$placeholder.val(sourceValue)
+            self.copyLocale(targetLocale)
         });
 
         this.$dropdown.on('click', '[data-switch-locale]', this.$activeButton, function(event){
@@ -111,13 +108,21 @@
         }
     }
 
+    MultiLingual.prototype.copyLocale = function(locale) {
+        var sourceValue = this.getLocaleValue(locale)
+        this.setLocaleValue(sourceValue)
+        this.$activeField = sourceValue
+        this.$placeholder.val(sourceValue)
+
+        this.$el.trigger('copyLocale.oc.multilingual', [locale, this.getLocaleValue(locale)])
+    }
+
     MultiLingual.prototype.setLocale = function(locale) {
         this.activeLocale = locale
         this.$activeField = this.getLocaleElement(locale)
         this.$activeButton.text(locale)
 
         this.$placeholder.val(this.getLocaleValue(locale))
-        // TODO: this event doesn't seem to do anything \_('')_/
         this.$el.trigger('setLocale.oc.multilingual', [locale, this.getLocaleValue(locale)])
     }
 

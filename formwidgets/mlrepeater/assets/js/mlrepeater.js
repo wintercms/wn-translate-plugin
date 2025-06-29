@@ -36,6 +36,7 @@
 
     MLRepeater.DEFAULTS = {
         switchHandler: null,
+        copyHandler: null,
         defaultLocale: 'en'
     }
 
@@ -47,6 +48,7 @@
         $(document).on('render', this.proxy(this.checkEmptyItems))
 
         this.$el.on('setLocale.oc.multilingual', this.proxy(this.onSetLocale))
+        this.$el.on('copyLocale.oc.multilingual', this.proxy(this.onCopyLocale))
 
         this.$el.one('dispose-control', this.proxy(this.dispose))
     }
@@ -76,6 +78,26 @@
         this.$el.toggleClass('is-empty', isEmpty)
     }
 
+    MLRepeater.prototype.onCopyLocale = function(e, locale, localeValue) {
+        var self = this,
+            previousLocale = this.locale
+
+        this.$el
+            .addClass('loading-indicator-container size-form-field')
+            .loadIndicator()
+
+        this.$el.request(this.options.copyHandler, {
+            data: {
+                _repeater_copy_locale: previousLocale,
+                _repeater_locale: locale
+            },
+            success: function(data) {
+                self.$el.loadIndicator('hide')
+                this.success(data)
+            }
+        })
+    }
+
     MLRepeater.prototype.onSetLocale = function(e, locale, localeValue) {
         var self = this,
             previousLocale = this.locale
@@ -87,6 +109,7 @@
         this.locale = locale
         this.$locale.val(locale)
 
+        console.log("before request")
         this.$el.request(this.options.switchHandler, {
             data: {
                 _repeater_previous_locale: previousLocale,
