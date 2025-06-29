@@ -89,7 +89,6 @@
         this.$el.request(this.options.copyHandler, {
             data: {
                 _repeater_copy_locale: previousLocale,
-                _repeater_locale: locale
             },
             success: function(data) {
                 self.$el.loadIndicator('hide')

@@ -106,14 +106,13 @@ class MLRepeater extends Repeater
 
     public function onCopyItemLocale()
     {
-        $sourceLocale = post('_repeater_copy_locale');
-        $targetLocale = post('_repeater_locale');
+        $selectedLocale = post('_repeater_copy_locale');
 
-        $sourceValues = $this->getLocaleSaveDataAsArray($sourceLocale);
+        $selectedValues = $this->getLocaleSaveDataAsArray($selectedLocale);
 
-        $this->reprocessLocaleItems($sourceValues);
+        $this->reprocessLocaleItems($selectedValues);
         foreach ($this->formWidgets as $key => $widget) {
-            $value = array_shift($sourceValues);
+            $value = array_shift($selectedValues);
             if ($value) {
                 $widget->setFormValues($value);
             }
