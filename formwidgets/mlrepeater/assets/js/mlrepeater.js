@@ -109,7 +109,6 @@
         this.locale = locale
         this.$locale.val(locale)
 
-        console.log("before request")
         this.$el.request(this.options.switchHandler, {
             data: {
                 _repeater_previous_locale: previousLocale,

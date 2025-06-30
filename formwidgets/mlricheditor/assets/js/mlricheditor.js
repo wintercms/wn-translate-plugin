@@ -94,6 +94,8 @@
         var $toolbar = $('.fr-toolbar', this.$el),
             $btn = $('.ml-btn[data-active-locale]:first', this.$el),
             $dropdown = $('.ml-dropdown-menu[data-locale-dropdown]:first', this.$el),
+            $copyBtn = $('.ml-copy-btn:first', this.$el),
+            $copyDropdown = $('.ml-copy-dropdown-menu:first', this.$el),
             $element = $('.fr-element', this.$el)
 
         if ($toolbar.length) {
@@ -101,6 +103,8 @@
             if (height) {
                 $btn.css('top', height)
                 $dropdown.css('top', height + 34)
+                $copyBtn.css('top', height)
+                $copyDropdown.css('top', height + 34)
             }
         }
 

@@ -93,6 +93,8 @@
         var $toolbar = $('.control-toolbar', this.$el),
             $btn = $('.ml-btn[data-active-locale]:first', this.$el),
             $dropdown = $('.ml-dropdown-menu[data-locale-dropdown]:first', this.$el),
+            $copyBtn = $('.ml-copy-btn:first', this.$el),
+            $copyDropdown = $('.ml-copy-dropdown-menu:first', this.$el),
             $container = $('.editor-write', this.$el),
             $scrollbar = $('.ace_scrollbar', this.$el),
             $input = $('.ace_text-input', this.$el)
@@ -100,8 +102,10 @@
         if ($toolbar.length) {
             var height = $toolbar.outerHeight(true)
             if (height) {
-                $btn.css('top', height + 0.5)
+                $btn.css('top', height)
                 $dropdown.css('top', height + 34)
+                $copyBtn.css('top', height)
+                $copyDropdown.css('top', height + 34)
             }
         }
 
