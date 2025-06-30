@@ -37,6 +37,7 @@
     MLMarkdownEditor.DEFAULTS = {
         textareaElement: null,
         placeholderField: null,
+        copyHandler: null,
         defaultLocale: 'en'
     }
 
@@ -44,6 +45,7 @@
         this.$el.multiLingual()
 
         this.$el.on('setLocale.oc.multilingual', this.proxy(this.onSetLocale))
+        this.$el.on('copyLocale.oc.multilingual', this.proxy(this.onCopyLocale))
         this.$textarea.on('changeContent.oc.markdowneditor', this.proxy(this.onChangeContent))
 
         this.updateLayout()
@@ -51,11 +53,12 @@
         $(window).on('resize', this.proxy(this.updateLayout))
         $(window).on('oc.updateUi', this.proxy(this.updateLayout))
         this.$el.one('dispose-control', this.proxy(this.dispose))
-        
+
     }
 
     MLMarkdownEditor.prototype.dispose = function() {
         this.$el.off('setLocale.oc.multilingual', this.proxy(this.onSetLocale))
+        this.$el.off('copyLocale.oc.multilingual', this.proxy(this.onCopyLocale))
         this.$textarea.off('changeContent.oc.markdowneditor', this.proxy(this.onChangeContent))
         this.$el.off('dispose-control', this.proxy(this.dispose))
 
@@ -71,6 +74,12 @@
     }
 
     MLMarkdownEditor.prototype.onSetLocale = function(e, locale, localeValue) {
+        if (typeof localeValue === 'string' && this.$markdownEditor.data('oc.markdownEditor')) {
+            this.$markdownEditor.markdownEditor('setContent', localeValue);
+        }
+    }
+
+    MLMarkdownEditor.prototype.onCopyLocale = function(e, locale, localeValue) {
         if (typeof localeValue === 'string' && this.$markdownEditor.data('oc.markdownEditor')) {
             this.$markdownEditor.markdownEditor('setContent', localeValue);
         }
@@ -101,7 +110,7 @@
             $previewContainer = $('.editor-preview', this.$el),
             $scrollbar = $('.ace_scrollbar', this.$el),
             $input = $('.ace_text-input', this.$el)
-    
+
         // fix exit fullscreen
         setTimeout(function() {
             setMLButtonPosition()
@@ -109,7 +118,7 @@
 
         // input listener
         $input.on('keydown keyup', setMLButtonPosition)
-        
+
         function setMLButtonPosition() {
 
             // make sure container is displayed (fix previewmode)
@@ -132,7 +141,7 @@
             $container.css('display', '')
 
         }
-        
+
     }
 
     // MLMARKDOWNEDITOR PLUGIN DEFINITION
