@@ -1,6 +1,6 @@
 /*
  * MLRichEditor plugin
- * 
+ *
  * Data attributes:
  * - data-control="mlricheditor" - enables the plugin on an element
  * - data-textarea-element="textarea#id" - an option with a value
@@ -36,6 +36,7 @@
 
     MLRichEditor.DEFAULTS = {
         textareaElement: null,
+        copyHandler: null,
         placeholderField: null,
         defaultLocale: 'en'
     }
@@ -44,6 +45,7 @@
         this.$el.multiLingual()
 
         this.$el.on('setLocale.oc.multilingual', this.proxy(this.onSetLocale))
+        this.$el.on('copyLocale.oc.multilingual', this.proxy(this.onCopyLocale))
         this.$textarea.on('syncContent.oc.richeditor', this.proxy(this.onSyncContent))
 
         this.updateLayout()
@@ -55,6 +57,7 @@
 
     MLRichEditor.prototype.dispose = function() {
         this.$el.off('setLocale.oc.multilingual', this.proxy(this.onSetLocale))
+        this.$el.off('copyLocale.oc.multilingual', this.proxy(this.onCopyLocale))
         this.$textarea.off('syncContent.oc.richeditor', this.proxy(this.onSyncContent))
         $(window).off('resize', this.proxy(this.updateLayout))
         $(window).off('oc.updateUi', this.proxy(this.updateLayout))
@@ -73,6 +76,11 @@
     }
 
     MLRichEditor.prototype.onSetLocale = function(e, locale, localeValue) {
+        if (typeof localeValue === 'string' && this.$richeditor.data('oc.richEditor')) {
+            this.$richeditor.richEditor('setContent', localeValue);
+        }
+    }
+    MLRichEditor.prototype.onCopyLocale = function(e, locale, localeValue) {
         if (typeof localeValue === 'string' && this.$richeditor.data('oc.richEditor')) {
             this.$richeditor.richEditor('setContent', localeValue);
         }
@@ -103,7 +111,7 @@
 
         setMLButtonPosition()
         $element.on('keydown keyup', setMLButtonPosition)
-        
+
         function setMLButtonPosition() {
             var scrollHeight = $element[0].scrollHeight
             var showScrollbar = scrollHeight > elementHeight
@@ -124,7 +132,7 @@
                 $dropdown.css('right', '')
             }
         }
-        
+
     }
 
     // MLRICHEDITOR PLUGIN DEFINITION
