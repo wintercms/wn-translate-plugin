@@ -305,7 +305,7 @@ $user->name;
 
 ## Indexed attributes
 
-Translatable model attributes can also be declared as an index by passing the `$transatable` attribute value as an array. The first value is the attribute name, the other values represent options, in this case setting the option `index` to `true`.
+Translatable model attributes can also be declared as an index by passing the `$translatable` attribute value as an array. The first value is the attribute name, the other values represent options, in this case setting the option `index` to `true`.
 
 ```php
 public $translatable = [
