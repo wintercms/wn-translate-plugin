@@ -8,12 +8,7 @@
 
     <?= $urlField ?>
 
-    <button
-        class="btn btn-default ml-btn"
-        data-toggle="dropdown"
-        data-active-locale
-        type="button">
-    </button>
+    <?= $this->makeMLPartial('locale_copy') ?>
 
     <?= $this->makeMLPartial('locale_values') ?>
 
