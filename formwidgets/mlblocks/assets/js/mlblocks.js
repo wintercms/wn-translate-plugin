@@ -36,6 +36,7 @@
 
     MLBlocks.DEFAULTS = {
         switchHandler: null,
+        copyHandler: null,
         defaultLocale: 'en'
     }
 
@@ -47,6 +48,7 @@
         $(document).on('render', this.proxy(this.checkEmptyItems))
 
         this.$el.on('setLocale.oc.multilingual', this.proxy(this.onSetLocale))
+        this.$el.on('copyLocale.oc.multilingual', this.proxy(this.onCopyLocale))
 
         this.$el.one('dispose-control', this.proxy(this.dispose))
     }
@@ -56,6 +58,7 @@
         $(document).off('render', this.proxy(this.checkEmptyItems))
 
         this.$el.off('setLocale.oc.multilingual', this.proxy(this.onSetLocale))
+        this.$el.off('copyLocale.oc.multilingual', this.proxy(this.onCopyLocale))
 
         this.$el.off('dispose-control', this.proxy(this.dispose))
 
@@ -74,6 +77,25 @@
     MLBlocks.prototype.checkEmptyItems = function() {
         var isEmpty = !$('ul.field-repeater-items > li', this.$el).length
         this.$el.toggleClass('is-empty', isEmpty)
+    }
+
+    MLBlocks.prototype.onCopyLocale = function(e, locale, localeValue) {
+        var self = this,
+            copyFromLocale = this.locale
+
+        this.$el
+            .addClass('loading-indicator-container size-form-field')
+            .loadIndicator()
+
+        this.$el.request(this.options.copyHandler, {
+            data: {
+                _blocks_copy_locale: copyFromLocale,
+            },
+            success: function(data) {
+                self.$el.loadIndicator('hide')
+                this.success(data)
+            }
+        })
     }
 
     MLBlocks.prototype.onSetLocale = function(e, locale, localeValue) {

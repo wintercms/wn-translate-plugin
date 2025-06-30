@@ -4,19 +4,13 @@
     data-control="mlblocks"
     data-default-locale="<?= e($defaultLocale->code) ?>"
     data-switch-handler="<?= $this->getEventHandler('onSwitchItemLocale') ?>"
+    data-copy-handler="<?= $this->getEventHandler('onCopyItemLocale') ?>"
     class="field-multilingual field-multilingual-repeater dropdown"
     >
 
     <div id="<?= $this->getId('mlBlocks') ?>">
         <?= $blocks ?>
     </div>
-
-    <button
-        class="btn btn-default ml-btn"
-        data-toggle="dropdown"
-        data-active-locale
-        type="button">
-    </button>
 
     <input
         type="hidden"
@@ -25,7 +19,9 @@
         value="<?= e($defaultLocale->code) ?>"
     />
 
-    <?= $this->makeMLPartial('locale_values') ?>
+    <?= $this->makeMLPartial('locale_copy') ?>
 
     <?= $this->makeMLPartial('locale_selector') ?>
+
+    <?= $this->makeMLPartial('locale_values') ?>
 </div>
