@@ -94,6 +94,24 @@ class MLNestedForm extends NestedForm
         return '/modules/backend/formwidgets/nestedform/assets';
     }
 
+    public function onCopyItemLocale()
+    {
+        $copyFromLocale = post('_repeater_copy_locale');
+
+        $copyFromValues = $this->getLocaleSaveDataAsArray($copyFromLocale);
+
+        $this->reprocessLocaleItems($copyFromValues);
+
+        $this->formWidget->setFormValues($copyFromValues);
+
+        $this->actAsParent();
+        $parentContent = parent::render();
+        $this->actAsParent(false);
+
+        return [
+            '#'.$this->getId('mlNestedForm') => $parentContent,
+        ];
+    }
     public function onSwitchItemLocale()
     {
         if (!$locale = post('_nestedform_locale')) {
