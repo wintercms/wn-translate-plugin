@@ -153,13 +153,13 @@ The same operation can be performed with the `translate:scan` artisan command. I
 ```bash
 php artisan translate:scan
 ```
-    
+
 Add the `--purge` option to clear old messages first:
 
-```bash 
+```bash
 php artisan translate:scan --purge
 ```
-    
+
 ## Content translation
 
 This plugin activates a feature in the CMS that allows content files to use language suffixes, for example:
@@ -186,6 +186,17 @@ class User extends Model
     public $implement = ['Winter.Translate.Behaviors.TranslatableModel'];
 
     public $translatable = ['name'];
+}
+```
+
+If you store structured data in a JSON column (e.g., additional_data), and you want to make nested fields translatable, use square bracket notation to define the path to the nested attribute.
+
+```php
+class User extends Model
+{
+    public $implement = ['Winter.Translate.Behaviors.TranslatableModel'];
+
+    public $translatable = ['foo[bar][baz]'];
 }
 ```
 
@@ -274,7 +285,7 @@ public function boot() {
     });
 }
 ```
-    
+
 ## Theme data translation
 
 It is also possible to translate theme customisation options. Just mark your form fields with `translatable` property and the plugin will take care about everything else:

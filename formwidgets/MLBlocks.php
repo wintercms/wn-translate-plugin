@@ -104,6 +104,29 @@ class MLBlocks extends Blocks
         return parent::onAddItem();
     }
 
+    public function onCopyItemLocale()
+    {
+        $copyFromLocale = post('_blocks_copy_locale');
+
+        $copyFromValues = $this->getLocaleSaveDataAsArray($copyFromLocale);
+
+        $this->reprocessLocaleItems($copyFromValues);
+        foreach ($this->formWidgets as $key => $widget) {
+            $value = array_shift($copyFromValues);
+            if ($value) {
+                $widget->setFormValues($value);
+            }
+        }
+
+        $this->actAsParent();
+        $parentContent = parent::render();
+        $this->actAsParent(false);
+
+        return [
+            '#'.$this->getId('mlBlocks') => $parentContent,
+        ];
+    }
+
     public function onSwitchItemLocale()
     {
         if (!$locale = post('_blocks_locale')) {

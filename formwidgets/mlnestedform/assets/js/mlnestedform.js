@@ -35,6 +35,7 @@
 
     MLNestedForm.DEFAULTS = {
         switchHandler: null,
+        copyHandler: null,
         defaultLocale: 'en'
     }
 
@@ -42,12 +43,14 @@
         this.$el.multiLingual()
 
         this.$el.on('setLocale.oc.multilingual', this.proxy(this.onSetLocale))
+        this.$el.on('copyLocale.oc.multilingual', this.proxy(this.onCopyLocale))
 
         this.$el.one('dispose-control', this.proxy(this.dispose))
     }
 
     MLNestedForm.prototype.dispose = function() {
         this.$el.off('setLocale.oc.multilingual', this.proxy(this.onSetLocale))
+        this.$el.off('copyLocale.oc.multilingual', this.proxy(this.onCopyLocale))
 
         this.$el.off('dispose-control', this.proxy(this.dispose))
 
@@ -61,6 +64,25 @@
         this.options = null
 
         BaseProto.dispose.call(this)
+    }
+
+    MLNestedForm.prototype.onCopyLocale = function(e, locale, localeValue) {
+        var self = this,
+            copyFromLocale = this.locale
+
+        this.$el
+            .addClass('loading-indicator-container size-form-field')
+            .loadIndicator()
+
+        this.$el.request(this.options.copyHandler, {
+            data: {
+                _repeater_copy_locale: copyFromLocale,
+            },
+            success: function(data) {
+                self.$el.loadIndicator('hide')
+                this.success(data)
+            }
+        })
     }
 
     MLNestedForm.prototype.onSetLocale = function(e, locale, localeValue) {

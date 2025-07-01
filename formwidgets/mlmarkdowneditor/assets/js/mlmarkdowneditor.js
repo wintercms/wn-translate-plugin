@@ -37,6 +37,7 @@
     MLMarkdownEditor.DEFAULTS = {
         textareaElement: null,
         placeholderField: null,
+        copyHandler: null,
         defaultLocale: 'en'
     }
 
@@ -44,6 +45,7 @@
         this.$el.multiLingual()
 
         this.$el.on('setLocale.oc.multilingual', this.proxy(this.onSetLocale))
+        this.$el.on('copyLocale.oc.multilingual', this.proxy(this.onCopyLocale))
         this.$textarea.on('changeContent.oc.markdowneditor', this.proxy(this.onChangeContent))
 
         this.updateLayout()
@@ -51,11 +53,12 @@
         $(window).on('resize', this.proxy(this.updateLayout))
         $(window).on('oc.updateUi', this.proxy(this.updateLayout))
         this.$el.one('dispose-control', this.proxy(this.dispose))
-        
+
     }
 
     MLMarkdownEditor.prototype.dispose = function() {
         this.$el.off('setLocale.oc.multilingual', this.proxy(this.onSetLocale))
+        this.$el.off('copyLocale.oc.multilingual', this.proxy(this.onCopyLocale))
         this.$textarea.off('changeContent.oc.markdowneditor', this.proxy(this.onChangeContent))
         this.$el.off('dispose-control', this.proxy(this.dispose))
 
@@ -76,6 +79,12 @@
         }
     }
 
+    MLMarkdownEditor.prototype.onCopyLocale = function(e, locale, localeValue) {
+        if (typeof localeValue === 'string' && this.$markdownEditor.data('oc.markdownEditor')) {
+            this.$markdownEditor.markdownEditor('setContent', localeValue);
+        }
+    }
+
     MLMarkdownEditor.prototype.onChangeContent = function(ev, markdowneditor, value) {
         this.$el.multiLingual('setLocaleValue', value)
     }
@@ -84,6 +93,8 @@
         var $toolbar = $('.control-toolbar', this.$el),
             $btn = $('.ml-btn[data-active-locale]:first', this.$el),
             $dropdown = $('.ml-dropdown-menu[data-locale-dropdown]:first', this.$el),
+            $copyBtn = $('.ml-copy-btn:first', this.$el),
+            $copyDropdown = $('.ml-copy-dropdown-menu:first', this.$el),
             $container = $('.editor-write', this.$el),
             $scrollbar = $('.ace_scrollbar', this.$el),
             $input = $('.ace_text-input', this.$el)
@@ -91,8 +102,10 @@
         if ($toolbar.length) {
             var height = $toolbar.outerHeight(true)
             if (height) {
-                $btn.css('top', height + 0.5)
+                $btn.css('top', height)
                 $dropdown.css('top', height + 34)
+                $copyBtn.css('top', height)
+                $copyDropdown.css('top', height + 34)
             }
         }
 
@@ -101,7 +114,7 @@
             $previewContainer = $('.editor-preview', this.$el),
             $scrollbar = $('.ace_scrollbar', this.$el),
             $input = $('.ace_text-input', this.$el)
-    
+
         // fix exit fullscreen
         setTimeout(function() {
             setMLButtonPosition()
@@ -109,7 +122,7 @@
 
         // input listener
         $input.on('keydown keyup', setMLButtonPosition)
-        
+
         function setMLButtonPosition() {
 
             // make sure container is displayed (fix previewmode)
@@ -132,7 +145,7 @@
             $container.css('display', '')
 
         }
-        
+
     }
 
     // MLMARKDOWNEDITOR PLUGIN DEFINITION
