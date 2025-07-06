@@ -38,8 +38,30 @@
         }
     }
 
+
     // Repeater-specific override
     &.field-multilingual-repeater .ml-btn, &.field-multilingual-repeater .ml-copy-btn {
+        top: 3px;
+        bottom: auto;
+        height: auto;
+        transform: translateY(-100%);
+        border-radius: .375rem;
+    }
+
+
+    // media finder specific stuff
+    &.field-multilingual-mediafinder > .dropdown.ml-dropdown.open > ul,
+    &.field-multilingual-mediafinder > .dropdown.ml-copy-dropdown.open > ul {
+        top: 3px;
+    }
+    // to stop it from overlapping with the upload button
+    &.field-multilingual-mediafinder > .dropdown.ml-dropdown:not(.open),
+    &.field-multilingual-mediafinder > .dropdown.ml-copy-dropdown:not(.open) {
+        height: 3px;
+    }
+
+    &.field-multilingual-mediafinder .ml-btn,
+    &.field-multilingual-mediafinder .ml-copy-btn {
         top: 3px;
         bottom: auto;
         height: auto;
