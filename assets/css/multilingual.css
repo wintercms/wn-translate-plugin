@@ -12,26 +12,37 @@
 .field-multilingual .ml-dropdown:not(.ml-copy-dropdown),
 .field-multilingual .ml-copy-dropdown:not(.ml-copy-dropdown){right:0}
 .field-multilingual.field-multilingual-repeater .ml-btn,
-.field-multilingual.field-multilingual-repeater .ml-copy-btn{top:3px;bottom:auto;height:auto;transform:translateY(-100%);border-radius:.375rem}
-.field-multilingual.field-multilingual-mediafinder>.dropdown.ml-dropdown.open>ul,
-.field-multilingual.field-multilingual-mediafinder>.dropdown.ml-copy-dropdown.open>ul{top:3px}
-.field-multilingual.field-multilingual-mediafinder>.dropdown.ml-dropdown:not(.open),
-.field-multilingual.field-multilingual-mediafinder>.dropdown.ml-copy-dropdown:not(.open){height:3px}
+.field-multilingual.field-multilingual-repeater .ml-copy-btn{top:3px;bottom:auto;height:15px;transform:translateY(-100%);border-radius:.375rem}
+.field-multilingual.field-multilingual-mediafinder .dropdown.ml-dropdown.open>ul,
+.field-multilingual.field-multilingual-mediafinder .dropdown.ml-copy-dropdown.open>ul{top:3px}
+.field-multilingual.field-multilingual-mediafinder .dropdown.ml-dropdown:not(.open),
+.field-multilingual.field-multilingual-mediafinder .dropdown.ml-copy-dropdown:not(.open){height:3px}
 .field-multilingual.field-multilingual-mediafinder .ml-btn,
-.field-multilingual.field-multilingual-mediafinder .ml-copy-btn{top:3px;bottom:auto;height:auto;transform:translateY(-100%);border-radius:.375rem}
-.field-multilingual.field-multilingual-mediafinder .ml-btn{border-radius:.375rem}
+.field-multilingual.field-multilingual-mediafinder .ml-copy-btn{top:3px;bottom:auto;height:15px;transform:translateY(-100%);border-radius:.375rem}
 .field-multilingual.field-multilingual-textarea textarea{padding-right:2rem}
 .field-multilingual.field-multilingual-textarea .ml-btn,
 .field-multilingual.field-multilingual-textarea .ml-copy-btn{border-bottom-right-radius:0;border-bottom-left-radius:.375rem}
 .field-multilingual.field-multilingual-textarea .ml-dropdown-menu,
 .field-multilingual.field-multilingual-textarea .ml-copy-dropdown>.dropdown-menu{top:28px}
-.field-multilingual.field-multilingual-richeditor .ml-btn,
-.field-multilingual.field-multilingual-markdowneditor .ml-btn{border-radius:0;border-bottom-left-radius:.375rem}
-.field-multilingual.field-multilingual-richeditor .ml-dropdown-menu,
-.field-multilingual.field-multilingual-markdowneditor .ml-dropdown-menu{top:28px;right:1px}
 .field-multilingual.field-multilingual-markdowneditor .mode-tab .editor-write,
 .field-multilingual.field-multilingual-markdowneditor .mode-split .editor-preview{padding-right:2rem}
 .field-multilingual.field-multilingual-markdowneditor .editor-code{padding-right:inherit}
+.field-multilingual.field-multilingual-markdowneditor .ml-btn,
+.field-multilingual.field-multilingual-richeditor .ml-btn,
+.field-multilingual.field-multilingual-markdowneditor .ml-copy-btn,
+.field-multilingual.field-multilingual-richeditor .ml-copy-btn{top:3px;bottom:auto;height:15px;transform:translateY(-100%);border-radius:.375rem}
+.field-multilingual.field-multilingual-markdowneditor .dropdown.ml-dropdown.open>ul,
+.field-multilingual.field-multilingual-richeditor .dropdown.ml-dropdown.open>ul,
+.field-multilingual.field-multilingual-markdowneditor .dropdown.ml-copy-dropdown.open>ul,
+.field-multilingual.field-multilingual-richeditor .dropdown.ml-copy-dropdown.open>ul{top:3px}
+.field-multilingual.field-multilingual-markdowneditor .dropdown.ml-dropdown:not(.open),
+.field-multilingual.field-multilingual-richeditor .dropdown.ml-dropdown:not(.open),
+.field-multilingual.field-multilingual-markdowneditor .dropdown.ml-copy-dropdown:not(.open),
+.field-multilingual.field-multilingual-richeditor .dropdown.ml-copy-dropdown:not(.open){height:3px}
+.field-multilingual.field-multilingual-markdowneditor .ml-btn,
+.field-multilingual.field-multilingual-richeditor .ml-btn{border-radius:0;border-bottom-left-radius:.375rem}
+.field-multilingual.field-multilingual-markdowneditor .ml-dropdown-menu,
+.field-multilingual.field-multilingual-richeditor .ml-dropdown-menu{top:28px;right:1px}
 .field-multilingual.field-multilingual-repeater .ml-dropdown-menu,
 .field-multilingual.field-multilingual-nestedform .ml-dropdown-menu,
 .field-multilingual.field-multilingual-repeater .ml-copy-dropdown>.dropdown-menu,

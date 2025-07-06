@@ -40,37 +40,30 @@
 
 
     // Repeater-specific override
-    &.field-multilingual-repeater .ml-btn, &.field-multilingual-repeater .ml-copy-btn {
-        top: 3px;
-        bottom: auto;
-        height: auto;
-        transform: translateY(-100%);
-        border-radius: .375rem;
+    &.field-multilingual-repeater {
+        .ml-btn,
+        .ml-copy-btn {
+            .multilingual-button-alt-style()
+        }
     }
 
 
     // media finder specific stuff
-    &.field-multilingual-mediafinder > .dropdown.ml-dropdown.open > ul,
-    &.field-multilingual-mediafinder > .dropdown.ml-copy-dropdown.open > ul {
-        top: 3px;
-    }
-    // to stop it from overlapping with the upload button
-    &.field-multilingual-mediafinder > .dropdown.ml-dropdown:not(.open),
-    &.field-multilingual-mediafinder > .dropdown.ml-copy-dropdown:not(.open) {
-        height: 3px;
-    }
+    &.field-multilingual-mediafinder {
 
-    &.field-multilingual-mediafinder .ml-btn,
-    &.field-multilingual-mediafinder .ml-copy-btn {
-        top: 3px;
-        bottom: auto;
-        height: auto;
-        transform: translateY(-100%);
-        border-radius: .375rem;
-    }
+        .dropdown.ml-dropdown.open > ul,
+        .dropdown.ml-copy-dropdown.open > ul {
+            top: 3px;
+        }
 
-    &.field-multilingual-mediafinder .ml-btn {
-        border-radius: .375rem;
+        .dropdown.ml-dropdown:not(.open),// to stop it from overlapping with the upload button
+        .dropdown.ml-copy-dropdown:not(.open) {
+            height: 3px;
+        }
+        .ml-btn,
+        .ml-copy-btn {
+            .multilingual-button-alt-style()
+        }
     }
 
     &.field-multilingual-textarea {
@@ -90,19 +83,6 @@
         }
     }
 
-    &.field-multilingual-richeditor,
-    &.field-multilingual-markdowneditor {
-        .ml-btn {
-            border-radius: 0;
-            border-bottom-left-radius: .375rem;
-        }
-
-        .ml-dropdown-menu {
-            top: @copy-btn-top-offset;
-            right: 1px;
-        }
-    }
-
     &.field-multilingual-markdowneditor {
         .mode-tab .editor-write,
         .mode-split .editor-preview {
@@ -111,6 +91,31 @@
 
         .editor-code {
             padding-right: inherit;
+        }
+    }
+
+    &.field-multilingual-markdowneditor,
+    &.field-multilingual-richeditor {
+        .ml-btn,
+        .ml-copy-btn {
+            .multilingual-button-alt-style()
+        }
+        .dropdown.ml-dropdown.open > ul,
+        .dropdown.ml-copy-dropdown.open > ul {
+            top: 3px;
+        }
+        .dropdown.ml-dropdown:not(.open),
+        .dropdown.ml-copy-dropdown:not(.open) {
+            height: 3px;
+        }
+        .ml-btn {
+            border-radius: 0;
+            border-bottom-left-radius: .375rem;
+        }
+
+        .ml-dropdown-menu {
+            top: @copy-btn-top-offset;
+            right: 1px;
         }
     }
 
@@ -139,6 +144,13 @@
 }
 
 // Reusable button style mixin
+.multilingual-button-alt-style() { // use with the .multilingual-button-style
+    top: 3px;
+    bottom: auto;
+    height: 15px;
+    transform: translateY(-100%);
+    border-radius: .375rem;
+}
 .multilingual-button-style() {
     z-index: 12;
     position: absolute;
