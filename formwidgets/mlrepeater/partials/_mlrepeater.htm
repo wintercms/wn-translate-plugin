@@ -4,6 +4,7 @@
     data-control="mlrepeater"
     data-default-locale="<?= e($defaultLocale->code) ?>"
     data-switch-handler="<?= $this->getEventHandler('onSwitchItemLocale') ?>"
+    data-copy-handler="<?= $this->getEventHandler('onCopyItemLocale') ?>"
     class="field-multilingual field-multilingual-repeater dropdown"
     >
 
@@ -11,19 +12,14 @@
         <?= $repeater ?>
     </div>
 
-    <button
-        class="btn btn-default ml-btn"
-        data-toggle="dropdown"
-        data-active-locale
-        type="button">
-    </button>
-
     <input
         type="hidden"
         data-repeater-active-locale
         name="<?= $field->getName('RLTranslateRepeaterLocale') ?>"
         value="<?= e($defaultLocale->code) ?>"
     />
+
+    <?= $this->makeMLPartial('locale_copy') ?>
 
     <?= $this->makeMLPartial('locale_values') ?>
 
