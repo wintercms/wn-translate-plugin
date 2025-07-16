@@ -143,3 +143,8 @@
     - "Add missing french translations"
 "2.2.0":
     - "Fix translating pages on Winter v1.2.7+"
+"2.2.1":
+    - "Add mlblocks"
+    - "Add mlurl formwidget"
+    - "Replace translateContext call with getAttributeTranslated"
+    - "Fix message scan (revert to regex, twig tokenizer is broken)"

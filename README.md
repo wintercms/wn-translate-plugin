@@ -305,7 +305,7 @@ $user->name;
 
 ## Indexed attributes
 
-Translatable model attributes can also be declared as an index by passing the `$transatable` attribute value as an array. The first value is the attribute name, the other values represent options, in this case setting the option `index` to `true`.
+Translatable model attributes can also be declared as an index by passing the `$translatable` attribute value as an array. The first value is the attribute name, the other values represent options, in this case setting the option `index` to `true`.
 
 ```php
 public $translatable = [
@@ -370,10 +370,9 @@ In YourModel, one possible implementation might look like this:
 public static function translateParams($params, $oldLocale, $newLocale) {
     $newParams = $params;
     foreach ($params as $paramName => $paramValue) {
-        $records = self::transWhere($paramName, $paramValue, $oldLocale)->first();
-        if ($records) {
-            $records->translateContext($newLocale);
-            $newParams[$paramName] = $records->$paramName;
+        $record = self::transWhere($paramName, $paramValue, $oldLocale)->first();
+        if ($record) {
+            $newParams[$paramName] = $record->getAttributeTranslated($paramName, $newLocale);
         }
     }
     return $newParams;
