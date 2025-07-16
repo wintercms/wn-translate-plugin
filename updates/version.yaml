@@ -148,3 +148,4 @@
     - "Add mlurl formwidget"
     - "Replace translateContext call with getAttributeTranslated"
     - "Fix message scan (revert to regex, twig tokenizer is broken)"
+"2.3.0": "Make use of controller behavior default views present in Winter v1.2.8+."
