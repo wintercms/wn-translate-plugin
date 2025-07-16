@@ -13,7 +13,7 @@
                 tabindex="-1"
                 data-copy-locale="<?= $code ?>"
                 href="javascript:;">
-                Copy from <?= $name ?>
+                <?= e(trans('winter.translate::lang.locale.copy_from', ['locale' => $name])); ?>
             </a>
         </li>
         <?php endforeach ?>
