@@ -91,9 +91,9 @@ class LocalePicker extends ComponentBase
             : $pageUrl;
 
         return Redirect::to(
-		$redirectUrl,
-		Config::get('winter.translate::redirectStatus')
-	);
+            $redirectUrl,
+            Config::get('winter.translate::redirectStatus')
+        );
     }
 
     protected function redirectForceUrl()
