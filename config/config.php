@@ -51,4 +51,16 @@ return [
 
     'disableLocalePrefixRoutes' => env('TRANSLATE_DISABLE_PREFIX_ROUTES', false),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Redirect Status Code
+    |--------------------------------------------------------------------------
+    |
+    | Specifies the HTTP status code to use for redirects.
+    | Default is 302 (Found).
+    |
+    */
+
+    'redirectStatus' => env('TRANSLATE_REDIRECT_STATUS', 302),
+
 ];

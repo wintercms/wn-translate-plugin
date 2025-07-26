@@ -86,11 +86,14 @@ class LocalePicker extends ComponentBase
         $this->translator->setLocale($locale);
 
         $pageUrl = $this->withPreservedQueryString($this->makeLocaleUrlFromPage($locale), $locale);
-        if ($this->property('forceUrl')) {
-            return Redirect::to($this->translator->getPathInLocale($pageUrl, $locale));
-        }
+        $redirectUrl = $this->property('forceUrl')
+            ? $this->translator->getPathInLocale($pageUrl, $locale)
+            : $pageUrl;
 
-        return Redirect::to($pageUrl);
+        return Redirect::to(
+            $redirectUrl,
+            Config::get('winter.translate::redirectStatus')
+        );
     }
 
     protected function redirectForceUrl()
@@ -112,7 +115,8 @@ class LocalePicker extends ComponentBase
                 $this->withPreservedQueryString(
                     $this->translator->getCurrentPathInLocale($locale),
                     $locale
-                )
+                ),
+                Config::get('winter.translate::redirectStatus')
             );
         } elseif ( $locale == $this->translator->getDefaultLocale()) {
             return;
