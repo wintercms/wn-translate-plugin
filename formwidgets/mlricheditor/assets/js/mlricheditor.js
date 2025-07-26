@@ -1,6 +1,6 @@
 /*
  * MLRichEditor plugin
- * 
+ *
  * Data attributes:
  * - data-control="mlricheditor" - enables the plugin on an element
  * - data-textarea-element="textarea#id" - an option with a value
@@ -36,6 +36,7 @@
 
     MLRichEditor.DEFAULTS = {
         textareaElement: null,
+        copyHandler: null,
         placeholderField: null,
         defaultLocale: 'en'
     }
@@ -44,6 +45,7 @@
         this.$el.multiLingual()
 
         this.$el.on('setLocale.oc.multilingual', this.proxy(this.onSetLocale))
+        this.$el.on('copyLocale.oc.multilingual', this.proxy(this.onCopyLocale))
         this.$textarea.on('syncContent.oc.richeditor', this.proxy(this.onSyncContent))
 
         this.updateLayout()
@@ -55,6 +57,7 @@
 
     MLRichEditor.prototype.dispose = function() {
         this.$el.off('setLocale.oc.multilingual', this.proxy(this.onSetLocale))
+        this.$el.off('copyLocale.oc.multilingual', this.proxy(this.onCopyLocale))
         this.$textarea.off('syncContent.oc.richeditor', this.proxy(this.onSyncContent))
         $(window).off('resize', this.proxy(this.updateLayout))
         $(window).off('oc.updateUi', this.proxy(this.updateLayout))
@@ -77,24 +80,20 @@
             this.$richeditor.richEditor('setContent', localeValue);
         }
     }
+    MLRichEditor.prototype.onCopyLocale = function(e, locale, localeValue) {
+        if (typeof localeValue === 'string' && this.$richeditor.data('oc.richEditor')) {
+            this.$richeditor.richEditor('setContent', localeValue);
+        }
+    }
 
     MLRichEditor.prototype.onSyncContent = function(ev, richeditor, value) {
         this.$el.multiLingual('setLocaleValue', value.html)
     }
 
     MLRichEditor.prototype.updateLayout = function() {
-        var $toolbar = $('.fr-toolbar', this.$el),
-            $btn = $('.ml-btn[data-active-locale]:first', this.$el),
+        var $btn = $('.ml-btn[data-active-locale]:first', this.$el),
             $dropdown = $('.ml-dropdown-menu[data-locale-dropdown]:first', this.$el),
             $element = $('.fr-element', this.$el)
-
-        if ($toolbar.length) {
-            var height = $toolbar.outerHeight(true)
-            if (height) {
-                $btn.css('top', height)
-                $dropdown.css('top', height + 34)
-            }
-        }
 
         // set ML button position
         var hasScrollbar = false
@@ -103,7 +102,7 @@
 
         setMLButtonPosition()
         $element.on('keydown keyup', setMLButtonPosition)
-        
+
         function setMLButtonPosition() {
             var scrollHeight = $element[0].scrollHeight
             var showScrollbar = scrollHeight > elementHeight
@@ -114,7 +113,7 @@
                 if (!scrollbarWidth) scrollbarWidth = $element[0].offsetWidth - $element[0].clientWidth
 
                 $element.css('padding-right', scrollbarWidth + 23)
-                $btn.css('right', scrollbarWidth - 1)
+                $btn.css('right', scrollbarWidth + 1)
                 $dropdown.css('right', scrollbarWidth - 2)
 
             } else if (hasScrollbar && !showScrollbar) {
@@ -124,7 +123,7 @@
                 $dropdown.css('right', '')
             }
         }
-        
+
     }
 
     // MLRICHEDITOR PLUGIN DEFINITION
