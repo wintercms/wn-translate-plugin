@@ -2,6 +2,7 @@
 <div
     id="<?= $this->getId('mlControl') ?>"
     data-control="multilingual"
+    data-copy-confirm="<?= e(trans('winter.translate::lang.locale.copy_confirm')); ?>"
     data-default-locale="<?= $defaultLocale->code ?>"
     data-placeholder-field="#<?= $field->getId() ?>"
     class="field-multilingual field-multilingual-url dropdown">

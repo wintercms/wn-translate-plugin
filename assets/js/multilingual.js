@@ -109,6 +109,9 @@
     }
 
     MultiLingual.prototype.copyLocale = function(copyFromLocale) {
+        if (!confirm(this.$el.data("copy-confirm"))) {
+            return
+        }
         var copyFromLocaleValue = this.getLocaleValue(copyFromLocale)
         this.$activeField.val(copyFromLocaleValue)
         this.$placeholder.val(copyFromLocaleValue)

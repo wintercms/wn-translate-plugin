@@ -3,6 +3,7 @@
     id="<?= $this->getId('mlControl') ?>"
     data-control="mlrepeater"
     data-default-locale="<?= e($defaultLocale->code) ?>"
+    data-copy-confirm="<?= e(trans('winter.translate::lang.locale.copy_confirm')); ?>"
     data-switch-handler="<?= $this->getEventHandler('onSwitchItemLocale') ?>"
     data-copy-handler="<?= $this->getEventHandler('onCopyItemLocale') ?>"
     class="field-multilingual field-multilingual-repeater dropdown"
