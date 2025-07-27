@@ -25,14 +25,6 @@
         this.$mediafinder = $('[data-control=mediafinder]', this.$el)
         this.$findValue = $('[data-find-value]', this.$el)
 
-        // If this widget does NOT have a label and comment
-        // then add margin for the locale buttons
-        if (
-            this.$el.siblings('label').length === 0 &&
-            this.$el.siblings('p').length === 0
-        ) {
-            this.$el.css('margin-top','38px')
-        }
         $.wn.foundation.controlUtils.markDisposable(element)
         Base.call(this)
         this.init()
@@ -54,12 +46,25 @@
         this.$el.on('setLocale.oc.multilingual', this.proxy(this.onSetLocale))
         this.$el.on('copyLocale.oc.multilingual', this.proxy(this.onCopyLocale))
         this.$el.one('dispose-control', this.proxy(this.dispose))
+
+        this.updateLayout()
         // Listen for change event from mediafinder
         this.$findValue.on('change', this.proxy(this.setValue))
 
         // Stop here for preview mode
         if (this.options.isPreview)
             return
+    }
+
+    MLMediaFinder.prototype.updateLayout = function() {
+        // If this widget does NOT have a label and comment
+        // then add margin for the locale buttons
+        if (
+            this.$el.siblings('label').length === 0 &&
+            this.$el.siblings('p').length === 0
+        ) {
+            this.$el.css('margin-top','38px')
+        }
     }
 
     // Simplify setPath

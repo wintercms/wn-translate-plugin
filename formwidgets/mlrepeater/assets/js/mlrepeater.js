@@ -24,14 +24,6 @@
         this.$locale   = $('[data-repeater-active-locale]', this.$el)
         this.locale    = options.defaultLocale
 
-        // If this widget does NOT have a label and comment
-        // then add margin for the locale buttons
-        if (
-            this.$el.siblings('label').length === 0 &&
-            this.$el.siblings('p').length === 0
-        ) {
-            this.$el.css('margin-top','38px')
-        }
         $.wn.foundation.controlUtils.markDisposable(element)
         Base.call(this)
 
@@ -52,6 +44,7 @@
         this.$el.multiLingual()
 
         this.checkEmptyItems()
+        this.updateLayout()
 
         $(document).on('render', this.proxy(this.checkEmptyItems))
 
@@ -104,6 +97,17 @@
                 this.success(data)
             }
         })
+    }
+
+    MLRepeater.prototype.updateLayout = function() {
+        // If this widget does NOT have a label and comment
+        // then add margin for the locale buttons
+        if (
+            this.$el.siblings('label').length === 0 &&
+            this.$el.siblings('p').length === 0
+        ) {
+            this.$el.css('margin-top','38px')
+        }
     }
 
     MLRepeater.prototype.onSetLocale = function(e, locale, localeValue) {
