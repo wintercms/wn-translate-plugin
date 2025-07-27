@@ -43,7 +43,7 @@
     &.field-multilingual-repeater {
         .ml-btn,
         .ml-copy-btn {
-            .multilingual-button-alt-style()
+            top: -24px;
         }
     }
 
@@ -53,7 +53,7 @@
 
         .dropdown.ml-dropdown.open > ul,
         .dropdown.ml-copy-dropdown.open > ul {
-            top: 3px;
+            top: -10px;
         }
 
         .dropdown.ml-dropdown:not(.open),// to stop it from overlapping with the upload button
@@ -62,7 +62,7 @@
         }
         .ml-btn,
         .ml-copy-btn {
-            .multilingual-button-alt-style()
+            top: -40px;
         }
     }
 
@@ -98,11 +98,11 @@
     &.field-multilingual-richeditor {
         .ml-btn,
         .ml-copy-btn {
-            .multilingual-button-alt-style()
+            top: 34px;
         }
         .dropdown.ml-dropdown.open > ul,
         .dropdown.ml-copy-dropdown.open > ul {
-            top: 3px;
+            top: 37px;
         }
         .dropdown.ml-dropdown:not(.open),
         .dropdown.ml-copy-dropdown:not(.open) {
@@ -143,14 +143,6 @@
     }
 }
 
-// Reusable button style mixin
-.multilingual-button-alt-style() { // use with the .multilingual-button-style
-    top: 3px;
-    bottom: auto;
-    height: 15px;
-    transform: translateY(-100%);
-    border-radius: .375rem;
-}
 .multilingual-button-style() {
     z-index: 12;
     position: absolute;
