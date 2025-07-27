@@ -49,12 +49,16 @@
         this.$textarea.on('syncContent.oc.richeditor', this.proxy(this.onSyncContent))
 
         this.updateLayout()
+        this.initFroala()
 
         $(window).on('resize', this.proxy(this.updateLayout))
         $(window).on('oc.updateUi', this.proxy(this.updateLayout))
         this.$el.one('dispose-control', this.proxy(this.dispose))
     }
 
+    MLRichEditor.prototype.initFroala = function() {
+        // TODO: attach to the froala events
+    }
     MLRichEditor.prototype.dispose = function() {
         this.$el.off('setLocale.oc.multilingual', this.proxy(this.onSetLocale))
         this.$el.off('copyLocale.oc.multilingual', this.proxy(this.onCopyLocale))
@@ -93,8 +97,20 @@
     MLRichEditor.prototype.updateLayout = function() {
         var $btn = $('.ml-btn[data-active-locale]:first', this.$el),
             $dropdown = $('.ml-dropdown-menu[data-locale-dropdown]:first', this.$el),
+            $copyBtn = $('.ml-copy-btn:first', this.$el),
+            $copyDropdown = $('.ml-copy-dropdown-menu:first', this.$el),
+            $toolbar = $('.fr-toolbar', this.$el),
             $element = $('.fr-element', this.$el)
 
+        if ($toolbar.length) {
+            var height = $toolbar.outerHeight(true)
+            if (height) {
+                $btn.css('top', height + 1)
+                $dropdown.css('top', height + 34)
+                $copyBtn.css('top', height + 1)
+                $copyDropdown.css('top', height + 34)
+            }
+        }
         // set ML button position
         var hasScrollbar = false
         var scrollbarWidth = 0

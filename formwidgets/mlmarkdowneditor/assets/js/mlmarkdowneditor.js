@@ -49,6 +49,7 @@
         this.$textarea.on('changeContent.oc.markdowneditor', this.proxy(this.onChangeContent))
 
         this.updateLayout()
+        this.initInputEvents()
 
         $(window).on('resize', this.proxy(this.updateLayout))
         $(window).on('oc.updateUi', this.proxy(this.updateLayout))
@@ -89,13 +90,29 @@
         this.$el.multiLingual('setLocaleValue', value)
     }
 
+    MLMarkdownEditor.prototype.initInputEvents = function() {
+        // TODO: hook into input events
+    }
+
     MLMarkdownEditor.prototype.updateLayout = function() {
         var $btn = $('.ml-btn[data-active-locale]:first', this.$el),
             $dropdown = $('.ml-dropdown-menu[data-locale-dropdown]:first', this.$el),
+            $copyBtn = $('.ml-copy-btn:first', this.$el),
+            $copyDropdown = $('.ml-copy-dropdown-menu:first', this.$el),
+            $toolbar = $('.control-toolbar', this.$el),
             $container = $('.editor-write', this.$el),
             $scrollbar = $('.ace_scrollbar', this.$el),
             $input = $('.ace_text-input', this.$el)
 
+        if ($toolbar.length) {
+            var height = $toolbar.outerHeight(true)
+            if (height) {
+                $btn.css('top', height + 1)
+                $dropdown.css('top', height + 34)
+                $copyBtn.css('top', height + 1)
+                $copyDropdown.css('top', height + 34)
+            }
+        }
         // set ML button position
         var $container = $('.editor-write', this.$el),
             $previewContainer = $('.editor-preview', this.$el),
