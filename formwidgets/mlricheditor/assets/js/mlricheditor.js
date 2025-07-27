@@ -19,10 +19,12 @@
     // ============================
 
     var MLRichEditor = function(element, options) {
-        this.options   = options
-        this.$el       = $(element)
-        this.$textarea = $(options.textareaElement)
+        this.options     = options
+        this.$el         = $(element)
+        this.$textarea   = $(options.textareaElement)
         this.$richeditor = $('[data-control=richeditor]:first', this.$el)
+        this.editor      = null
+        this.isFocused   = false
 
         $.wn.foundation.controlUtils.markDisposable(element)
         Base.call(this)
@@ -49,15 +51,24 @@
         this.$textarea.on('syncContent.oc.richeditor', this.proxy(this.onSyncContent))
 
         this.updateLayout()
-        this.initFroala()
+        this.attachToFroalaEvents()
 
         $(window).on('resize', this.proxy(this.updateLayout))
         $(window).on('oc.updateUi', this.proxy(this.updateLayout))
         this.$el.one('dispose-control', this.proxy(this.dispose))
     }
 
-    MLRichEditor.prototype.initFroala = function() {
-        // TODO: attach to the froala events
+    MLRichEditor.prototype.attachToFroalaEvents = function() {
+        const self = this
+        this.editor = this.$textarea.data('froala.editor')
+        this.editor.events.on('focus', function () {
+            self.isFocused = true
+            self.updateLayout()
+        });
+        this.editor.events.on('blur', function () {
+            self.isFocused = false
+            self.updateLayout()
+        });
     }
     MLRichEditor.prototype.dispose = function() {
         this.$el.off('setLocale.oc.multilingual', this.proxy(this.onSetLocale))
@@ -110,6 +121,15 @@
                 $copyBtn.css('top', height + 1)
                 $copyDropdown.css('top', height + 34)
             }
+        }
+
+        // Hide locale buttons while editor is focused
+        if (this.isFocused) {
+            $btn.hide()
+            $copyBtn.hide()
+        } else {
+            $btn.show()
+            $copyBtn.show()
         }
         // set ML button position
         var hasScrollbar = false
