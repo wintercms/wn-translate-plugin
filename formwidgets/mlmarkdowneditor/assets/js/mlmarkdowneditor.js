@@ -19,10 +19,12 @@
     // ============================
 
     var MLMarkdownEditor = function(element, options) {
-        this.options   = options
-        this.$el       = $(element)
-        this.$textarea = $(options.textareaElement)
+        this.options         = options
+        this.$el             = $(element)
+        this.$textarea       = $(options.textareaElement)
         this.$markdownEditor = $('[data-control=markdowneditor]:first', this.$el)
+        this.$code           = $('.editor-code', this.$el)
+        this.isFocused       = false
 
         $.wn.foundation.controlUtils.markDisposable(element)
         Base.call(this)
@@ -91,7 +93,17 @@
     }
 
     MLMarkdownEditor.prototype.initInputEvents = function() {
-        // TODO: hook into input events
+        const self = this
+        var editor = ace.edit(this.$code.attr('id'))
+        console.log(this.$code)
+        editor.on('blur', function() {
+            self.isFocused = false
+            self.updateLayout()
+        })
+        editor.on('focus', function() {
+            self.isFocused = true
+            self.updateLayout()
+        })
     }
 
     MLMarkdownEditor.prototype.updateLayout = function() {
@@ -118,6 +130,15 @@
             $previewContainer = $('.editor-preview', this.$el),
             $scrollbar = $('.ace_scrollbar', this.$el),
             $input = $('.ace_text-input', this.$el)
+
+        // Hide locale buttons while editor is focused
+        if (this.isFocused) {
+            $btn.hide()
+            $copyBtn.hide()
+        } else {
+            $btn.show()
+            $copyBtn.show()
+        }
 
         // fix exit fullscreen
         setTimeout(function() {
