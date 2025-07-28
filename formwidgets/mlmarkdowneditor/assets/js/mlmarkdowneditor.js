@@ -95,7 +95,6 @@
     MLMarkdownEditor.prototype.initInputEvents = function() {
         const self = this
         var editor = ace.edit(this.$code.attr('id'))
-        console.log(this.$code)
         editor.on('blur', function() {
             self.isFocused = false
             self.updateLayout()

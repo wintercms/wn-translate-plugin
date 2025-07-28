@@ -39,8 +39,20 @@
         defaultLocale: 'en'
     }
 
+    MLNestedForm.prototype.updateLayout = function() {
+        // If this widget does NOT have a label and comment
+        // then add margin for the locale buttons
+        if (
+            this.$el.siblings('label').length === 0 &&
+            this.$el.siblings('p').length === 0
+        ) {
+            console.log(this.$el)
+            this.$el.css('margin-top','36px')
+        }
+    }
     MLNestedForm.prototype.init = function() {
         this.$el.multiLingual()
+        this.updateLayout()
 
         this.$el.on('setLocale.oc.multilingual', this.proxy(this.onSetLocale))
         this.$el.on('copyLocale.oc.multilingual', this.proxy(this.onCopyLocale))

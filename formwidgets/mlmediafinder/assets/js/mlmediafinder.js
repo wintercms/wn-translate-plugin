@@ -63,7 +63,7 @@
             this.$el.siblings('label').length === 0 &&
             this.$el.siblings('p').length === 0
         ) {
-            this.$el.css('margin-top','38px')
+            this.$el.css('margin-top','36px')
         }
     }
 
