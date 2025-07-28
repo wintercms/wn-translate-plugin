@@ -46,7 +46,6 @@
             this.$el.siblings('label').length === 0 &&
             this.$el.siblings('p').length === 0
         ) {
-            console.log(this.$el)
             this.$el.css('margin-top','36px')
         }
     }

@@ -83,12 +83,10 @@
     MLBlocks.prototype.updateLayout = function() {
         // If this widget does NOT have a label and comment
         // then add margin for the locale buttons
-        console.log(this.$el)
         if (
             this.$el.siblings('label').length === 0 &&
             this.$el.siblings('p').length === 0
         ) {
-            console.log(this.$el)
             this.$el.css('margin-top','36px')
         }
     }

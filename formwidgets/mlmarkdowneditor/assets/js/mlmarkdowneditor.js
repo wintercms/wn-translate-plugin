@@ -56,7 +56,6 @@
         $(window).on('resize', this.proxy(this.updateLayout))
         $(window).on('oc.updateUi', this.proxy(this.updateLayout))
         this.$el.one('dispose-control', this.proxy(this.dispose))
-
     }
 
     MLMarkdownEditor.prototype.dispose = function() {
