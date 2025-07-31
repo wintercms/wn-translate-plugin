@@ -23,7 +23,7 @@
         this.$el         = $(element)
         this.$textarea   = $(options.textareaElement)
         this.$richeditor = $('[data-control=richeditor]:first', this.$el)
-        this.editor      = null
+        this.editor      = this.$textarea.data('froala.editor')
         this.isFocused   = false
 
         $.wn.foundation.controlUtils.markDisposable(element)
@@ -50,26 +50,20 @@
         this.$el.on('copyLocale.oc.multilingual', this.proxy(this.onCopyLocale))
         this.$textarea.on('syncContent.oc.richeditor', this.proxy(this.onSyncContent))
 
+        this.editor.events.on('focus', this.proxy(this.toggleIsFocused));
+        this.editor.events.on('blur', this.proxy(this.toggleIsFocused));
+
         this.updateLayout()
-        this.attachToFroalaEvents()
 
         $(window).on('resize', this.proxy(this.updateLayout))
         $(window).on('oc.updateUi', this.proxy(this.updateLayout))
         this.$el.one('dispose-control', this.proxy(this.dispose))
     }
-
-    MLRichEditor.prototype.attachToFroalaEvents = function() {
-        const self = this
-        this.editor = this.$textarea.data('froala.editor')
-        this.editor.events.on('focus', function () {
-            self.isFocused = true
-            self.updateLayout()
-        });
-        this.editor.events.on('blur', function () {
-            self.isFocused = false
-            self.updateLayout()
-        });
+    MLRichEditor.prototype.toggleIsFocused = function () {
+        this.isFocused = !this.isFocused
+        this.updateLayout()
     }
+
     MLRichEditor.prototype.dispose = function() {
         this.$el.off('setLocale.oc.multilingual', this.proxy(this.onSetLocale))
         this.$el.off('copyLocale.oc.multilingual', this.proxy(this.onCopyLocale))
@@ -77,6 +71,8 @@
         $(window).off('resize', this.proxy(this.updateLayout))
         $(window).off('oc.updateUi', this.proxy(this.updateLayout))
 
+        this.editor.events.off('focus', this.proxy(this.toggleIsFocused));
+        this.editor.events.off('blur', this.proxy(this.toggleIsFocused));
         this.$el.off('dispose-control', this.proxy(this.dispose))
 
         this.$el.removeData('oc.mlRichEditor')

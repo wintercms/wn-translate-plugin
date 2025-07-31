@@ -24,6 +24,7 @@
         this.$textarea       = $(options.textareaElement)
         this.$markdownEditor = $('[data-control=markdowneditor]:first', this.$el)
         this.$code           = $('.editor-code', this.$el)
+        this.codeEditor      = ace.edit(this.$code.attr('id'))
         this.isFocused       = false
 
         $.wn.foundation.controlUtils.markDisposable(element)
@@ -50,8 +51,10 @@
         this.$el.on('copyLocale.oc.multilingual', this.proxy(this.onCopyLocale))
         this.$textarea.on('changeContent.oc.markdowneditor', this.proxy(this.onChangeContent))
 
+        this.codeEditor.on('blur', this.proxy(this.toggleIsFocused))
+        this.codeEditor.on('focus', this.proxy(this.toggleIsFocused))
+
         this.updateLayout()
-        this.initInputEvents()
 
         $(window).on('resize', this.proxy(this.updateLayout))
         $(window).on('oc.updateUi', this.proxy(this.updateLayout))
@@ -63,6 +66,8 @@
         this.$el.off('copyLocale.oc.multilingual', this.proxy(this.onCopyLocale))
         this.$textarea.off('changeContent.oc.markdowneditor', this.proxy(this.onChangeContent))
         this.$el.off('dispose-control', this.proxy(this.dispose))
+        this.codeEditor.off('blur', this.proxy(this.toggleIsFocused))
+        this.codeEditor.off('focus', this.proxy(this.toggleIsFocused))
 
         this.$el.removeData('oc.mlMarkdownEditor')
 
@@ -91,18 +96,11 @@
         this.$el.multiLingual('setLocaleValue', value)
     }
 
-    MLMarkdownEditor.prototype.initInputEvents = function() {
-        const self = this
-        var editor = ace.edit(this.$code.attr('id'))
-        editor.on('blur', function() {
-            self.isFocused = false
-            self.updateLayout()
-        })
-        editor.on('focus', function() {
-            self.isFocused = true
-            self.updateLayout()
-        })
+    MLMarkdownEditor.prototype.toggleIsFocused = function () {
+        this.isFocused = !this.isFocused
+        this.updateLayout()
     }
+
 
     MLMarkdownEditor.prototype.updateLayout = function() {
         var $btn = $('.ml-btn[data-active-locale]:first', this.$el),
