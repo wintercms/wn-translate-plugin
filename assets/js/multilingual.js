@@ -1,6 +1,6 @@
 /*
  * Multi lingual control plugin
- * 
+ *
  * Data attributes:
  * - data-control="multilingual" - enables the plugin on an element
  * - data-default-locale="en" - default locale code
@@ -25,6 +25,7 @@
 
         this.$activeField  = null
         this.$activeButton = $('[data-active-locale]', this.$el)
+        this.$copyDropdown = $('ul.ml-copy-dropdown-menu', this.$el)
         this.$dropdown     = $('ul.ml-dropdown-menu', this.$el)
         this.$placeholder  = $(this.options.placeholderField)
 
@@ -34,6 +35,15 @@
         this.activeLocale = this.options.defaultLocale
         this.$activeField = this.getLocaleElement(this.activeLocale)
         this.$activeButton.text(this.activeLocale)
+
+        this.$copyDropdown.on('click', '[data-copy-locale]', function(_event) {
+            var currentLocale = self.activeLocale
+            var copyFromLocale = $(this).data('copy-locale')
+
+            if (!copyFromLocale || currentLocale === copyFromLocale) return;
+
+            self.copyLocale(copyFromLocale)
+        });
 
         this.$dropdown.on('click', '[data-switch-locale]', this.$activeButton, function(event){
             var currentLocale = event.data.text();
@@ -96,6 +106,17 @@
         else {
             this.$activeField.val(value)
         }
+    }
+
+    MultiLingual.prototype.copyLocale = function(copyFromLocale) {
+        if (!confirm(this.$el.data("copy-confirm"))) {
+            return
+        }
+        var copyFromLocaleValue = this.getLocaleValue(copyFromLocale)
+        this.$activeField.val(copyFromLocaleValue)
+        this.$placeholder.val(copyFromLocaleValue)
+
+        this.$el.trigger('copyLocale.oc.multilingual', [copyFromLocale, copyFromLocaleValue])
     }
 
     MultiLingual.prototype.setLocale = function(locale) {

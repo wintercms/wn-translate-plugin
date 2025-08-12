@@ -35,6 +35,7 @@
 
     MLMediaFinder.DEFAULTS = {
         placeholderField: null,
+        copyHandler: null,
         defaultLocale: 'en',
         mediaPath: '/',
     }
@@ -43,13 +44,27 @@
 
         this.$el.multiLingual()
         this.$el.on('setLocale.oc.multilingual', this.proxy(this.onSetLocale))
+        this.$el.on('copyLocale.oc.multilingual', this.proxy(this.onCopyLocale))
         this.$el.one('dispose-control', this.proxy(this.dispose))
+
+        this.updateLayout()
         // Listen for change event from mediafinder
         this.$findValue.on('change', this.proxy(this.setValue))
 
         // Stop here for preview mode
         if (this.options.isPreview)
             return
+    }
+
+    MLMediaFinder.prototype.updateLayout = function() {
+        // If this widget does NOT have a label and comment
+        // then add margin for the locale buttons
+        if (
+            this.$el.siblings('label').length === 0 &&
+            this.$el.siblings('p').length === 0
+        ) {
+            this.$el.css('margin-top','36px')
+        }
     }
 
     // Simplify setPath
@@ -59,6 +74,7 @@
 
     MLMediaFinder.prototype.dispose = function() {
         this.$el.off('setLocale.oc.multilingual', this.proxy(this.onSetLocale))
+        this.$el.off('copyLocale.oc.multilingual', this.proxy(this.onCopyLocale))
         this.$el.off('dispose-control', this.proxy(this.dispose))
         this.$findValue.off('change', this.proxy(this.setValue))
 
@@ -77,6 +93,10 @@
 
 
     MLMediaFinder.prototype.onSetLocale = function(e, locale, localeValue) {
+        this.setPath(localeValue)
+    }
+
+    MLMediaFinder.prototype.onCopyLocale = function(e, locale, localeValue) {
         this.setPath(localeValue)
     }
 

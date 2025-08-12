@@ -37,6 +37,8 @@ return [
         'hint_locales' => 'Create new languages here for translating front-end content. The default language represents the content before it has been translated.',
         'reorder_title' => 'Reorder languages',
         'sort_order' => 'Sort Order',
+        'copy_from' => 'Copy from :locale',
+        'copy_confirm' => 'Are you sure you want to copy from another locale?',
     ],
     'messages' => [
         'title' => 'Translate messages',

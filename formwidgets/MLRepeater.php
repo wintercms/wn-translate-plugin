@@ -104,6 +104,28 @@ class MLRepeater extends Repeater
         return parent::onAddItem();
     }
 
+    public function onCopyItemLocale()
+    {
+        $copyFromLocale = post('_repeater_copy_locale');
+
+        $copyFromValues = $this->getLocaleSaveDataAsArray($copyFromLocale);
+
+        $this->reprocessLocaleItems($copyFromValues);
+        foreach ($this->formWidgets as $key => $widget) {
+            $value = array_shift($copyFromValues);
+            if ($value) {
+                $widget->setFormValues($value);
+            }
+        }
+
+        $this->actAsParent();
+        $parentContent = parent::render();
+        $this->actAsParent(false);
+
+        return [
+            '#'.$this->getId('mlRepeater') => $parentContent,
+        ];
+    }
     public function onSwitchItemLocale()
     {
         if (!$locale = post('_repeater_locale')) {

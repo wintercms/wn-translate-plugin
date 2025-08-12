@@ -1,0 +1,23 @@
+<?php if (!config('winter.translate::disable_copy', false)): ?>
+<!-- Language Copy Dropdown -->
+<div class="dropdown ml-copy-dropdown">
+    <button
+        class="icon-copy btn ml-copy-btn"
+        data-toggle="dropdown"
+        type="button">
+    </button>
+    <ul class="dropdown-menu pull-right ml-copy-dropdown-menu" role="menu">
+        <?php foreach ($locales as $code => $name): ?>
+        <li role="presentation">
+            <a
+                role="menuitem"
+                tabindex="-1"
+                data-copy-locale="<?= $code ?>"
+                href="javascript:;">
+                <?= e(trans('winter.translate::lang.locale.copy_from', ['locale' => $name])); ?>
+            </a>
+        </li>
+        <?php endforeach ?>
+    </ul>
+</div>
+<?php endif; ?>

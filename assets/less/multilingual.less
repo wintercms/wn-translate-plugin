@@ -1,6 +1,8 @@
 @import "../../../../../modules/backend/assets/less/core/boot.less";
 
 @multilingual-btn-color: #555555;
+@copy-btn-right-offset: 41px;
+@copy-btn-top-offset: 28px;
 
 .field-multilingual {
     position: relative;
@@ -9,44 +11,68 @@
         z-index: 20;
     }
 
-    .ml-btn {
-        z-index: 12;
+    // Shared styles for both buttons
+    .ml-btn,
+    .ml-copy-btn {
+        .multilingual-button-style();
+    }
+
+    // Individual tweaks
+    .ml-copy-btn {
+        border-radius: 0;
+    }
+
+    .ml-dropdown,
+    .ml-copy-dropdown {
         position: absolute;
-        top: 1px;
-        bottom: 1px;
-        right: 1px;
-        
-        width: auto;
-        max-width: 44px;
-        max-height: 38px;
+        height: 100%;
+        width: 42px;
+        top: 0;
 
-        color: lighten(@multilingual-btn-color, 15%);
-        background-color: #F8F6F3;
-        box-shadow: none;
+        &.ml-copy-dropdown {
+            right: @copy-btn-right-offset;
+        }
 
-        font-size: 11px;
-        letter-spacing: 1px;
-        text-transform: uppercase;
+        &:not(.ml-copy-dropdown) {
+            right: 0;
+        }
+    }
+    .dropdown.ml-dropdown.open > .dropdown-menu,
+    .dropdown.ml-copy-dropdown.open > .dropdown-menu {
+        top: @copy-btn-top-offset;
+    }
 
-        margin: 0 !important;
-        padding: 0 12px;
 
-        border-top-left-radius: 0;
-        border-bottom-left-radius: 0;
-        
-        transition: color 420ms ease;
-
-        &:hover {
-            color: @multilingual-btn-color;
+    // Repeater-specific override
+    &.field-multilingual-repeater,
+    &.field-multilingual-nestedform {
+        .ml-btn,
+        .ml-copy-btn {
+            top: -36px;
+        }
+        .dropdown.ml-dropdown.open > .dropdown-menu,
+        .dropdown.ml-copy-dropdown.open > .dropdown-menu {
+            top: -10px;
         }
     }
 
-    &.field-multilingual-repeater .ml-btn {
-        top: 3px;
-        bottom: auto;
-        height: auto;
-        transform: translateY(-100%);
-        border-radius: .375rem;
+
+    // media finder specific stuff
+    &.field-multilingual-mediafinder {
+
+        .dropdown.ml-dropdown.open > .dropdown-menu,
+        .dropdown.ml-copy-dropdown.open > .dropdown-menu {
+            top: -10px;
+        }
+
+        .dropdown.ml-dropdown:not(.open),// to stop it from overlapping with the upload button
+        .dropdown.ml-copy-dropdown:not(.open) {
+            height: 3px;
+        }
+        .ml-btn,
+        .ml-copy-btn {
+            top: -36px;
+        }
     }
 
     &.field-multilingual-textarea {
@@ -54,34 +80,20 @@
             padding-right: 2rem;
         }
 
-        .ml-btn {
-            border-bottom-right-radius: 0px;
-            border-bottom-left-radius: .375rem;
-        }
-        
-        .ml-dropdown-menu {
-            top: 28px;
-            right: 1px;
-        }
-    }
-
-    &.field-multilingual-richeditor {
-        .ml-btn {
-            border-radius: 0;
+        .ml-btn,
+        .ml-copy-btn {
+            border-bottom-right-radius: 0;
             border-bottom-left-radius: .375rem;
         }
 
-        .ml-dropdown-menu {
-            top: 28px;
-            right: 1px;
+        .ml-dropdown-menu,
+        .ml-copy-dropdown > .dropdown-menu {
+            top: @copy-btn-top-offset;
         }
     }
 
     &.field-multilingual-markdowneditor {
-        .mode-tab .editor-write {
-            padding-right: 2rem;
-        }
-
+        .mode-tab .editor-write,
         .mode-split .editor-preview {
             padding-right: 2rem;
         }
@@ -89,44 +101,85 @@
         .editor-code {
             padding-right: inherit;
         }
+    }
 
+    &.field-multilingual-markdowneditor,
+    &.field-multilingual-richeditor {
+        .ml-btn,
+        .ml-copy-btn {
+            height: 38px;
+        }
+        .dropdown.ml-dropdown.open > .dropdown-menu,
+        .dropdown.ml-copy-dropdown.open > .dropdown-menu {
+            top: 37px;
+        }
+        .dropdown.ml-dropdown:not(.open),
+        .dropdown.ml-copy-dropdown:not(.open) {
+            height: 3px;
+        }
         .ml-btn {
             border-radius: 0;
             border-bottom-left-radius: .375rem;
         }
 
         .ml-dropdown-menu {
-            top: 28px;
+            top: @copy-btn-top-offset;
             right: 1px;
         }
     }
 
     &.field-multilingual-repeater,
     &.field-multilingual-nestedform {
-        .ml-dropdown-menu {
-            top: 2px;
+        .ml-dropdown-menu,
+        .ml-copy-dropdown > .dropdown-menu {
+            top: calc(@copy-btn-top-offset - 20px );
             right: 0;
         }
     }
-
-    &.field-multilingual-mediafinder {
-        .ml-btn {
-            border-radius: .375rem;
-        }
-    }
 }
 
+// Fancy layout overrides
 .fancy-layout {
     .form-tabless-fields .field-multilingual {
-        .ml-btn {
-            background-color: rgba(248, 246, 243, 0.75)
+        .ml-btn,
+        .ml-copy-btn {
+            background-color: rgba(248, 246, 243, 0.75);
+
+            &:hover {
+                background-color: rgba(248, 246, 243, 0.85);
+            }
         }
     }
 }
 
-// ?? CHECK THIS
-// .help-block.before-field + .field-multilingual.field-multilingual-textarea {
-//     .ml-btn {
-//         top: -41px;
-//     }
-// }
+.multilingual-button-style() {
+    z-index: 12;
+    position: absolute;
+    top: 1px;
+    bottom: 1px;
+    right: 1px;
+
+    width: auto;
+    width: 44px;
+    height: 36px;
+
+    color: lighten(@multilingual-btn-color, 15%);
+    background-color: #F8F6F3;
+    box-shadow: none;
+
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+
+    margin: 0 !important;
+    padding: 0 12px;
+
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+
+    transition: color 420ms ease;
+
+    &:hover {
+        color: @multilingual-btn-color;
+    }
+}

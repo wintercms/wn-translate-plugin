@@ -3,20 +3,15 @@
     id="<?= $this->getId('mlControl') ?>"
     data-control="mlnestedform"
     data-default-locale="<?= e($defaultLocale->code) ?>"
+    data-copy-confirm="<?= e(trans('winter.translate::lang.locale.copy_confirm')); ?>"
     data-switch-handler="<?= $this->getEventHandler('onSwitchItemLocale') ?>"
+    data-copy-handler="<?= $this->getEventHandler('onCopyItemLocale') ?>"
     class="field-multilingual field-multilingual-nestedform dropdown <?= $this->usePanelStyles ? 'using-panel-styles' : '' ?>"
     >
 
     <div id="<?= $this->getId('mlNestedForm') ?>">
         <?= $nestedform ?>
     </div>
-
-    <button
-        class="btn btn-default ml-btn"
-        data-toggle="dropdown"
-        data-active-locale
-        type="button">
-    </button>
 
     <input
         type="hidden"
@@ -25,7 +20,9 @@
         value="<?= e($defaultLocale->code) ?>"
     />
 
-    <?= $this->makeMLPartial('locale_values') ?>
+    <?= $this->makeMLPartial('locale_copy') ?>
 
     <?= $this->makeMLPartial('locale_selector') ?>
+
+    <?= $this->makeMLPartial('locale_values') ?>
 </div>

@@ -3,6 +3,7 @@
     id="<?= $this->getId('mlControl') ?>"
     data-control="mlmarkdowneditor"
     data-textarea-element="#<?= $this->getId('textarea') ?>"
+    data-copy-confirm="<?= e(trans('winter.translate::lang.locale.copy_confirm')); ?>"
     data-default-locale="<?= $defaultLocale->code ?>"
     data-placeholder-field="#<?= $this->getId('textarea') ?>"
     class="field-multilingual field-multilingual-markdowneditor dropdown <?= $stretch?'layout-relative stretch':'' ?>"
@@ -10,14 +11,9 @@
 
     <?= $markdowneditor ?>
 
-    <button
-        class="btn btn-default ml-btn"
-        data-toggle="dropdown"
-        data-active-locale
-        type="button">
-    </button>
-
-    <?= $this->makeMLPartial('locale_values') ?>
+    <?= $this->makeMLPartial('locale_copy') ?>
 
     <?= $this->makeMLPartial('locale_selector') ?>
+
+    <?= $this->makeMLPartial('locale_values') ?>
 </div>

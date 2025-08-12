@@ -1,19 +1,61 @@
 .field-multilingual{position:relative}
 .field-multilingual .form-control:focus{z-index:20}
-.field-multilingual .ml-btn{z-index:12;position:absolute;top:1px;bottom:1px;right:1px;width:auto;max-width:44px;max-height:38px;color:#7b7b7b;background-color:#F8F6F3;box-shadow:none;font-size:11px;letter-spacing:1px;text-transform:uppercase;margin:0 !important;padding:0 12px;border-top-left-radius:0;border-bottom-left-radius:0;transition:color 420ms ease}
-.field-multilingual .ml-btn:hover{color:#555}
-.field-multilingual.field-multilingual-repeater .ml-btn{top:3px;bottom:auto;height:auto;transform:translateY(-100%);border-radius:.375rem}
+.field-multilingual .ml-btn,
+.field-multilingual .ml-copy-btn{z-index:12;position:absolute;top:1px;bottom:1px;right:1px;width:auto;width:44px;height:36px;color:#7b7b7b;background-color:#F8F6F3;box-shadow:none;font-size:11px;letter-spacing:1px;text-transform:uppercase;margin:0 !important;padding:0 12px;border-top-left-radius:0;border-bottom-left-radius:0;transition:color 420ms ease}
+.field-multilingual .ml-btn:hover,
+.field-multilingual .ml-copy-btn:hover{color:#555}
+.field-multilingual .ml-copy-btn{border-radius:0}
+.field-multilingual .ml-dropdown,
+.field-multilingual .ml-copy-dropdown{position:absolute;height:100%;width:42px;top:0}
+.field-multilingual .ml-dropdown.ml-copy-dropdown,
+.field-multilingual .ml-copy-dropdown.ml-copy-dropdown{right:41px}
+.field-multilingual .ml-dropdown:not(.ml-copy-dropdown),
+.field-multilingual .ml-copy-dropdown:not(.ml-copy-dropdown){right:0}
+.field-multilingual .dropdown.ml-dropdown.open>.dropdown-menu,
+.field-multilingual .dropdown.ml-copy-dropdown.open>.dropdown-menu{top:28px}
+.field-multilingual.field-multilingual-repeater .ml-btn,
+.field-multilingual.field-multilingual-nestedform .ml-btn,
+.field-multilingual.field-multilingual-repeater .ml-copy-btn,
+.field-multilingual.field-multilingual-nestedform .ml-copy-btn{top:-36px}
+.field-multilingual.field-multilingual-repeater .dropdown.ml-dropdown.open>.dropdown-menu,
+.field-multilingual.field-multilingual-nestedform .dropdown.ml-dropdown.open>.dropdown-menu,
+.field-multilingual.field-multilingual-repeater .dropdown.ml-copy-dropdown.open>.dropdown-menu,
+.field-multilingual.field-multilingual-nestedform .dropdown.ml-copy-dropdown.open>.dropdown-menu{top:-10px}
+.field-multilingual.field-multilingual-mediafinder .dropdown.ml-dropdown.open>.dropdown-menu,
+.field-multilingual.field-multilingual-mediafinder .dropdown.ml-copy-dropdown.open>.dropdown-menu{top:-10px}
+.field-multilingual.field-multilingual-mediafinder .dropdown.ml-dropdown:not(.open),
+.field-multilingual.field-multilingual-mediafinder .dropdown.ml-copy-dropdown:not(.open){height:3px}
+.field-multilingual.field-multilingual-mediafinder .ml-btn,
+.field-multilingual.field-multilingual-mediafinder .ml-copy-btn{top:-36px}
 .field-multilingual.field-multilingual-textarea textarea{padding-right:2rem}
-.field-multilingual.field-multilingual-textarea .ml-btn{border-bottom-right-radius:0;border-bottom-left-radius:.375rem}
-.field-multilingual.field-multilingual-textarea .ml-dropdown-menu{top:28px;right:1px}
-.field-multilingual.field-multilingual-richeditor .ml-btn{border-radius:0;border-bottom-left-radius:.375rem}
-.field-multilingual.field-multilingual-richeditor .ml-dropdown-menu{top:28px;right:1px}
-.field-multilingual.field-multilingual-markdowneditor .mode-tab .editor-write{padding-right:2rem}
+.field-multilingual.field-multilingual-textarea .ml-btn,
+.field-multilingual.field-multilingual-textarea .ml-copy-btn{border-bottom-right-radius:0;border-bottom-left-radius:0.375rem}
+.field-multilingual.field-multilingual-textarea .ml-dropdown-menu,
+.field-multilingual.field-multilingual-textarea .ml-copy-dropdown>.dropdown-menu{top:28px}
+.field-multilingual.field-multilingual-markdowneditor .mode-tab .editor-write,
 .field-multilingual.field-multilingual-markdowneditor .mode-split .editor-preview{padding-right:2rem}
 .field-multilingual.field-multilingual-markdowneditor .editor-code{padding-right:inherit}
-.field-multilingual.field-multilingual-markdowneditor .ml-btn{border-radius:0;border-bottom-left-radius:.375rem}
-.field-multilingual.field-multilingual-markdowneditor .ml-dropdown-menu{top:28px;right:1px}
+.field-multilingual.field-multilingual-markdowneditor .ml-btn,
+.field-multilingual.field-multilingual-richeditor .ml-btn,
+.field-multilingual.field-multilingual-markdowneditor .ml-copy-btn,
+.field-multilingual.field-multilingual-richeditor .ml-copy-btn{height:38px}
+.field-multilingual.field-multilingual-markdowneditor .dropdown.ml-dropdown.open>.dropdown-menu,
+.field-multilingual.field-multilingual-richeditor .dropdown.ml-dropdown.open>.dropdown-menu,
+.field-multilingual.field-multilingual-markdowneditor .dropdown.ml-copy-dropdown.open>.dropdown-menu,
+.field-multilingual.field-multilingual-richeditor .dropdown.ml-copy-dropdown.open>.dropdown-menu{top:37px}
+.field-multilingual.field-multilingual-markdowneditor .dropdown.ml-dropdown:not(.open),
+.field-multilingual.field-multilingual-richeditor .dropdown.ml-dropdown:not(.open),
+.field-multilingual.field-multilingual-markdowneditor .dropdown.ml-copy-dropdown:not(.open),
+.field-multilingual.field-multilingual-richeditor .dropdown.ml-copy-dropdown:not(.open){height:3px}
+.field-multilingual.field-multilingual-markdowneditor .ml-btn,
+.field-multilingual.field-multilingual-richeditor .ml-btn{border-radius:0;border-bottom-left-radius:0.375rem}
+.field-multilingual.field-multilingual-markdowneditor .ml-dropdown-menu,
+.field-multilingual.field-multilingual-richeditor .ml-dropdown-menu{top:28px;right:1px}
 .field-multilingual.field-multilingual-repeater .ml-dropdown-menu,
-.field-multilingual.field-multilingual-nestedform .ml-dropdown-menu{top:2px;right:0}
-.field-multilingual.field-multilingual-mediafinder .ml-btn{border-radius:.375rem}
-.fancy-layout .form-tabless-fields .field-multilingual .ml-btn{background-color:rgba(248,246,243,0.75)}
+.field-multilingual.field-multilingual-nestedform .ml-dropdown-menu,
+.field-multilingual.field-multilingual-repeater .ml-copy-dropdown>.dropdown-menu,
+.field-multilingual.field-multilingual-nestedform .ml-copy-dropdown>.dropdown-menu{top:calc(28px - 20px);right:0}
+.fancy-layout .form-tabless-fields .field-multilingual .ml-btn,
+.fancy-layout .form-tabless-fields .field-multilingual .ml-copy-btn{background-color:rgba(248,246,243,0.75)}
+.fancy-layout .form-tabless-fields .field-multilingual .ml-btn:hover,
+.fancy-layout .form-tabless-fields .field-multilingual .ml-copy-btn:hover{background-color:rgba(248,246,243,0.85)}
