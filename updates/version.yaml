@@ -149,3 +149,4 @@
     - "Replace translateContext call with getAttributeTranslated"
     - "Fix message scan (revert to regex, twig tokenizer is broken)"
 "2.3.0": "Make use of controller behavior default views present in Winter v1.2.8+."
+"2.3.1": "Add ability to copy content from one language to another to simplify the translation process"
