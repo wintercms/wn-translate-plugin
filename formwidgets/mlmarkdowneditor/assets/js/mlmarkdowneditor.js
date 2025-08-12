@@ -101,7 +101,6 @@
         this.updateLayout()
     }
 
-
     MLMarkdownEditor.prototype.updateLayout = function() {
         var $btn = $('.ml-btn[data-active-locale]:first', this.$el),
             $dropdown = $('.ml-dropdown-menu[data-locale-dropdown]:first', this.$el),
