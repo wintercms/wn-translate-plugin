@@ -40,6 +40,9 @@ return [
         'copy_from' => 'Copy from :locale',
         'copy_from_label' => 'Copy from another locale',
         'copy_confirm' => 'Are you sure you want to copy from another locale?',
+        'translate_method' => 'Translate Method',
+        'standard' => 'Standard',
+        'copy_button' => 'Copy',
     ],
     'messages' => [
         'title' => 'Translate messages',

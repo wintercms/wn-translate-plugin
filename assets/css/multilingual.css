@@ -1,3 +1,4 @@
+.ml-modal label{color:#333 !important;text-transform:none !important}
 .field-multilingual{position:relative}
 .field-multilingual .form-control:focus{z-index:20}
 .field-multilingual .ml-btn,
@@ -51,6 +52,7 @@
 .field-multilingual.field-multilingual-richeditor .ml-btn{border-radius:0;border-bottom-left-radius:0.375rem}
 .field-multilingual.field-multilingual-markdowneditor .ml-dropdown-menu,
 .field-multilingual.field-multilingual-richeditor .ml-dropdown-menu{top:28px;right:1px}
+.field-multilingual .loading-indicator{z-index:99}
 .field-multilingual.field-multilingual-repeater .ml-dropdown-menu,
 .field-multilingual.field-multilingual-nestedform .ml-dropdown-menu,
 .field-multilingual.field-multilingual-repeater .ml-copy-dropdown>.dropdown-menu,
