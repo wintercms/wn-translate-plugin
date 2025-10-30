@@ -63,4 +63,41 @@ return [
 
     'redirectStatus' => env('TRANSLATE_REDIRECT_STATUS', 302),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Auto Translation Providers
+    |--------------------------------------------------------------------------
+    |
+    | Configure the translation API services used by your application.
+    | You may define multiple providers and pick one as the default.
+    |
+    | Supported Examples: "google"
+    |
+    */
+
+    // NOTE: if you have multiple fields named the same thing they will be like name, name2, name3, etc
+    // this will only translate the ones explicitly defined, in this case only name will be translated
+    'autoTranslateWhiteList' => [
+        'does_not_work',
+        'does_not_work3',
+        'name',
+        'content',
+        'works',
+        'value',
+    ],
+
+    'defaultProvider' => env('TRANSLATE_PROVIDER', 'google'),
+
+    'providers' => [
+
+        'google' => [
+            'url' => env('GOOGLE_TRANSLATE_URL', 'https://translation.googleapis.com/language/translate/v2'),
+            'key' => env('GOOGLE_TRANSLATE_KEY', ''),
+        ],
+
+        'deepl' => [
+            'url' => env('DEEPL_API_URL', 'https://api.deepl.com/v2/translate'),
+            'key' => env('DEEPL_API_KEY', ''),
+        ],
+    ],
 ];

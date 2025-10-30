@@ -38,7 +38,9 @@ return [
         'reorder_title' => 'Reorder languages',
         'sort_order' => 'Sort Order',
         'copy_from' => 'Copy from :locale',
-        'copy_confirm' => 'Are you sure you want to copy from another locale?',
+        'translate_method' => 'Translate Method',
+        'standard' => 'Standard',
+        'copy_button' => 'Copy',
     ],
     'messages' => [
         'title' => 'Translate messages',

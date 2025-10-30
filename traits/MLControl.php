@@ -5,6 +5,7 @@ namespace Winter\Translate\Traits;
 use Str;
 use Winter\Storm\Html\Helper as HtmlHelper;
 use Winter\Translate\Models\Locale;
+use Illuminate\Support\Facades\Config;
 
 /**
  * Generic ML Control
@@ -78,8 +79,7 @@ trait MLControl
             $this->originalViewPath = $this->viewPath;
             $this->assetPath = $this->getParentAssetPath();
             $this->viewPath = $this->getParentViewPath();
-        }
-        else {
+        } else {
             $this->assetPath = $this->originalAssetPath;
             $this->viewPath = $this->originalViewPath;
         }
@@ -125,6 +125,7 @@ trait MLControl
     {
         $this->vars['defaultLocale'] = $this->defaultLocale;
         $this->vars['locales'] = Locale::listAvailable();
+        $this->vars['providers'] = Config::get('winter.translate::providers');
         $this->vars['field'] = $this->makeRenderFormField();
     }
 
@@ -150,15 +151,13 @@ trait MLControl
          * Get the translated values from the model
          */
         $studKey = Str::studly(implode(' ', HtmlHelper::nameToArray($key)));
-        $mutateMethod = 'get'.$studKey.'AttributeTranslated';
+        $mutateMethod = 'get' . $studKey . 'AttributeTranslated';
 
         if ($this->objectMethodExists($this->model, $mutateMethod)) {
             $value = $this->model->$mutateMethod($locale);
-        }
-        elseif ($this->objectMethodExists($this->model, 'getAttributeTranslated') && $this->defaultLocale->code != $locale) {
+        } elseif ($this->objectMethodExists($this->model, 'getAttributeTranslated') && $this->defaultLocale->code != $locale) {
             $value = $this->model->setTranslatableUseFallback(false)->getAttributeTranslated($key, $locale);
-        }
-        else {
+        } else {
             $value = $this->formField->value;
         }
 
@@ -192,14 +191,13 @@ trait MLControl
          * Set the translated values to the model
          */
         $studKey = Str::studly(implode(' ', HtmlHelper::nameToArray($key)));
-        $mutateMethod = 'set'.$studKey.'AttributeTranslated';
+        $mutateMethod = 'set' . $studKey . 'AttributeTranslated';
 
         if ($this->objectMethodExists($this->model, $mutateMethod)) {
             foreach ($localeData as $locale => $value) {
                 $this->model->$mutateMethod($value, $locale);
             }
-        }
-        elseif ($this->objectMethodExists($this->model, 'setAttributeTranslated')) {
+        } elseif ($this->objectMethodExists($this->model, 'setAttributeTranslated')) {
             foreach ($localeData as $locale => $value) {
                 $this->model->setAttributeTranslated($key, $value, $locale);
             }
