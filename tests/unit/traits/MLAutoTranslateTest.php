@@ -188,6 +188,7 @@ class MLAutoTranslateTest extends \Winter\Translate\Tests\TranslatePluginTestCas
                             'does_not_work1' => '2',
                             'does_not_work2' => '3',
                             'does_not_work3' => '4',
+                            '1does_not_work4' => '5' // it should only translate keys with trailing numbers when defined in whitelist
                         ],
                     ],
                 ],
@@ -195,13 +196,13 @@ class MLAutoTranslateTest extends \Winter\Translate\Tests\TranslatePluginTestCas
             ],
 
             [
-                'value' => '5',
+                'value' => '6',
                 '_group' => 'block_single'
             ],
         ];
 
         $flattened = $translator->flatten($data, $whitelist);
-        $this->assertSame($flattened, ['0', '1', '5']);
+        $this->assertSame($flattened, ['0', '1', '2', '3', '4', '6']);
         $expanded = $translator->expand($flattened, $data, $whitelist);
         $this->assertSame($expanded, $data);
     }
@@ -240,7 +241,7 @@ class MLAutoTranslateTest extends \Winter\Translate\Tests\TranslatePluginTestCas
         ];
 
         $flattened = $translator->flatten($data, $whitelist);
-        $this->assertSame($flattened, ['0', '', '5']);
+        $this->assertSame($flattened, ['0', '', '2', '3', '4', '5']);
         $expanded = $translator->expand($flattened, $data, $whitelist);
         $this->assertSame($expanded, $data);
     }

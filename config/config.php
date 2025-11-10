@@ -65,28 +65,67 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Auto Translation Providers
+    | Auto Translation Whitelist
     |--------------------------------------------------------------------------
     |
-    | Configure the translation API services used by your application.
-    | You may define multiple providers and pick one as the default.
+    | Specifies which form inputs should be automatically translated when using
+    | auto-translation.
     |
-    | Supported Examples: "google"
+    | Example scenario:
+    |       fields:
+    |           does_not_work: <- this is the key you put into the whitelist
+    |               label: Does not work
+    |               trigger:
+    |                   action: hide
+    |                   field: is_delayed
+    |                   condition: checked
+    |
+    | Important Notes:
+    | - Only applies to formwidgets that have multiple inputs (e.g. NestedForm),
+    |   otherwise it's ignored.
+    |
+    | Example:
+    |   'autoTranslateWhiteList' => ['name', 'content']
     |
     */
 
-    // NOTE: if you have multiple fields named the same thing they will be like name, name2, name3, etc
-    // this will only translate the ones explicitly defined, in this case only name will be translated
-    'autoTranslateWhiteList' => [
-        'does_not_work',
-        'does_not_work3',
-        'name',
-        'content',
-        'works',
-        'value',
-    ],
+    'autoTranslateWhiteList' => ['does_not_work'],
 
-    'defaultProvider' => env('TRANSLATE_PROVIDER', 'google'),
+    /*
+    |--------------------------------------------------------------------------
+    | Default Auto Translation Provider
+    |--------------------------------------------------------------------------
+    |
+    | Sets the default provider used when performing auto translation.
+    | This must match one of the providers defined in the "providers" section,
+    | otherwise a 'standard' copy will be performed.
+    |
+    | Default is standard as users will need to setup access to a provider
+    |
+    | Example:
+    |   TRANSLATE_PROVIDER=google
+    |
+    */
+
+    'defaultProvider' => env('TRANSLATE_PROVIDER', 'standard'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Auto Translation Providers
+    |--------------------------------------------------------------------------
+    |
+    | Configure the translation API services available to your application.
+    | You may define multiple providers; each provider will appear in the
+    | dropdown list when choosing a translation service.
+    |
+    | To create new providers create a new class that implements TranslationProvider
+    | and add it to the ProviderFactory, see translate/providers.
+    |
+    | Each provider must include:
+    |   - url : API endpoint
+    |   - key : API key or authentication token
+    |
+    */
 
     'providers' => [
 
@@ -95,9 +134,11 @@ return [
             'key' => env('GOOGLE_TRANSLATE_KEY', ''),
         ],
 
-        'deepl' => [
-            'url' => env('DEEPL_API_URL', 'https://api.deepl.com/v2/translate'),
-            'key' => env('DEEPL_API_KEY', ''),
-        ],
+        // Example for adding an additional provider:
+        //
+        // 'deepl' => [
+        //     'url' => env('DEEPL_API_URL', 'https://api.deepl.com/v2/translate'),
+        //     'key' => env('DEEPL_API_KEY', ''),
+        // ],
     ],
 ];

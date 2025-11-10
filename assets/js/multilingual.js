@@ -115,8 +115,8 @@
     }
 
     MultiLingual.prototype.getProvider = function() {
-        const $selected = $('input:checked', this.$modal)
-        return $selected.val() || 'standard'
+        const $select = $('select[name^="translation_provider_"]', this.$modal);
+        return $select.val() ?? 'standard';
     }
 
     MultiLingual.prototype.setLocaleValue = function(value, locale) {
@@ -153,8 +153,10 @@
             },
             success: function(data) {
                 self.$el.trigger('autoTranslateSuccess.oc.multilingual', [data])
-                self.$el.loadIndicator('hide')
                 this.success(data)
+            },
+            complete: function() {
+                self.$el.loadIndicator('hide')
             }
         })
     }

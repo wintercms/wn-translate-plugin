@@ -28,26 +28,36 @@
                 <form>
                     <div class="form-group">
                         <fieldset>
-                            <h3>
+                            <h3 class="lang-code-display">
                                 <span data-display-locale></span>→<span data-display-active-locale></span>
                             </h3>
                             <p><?= e(trans('winter.translate::lang.locale.translate_method')); ?></p>
 
-                            <div class="radio custom-radio">
-                                <input checked="checked" name="translation_provider_<?= $widgetId ?>" value="standard"
-                                    type="radio" id="radio_standard_<?= $widgetId ?>" />
-                                <label for="radio_standard_<?= $widgetId ?>"><?= e(trans('winter.translate::lang.locale.standard')); ?></label>
-                            </div>
+                            <?php
+                                $default = strtolower($defaultProvider ?? '');
+                                $isStandard = ($default === '' || $default === 'standard');
 
-                            <?php foreach ($providers as $providerKey => $providerConfig): ?>
-                            <div class="radio custom-radio">
-                                <input name="translation_provider_<?= $widgetId ?>" value="<?= $providerKey ?>"
-                                    type="radio" id="radio_<?= $providerKey ?>_<?= $widgetId ?>" />
-                                <label for="radio_<?= $providerKey ?>_<?= $widgetId ?>">
-                                    <?= ucfirst($providerKey) ?>
-                                </label>
+                                // some FormWidgets are not machine translatable, eg. MediaFinder
+                                $translatable = $autoTranslatable ?? true;
+                            ?>
+
+                            <div class="form-group">
+                                <select name="translation_provider_<?= $widgetId ?>" class="form-control">
+
+                                    <option value="standard" <?= $isStandard ? 'selected' : '' ?>>
+                                        <?= e(trans('winter.translate::lang.locale.standard')); ?>
+                                    </option>
+
+                                    <?php if ($translatable) { ?>
+                                        <?php foreach ($providers as $providerName => $providerConfig): ?>
+                                            <?php $selected = ($default === strtolower($providerName)) ? 'selected' : ''; ?>
+                                            <option value="<?= $providerName ?>" <?= $selected ?>>
+                                                <?= ucfirst($providerName) ?>
+                                            </option>
+                                        <?php endforeach ?>
+                                    <?php } ?>
+                                </select>
                             </div>
-                            <?php endforeach ?>
 
                             <div class="modal-footer">
                                 <button data-selected-locale="" type="button" class="btn btn-primary"

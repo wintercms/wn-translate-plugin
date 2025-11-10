@@ -9,7 +9,7 @@ namespace Winter\Translate\Traits;
 use Exception;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Config;
-use Winter\Translate\ProviderFactory;
+use Winter\Translate\Providers\ProviderFactory;
 
 trait MLAutoTranslate
 {
@@ -25,12 +25,16 @@ trait MLAutoTranslate
     {
         $result = [];
 
-        $walk = function ($array) use (&$walk, &$result, $whitelist) {
+        $walk = function($array) use (&$walk, &$result, $whitelist) {
             foreach ($array as $key => $value) {
                 if (is_array($value)) {
                     $walk($value);
-                } elseif (in_array($key, $whitelist, true)) {
-                    $result[] = $value;
+                } else {
+                    $baseKey = preg_replace('/\d+$/', '', $key); // strip trailing numbers
+
+                    if (in_array($baseKey, $whitelist, true)) {
+                        $result[] = $value;
+                    }
                 }
             }
         };
@@ -55,9 +59,13 @@ trait MLAutoTranslate
             foreach ($array as $key => &$value) {
                 if (is_array($value)) {
                     $replace($value);
-                } elseif (in_array($key, $whitelist, true)) {
-                    $value = $flatValues[$idx] ?? $value;
-                    $idx++;
+                } else {
+                    $baseKey = preg_replace('/\d+$/', '', $key); // strip trailing numbers
+
+                    if (in_array($baseKey, $whitelist, true)) {
+                        $value = $flatValues[$idx] ?? $value;
+                        $idx++;
+                    }
                 }
             }
         };
@@ -71,6 +79,9 @@ trait MLAutoTranslate
     {
         $whitelist = $this->getAutoTranslatableFields();
         $flattenedValues = $this->flatten($copyFromValues, $whitelist);
+        if (count($flattenedValues) == 0) {
+            throw new Exception("None of the fields on this widget are auto translatable, update config.autoTranslateWhiteList with the label of each input you wish to include, eg. name, content");
+        }
 
         $translatedValues = $this->translate(
             $flattenedValues,
@@ -133,6 +144,9 @@ trait MLAutoTranslate
      */
     public function translate($input, string $targetLocale, string $currentLocale, string $provider = "")
     {
+        if (count($input) == 0) {
+            throw new Exception("Cannot translate input of size 0");
+        }
         if ($provider === '') {
             $provider = Config::get('winter.translate::defaultProvider');
         }

@@ -94,8 +94,10 @@
                 _provider: provider,
             },
             success: function(data) {
-                self.$el.loadIndicator('hide')
                 this.success(data)
+            },
+            complete: function() {
+                self.$el.loadIndicator('hide')
             }
         })
     }

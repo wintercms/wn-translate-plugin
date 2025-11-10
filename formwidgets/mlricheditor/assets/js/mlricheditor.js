@@ -105,6 +105,7 @@
         if (typeof translatedValue != 'string' || !this.$richeditor.data('oc.richEditor')) {
             return
         }
+        this.$el.multiLingual('setLocaleValue', translatedValue, data.translatedLocale)
         this.$richeditor.richEditor('setContent', translatedValue);
     }
 

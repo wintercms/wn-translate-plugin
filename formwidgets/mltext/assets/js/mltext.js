@@ -58,12 +58,11 @@
     }
 
     MLText.prototype.onAutoTranslateSuccess = function(e, data) {
-        var self = this
         const translatedValue = data.translatedValue[0]
         if (data.translatedValue && data.translatedLocale) {
-            const $visibleInput = $('input.form-control', self.$el)
+            const $visibleInput = $('input.form-control', this.$el)
             $visibleInput.val(translatedValue).trigger('input')
-            self.$el.multiLingual('setLocaleValue', translatedValue, data.translatedLocale)
+            this.$el.multiLingual('setLocaleValue', translatedValue, data.translatedLocale)
         }
     }
 

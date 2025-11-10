@@ -2,7 +2,7 @@
 
 namespace Winter\Translate\Providers;
 
-use Winter\Translate\Contracts\TranslationProvider;
+use Winter\Translate\Providers\TranslationProvider;
 use Exception;
 use Illuminate\Support\Facades\Http;
 
