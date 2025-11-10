@@ -1,5 +1,6 @@
 .ml-modal label{color:#333 !important;text-transform:none !important}
 .field-multilingual{position:relative}
+.field-multilingual .lang-code-display{margin-bottom:2rem;text-transform:uppercase}
 .field-multilingual .form-control:focus{z-index:20}
 .field-multilingual .ml-btn,
 .field-multilingual .ml-copy-btn{z-index:12;position:absolute;top:1px;bottom:1px;right:1px;width:auto;width:44px;height:36px;color:#7b7b7b;background-color:#F8F6F3;box-shadow:none;font-size:11px;letter-spacing:1px;text-transform:uppercase;margin:0 !important;padding:0 12px;border-top-left-radius:0;border-bottom-left-radius:0;transition:color 420ms ease}

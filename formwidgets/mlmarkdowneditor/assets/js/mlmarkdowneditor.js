@@ -100,6 +100,7 @@
         if (typeof translatedValue != 'string' || !this.$markdownEditor.data('oc.markdownEditor')) {
             return
         }
+        this.$el.multiLingual('setLocaleValue', translatedValue, data.translatedLocale)
         this.$markdownEditor.markdownEditor('setContent', translatedValue);
     }
 

@@ -126,6 +126,7 @@ trait MLControl
         $this->vars['defaultLocale'] = $this->defaultLocale;
         $this->vars['locales'] = Locale::listAvailable();
         $this->vars['providers'] = Config::get('winter.translate::providers');
+        $this->vars['defaultProvider'] = Config::get('winter.translate::defaultProvider');
         $this->vars['field'] = $this->makeRenderFormField();
     }
 

@@ -1,11 +1,11 @@
 <?php
 
-namespace Winter\Translate;
+namespace Winter\Translate\Providers;
 
 use Illuminate\Support\Facades\Config;
 use Winter\Translate\Providers\GoogleTranslateProvider;
 use Winter\Translate\Providers\DeepLTranslateProvider;
-use Winter\Translate\Contracts\TranslationProvider;
+use Winter\Translate\Providers\TranslationProvider;
 
 class ProviderFactory
 {
@@ -17,10 +17,11 @@ class ProviderFactory
             throw new \Exception("No provider found: $provider");
         }
 
-        return match ($provider) {
-            'google' => new GoogleTranslateProvider($config),
-            'deepl'  => new DeepLTranslateProvider($config),
-            default  => throw new \Exception("No provider found: $provider"),
+
+        switch ($provider) {
+            case 'google': return new GoogleTranslateProvider($config); break;
+            case 'deepl': return new DeepLTranslateProvider($config); break;
+            default: throw new \Exception("No provider found: $provider"); break;
         };
     }
 }

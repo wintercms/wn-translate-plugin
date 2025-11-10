@@ -1,6 +1,6 @@
 <?php
 
-namespace Winter\Translate\Contracts;
+namespace Winter\Translate\Providers;
 
 interface TranslationProvider
 {
