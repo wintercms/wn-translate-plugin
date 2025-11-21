@@ -89,7 +89,7 @@ return [
     |
     */
 
-    'autoTranslateWhiteList' => ['does_not_work'],
+    'autoTranslateWhiteList' => [],
 
     /*
     |--------------------------------------------------------------------------
