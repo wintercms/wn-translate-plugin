@@ -90,9 +90,8 @@
             this.$el.css('margin-top','36px')
         }
     }
-    MLBlocks.prototype.onCopyLocale = function(e, locale, localeValue) {
-        var self = this,
-            copyFromLocale = this.locale
+    MLBlocks.prototype.onCopyLocale = function(e, {copyFromLocale, copyFromValue, currentLocale, provider}) {
+        var self = this
 
         this.$el
             .addClass('loading-indicator-container size-form-field')
@@ -101,10 +100,14 @@
         this.$el.request(this.options.copyHandler, {
             data: {
                 _blocks_copy_locale: copyFromLocale,
+                _blocks_current_locale: currentLocale,
+                _provider: provider,
             },
             success: function(data) {
-                self.$el.loadIndicator('hide')
                 this.success(data)
+            },
+            complete: function() {
+                self.$el.loadIndicator('hide')
             }
         })
     }

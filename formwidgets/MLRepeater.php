@@ -18,6 +18,7 @@ use Winter\Translate\Models\Locale;
 class MLRepeater extends Repeater
 {
     use \Winter\Translate\Traits\MLControl;
+    use \Winter\Translate\Traits\MLAutoTranslate;
 
     /**
      * {@inheritDoc}
@@ -107,8 +108,18 @@ class MLRepeater extends Repeater
     public function onCopyItemLocale()
     {
         $copyFromLocale = post('_repeater_copy_locale');
+        $currentLocale = post('_repeater_current_locale');
+        $provider = post('_provider');
 
         $copyFromValues = $this->getLocaleSaveDataAsArray($copyFromLocale);
+        if ($provider !== '' && !empty($copyFromValues)) {
+            $copyFromValues = $this->autoTranslateArray(
+                $copyFromValues,
+                $currentLocale,
+                $copyFromLocale,
+                $provider
+            );
+        }
 
         $this->reprocessLocaleItems($copyFromValues);
         foreach ($this->formWidgets as $key => $widget) {

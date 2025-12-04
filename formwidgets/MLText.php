@@ -3,6 +3,7 @@
 namespace Winter\Translate\FormWidgets;
 
 use Backend\Classes\FormWidgetBase;
+use Exception;
 
 /**
  * ML Text
@@ -14,6 +15,7 @@ use Backend\Classes\FormWidgetBase;
 class MLText extends FormWidgetBase
 {
     use \Winter\Translate\Traits\MLControl;
+    use \Winter\Translate\Traits\MLAutoTranslate;
 
     /**
      * {@inheritDoc}
@@ -57,5 +59,6 @@ class MLText extends FormWidgetBase
     protected function loadAssets()
     {
         $this->loadLocaleAssets();
+        $this->addJs('js/mltext.js');
     }
 }

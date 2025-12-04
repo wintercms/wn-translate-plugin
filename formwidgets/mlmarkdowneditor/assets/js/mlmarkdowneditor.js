@@ -49,6 +49,7 @@
 
         this.$el.on('setLocale.oc.multilingual', this.proxy(this.onSetLocale))
         this.$el.on('copyLocale.oc.multilingual', this.proxy(this.onCopyLocale))
+        this.$el.on('autoTranslateSuccess.oc.multilingual', this.proxy(this.onAutoTranslateSuccess))
         this.$textarea.on('changeContent.oc.markdowneditor', this.proxy(this.onChangeContent))
 
         this.codeEditor.on('blur', this.proxy(this.toggleIsFocused))
@@ -64,6 +65,7 @@
     MLMarkdownEditor.prototype.dispose = function() {
         this.$el.off('setLocale.oc.multilingual', this.proxy(this.onSetLocale))
         this.$el.off('copyLocale.oc.multilingual', this.proxy(this.onCopyLocale))
+        this.$el.off('autoTranslateSuccess.oc.multilingual', this.proxy(this.onAutoTranslateSuccess))
         this.$textarea.off('changeContent.oc.markdowneditor', this.proxy(this.onChangeContent))
         this.$el.off('dispose-control', this.proxy(this.dispose))
         this.codeEditor.off('blur', this.proxy(this.toggleIsFocused))
@@ -86,10 +88,20 @@
         }
     }
 
-    MLMarkdownEditor.prototype.onCopyLocale = function(e, locale, localeValue) {
-        if (typeof localeValue === 'string' && this.$markdownEditor.data('oc.markdownEditor')) {
-            this.$markdownEditor.markdownEditor('setContent', localeValue);
+    MLMarkdownEditor.prototype.onCopyLocale = function(e, {copyFromLocale, copyFromValue, currentLocale, provider}) {
+        if (typeof copyFromValue === 'string' && this.$markdownEditor.data('oc.markdownEditor')) {
+            this.$markdownEditor.markdownEditor('setContent', copyFromValue);
         }
+        this.$el.multiLingual('autoTranslate', copyFromLocale, provider)
+    }
+
+    MLMarkdownEditor.prototype.onAutoTranslateSuccess = function(e, data) {
+        const translatedValue = data.translatedValue[0]
+        if (typeof translatedValue != 'string' || !this.$markdownEditor.data('oc.markdownEditor')) {
+            return
+        }
+        this.$el.multiLingual('setLocaleValue', translatedValue, data.translatedLocale)
+        this.$markdownEditor.markdownEditor('setContent', translatedValue);
     }
 
     MLMarkdownEditor.prototype.onChangeContent = function(ev, markdowneditor, value) {

@@ -77,9 +77,8 @@
         BaseProto.dispose.call(this)
     }
 
-    MLNestedForm.prototype.onCopyLocale = function(e, locale, localeValue) {
-        var self = this,
-            copyFromLocale = this.locale
+    MLNestedForm.prototype.onCopyLocale = function(e, {copyFromLocale, copyFromValue, currentLocale, provider}) {
+        var self = this
 
         this.$el
             .addClass('loading-indicator-container size-form-field')
@@ -88,10 +87,14 @@
         this.$el.request(this.options.copyHandler, {
             data: {
                 _repeater_copy_locale: copyFromLocale,
+                _repeater_current_locale: currentLocale,
+                _provider: provider,
             },
             success: function(data) {
-                self.$el.loadIndicator('hide')
                 this.success(data)
+            },
+            complete: function() {
+                self.$el.loadIndicator('hide')
             }
         })
     }

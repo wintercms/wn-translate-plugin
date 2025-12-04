@@ -48,6 +48,7 @@
 
         this.$el.on('setLocale.oc.multilingual', this.proxy(this.onSetLocale))
         this.$el.on('copyLocale.oc.multilingual', this.proxy(this.onCopyLocale))
+        this.$el.on('autoTranslateSuccess.oc.multilingual', this.proxy(this.onAutoTranslateSuccess))
         this.$textarea.on('syncContent.oc.richeditor', this.proxy(this.onSyncContent))
 
         this.editor.events.on('focus', this.proxy(this.toggleIsFocused));
@@ -67,6 +68,7 @@
     MLRichEditor.prototype.dispose = function() {
         this.$el.off('setLocale.oc.multilingual', this.proxy(this.onSetLocale))
         this.$el.off('copyLocale.oc.multilingual', this.proxy(this.onCopyLocale))
+        this.$el.off('autoTranslateSuccess.oc.multilingual', this.proxy(this.onAutoTranslateSuccess))
         this.$textarea.off('syncContent.oc.richeditor', this.proxy(this.onSyncContent))
         $(window).off('resize', this.proxy(this.updateLayout))
         $(window).off('oc.updateUi', this.proxy(this.updateLayout))
@@ -91,10 +93,20 @@
             this.$richeditor.richEditor('setContent', localeValue);
         }
     }
-    MLRichEditor.prototype.onCopyLocale = function(e, locale, localeValue) {
-        if (typeof localeValue === 'string' && this.$richeditor.data('oc.richEditor')) {
-            this.$richeditor.richEditor('setContent', localeValue);
+    MLRichEditor.prototype.onCopyLocale = function(e, {copyFromLocale, copyFromValue, currentLocale, provider}) {
+        if (typeof copyFromValue === 'string' && this.$richeditor.data('oc.richEditor')) {
+            this.$richeditor.richEditor('setContent', copyFromValue);
         }
+        this.$el.multiLingual('autoTranslate', copyFromLocale, provider)
+    }
+
+    MLRichEditor.prototype.onAutoTranslateSuccess = function(e, data) {
+        const translatedValue = data.translatedValue[0]
+        if (typeof translatedValue != 'string' || !this.$richeditor.data('oc.richEditor')) {
+            return
+        }
+        this.$el.multiLingual('setLocaleValue', translatedValue, data.translatedLocale)
+        this.$richeditor.richEditor('setContent', translatedValue);
     }
 
     MLRichEditor.prototype.onSyncContent = function(ev, richeditor, value) {
