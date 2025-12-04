@@ -112,7 +112,7 @@ class MLRepeater extends Repeater
         $provider = post('_provider');
 
         $copyFromValues = $this->getLocaleSaveDataAsArray($copyFromLocale);
-        if ($provider !== 'standard' && !empty($copyFromValues)) {
+        if ($provider !== '' && !empty($copyFromValues)) {
             $copyFromValues = $this->autoTranslateArray(
                 $copyFromValues,
                 $currentLocale,

@@ -116,7 +116,7 @@
 
     MultiLingual.prototype.getProvider = function() {
         const $select = $('select[name^="translation_provider_"]', this.$modal);
-        return $select.val() ?? 'standard';
+        return $select.val() ?? '';
     }
 
     MultiLingual.prototype.setLocaleValue = function(value, locale) {
@@ -130,7 +130,7 @@
 
     MultiLingual.prototype.autoTranslate = function(copyFromLocale, provider) {
         var self = this
-        if (provider == "standard") {
+        if (provider === '') {
             return
         }
         var currentLocale = this.activeLocale

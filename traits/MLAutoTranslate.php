@@ -142,13 +142,13 @@ trait MLAutoTranslate
     /**
      * @param string[] $input
      */
-    public function translate($input, string $targetLocale, string $currentLocale, string $provider = "")
+    public function translate($input, string $targetLocale, string $currentLocale, string $provider)
     {
         if (count($input) == 0) {
             throw new Exception("Cannot translate input of size 0");
         }
         if ($provider === '') {
-            $provider = Config::get('winter.translate::defaultProvider');
+            throw new Exception("Cannot translate without a provider");
         }
 
         $translator = ProviderFactory::create($provider);
