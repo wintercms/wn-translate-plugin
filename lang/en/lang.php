@@ -39,7 +39,7 @@ return [
         'sort_order' => 'Sort Order',
         'copy_from' => 'Copy from :locale',
         'translate_method' => 'Translate Method',
-        'standard' => 'Standard',
+        'none' => 'None',
         'copy_button' => 'Copy',
     ],
     'messages' => [

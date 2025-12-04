@@ -18,7 +18,6 @@ class MLAutoTranslateTest extends \Winter\Translate\Tests\TranslatePluginTestCas
     {
         $translator = $this->createTranslator();
 
-        Config::set('winter.translate::defaultProvider', 'google');
         Config::set('winter.translate::providers.google.url', 'https://fake-endpoint.com/translate');
         Config::set('winter.translate::providers.google.key', 'abc123');
 
@@ -34,7 +33,7 @@ class MLAutoTranslateTest extends \Winter\Translate\Tests\TranslatePluginTestCas
             ], 200)
         ]);
 
-        $result = $translator->translate(['Hola mundo'], 'en', 'es');
+        $result = $translator->translate(['Hola mundo'], 'en', 'es', 'google');
 
         $this->assertSame('Hello world', $result[0]);
     }
@@ -61,18 +60,6 @@ class MLAutoTranslateTest extends \Winter\Translate\Tests\TranslatePluginTestCas
         $result = $translator->translate(['Hola mundo'], 'en', 'es', 'google');
 
         $this->assertSame('Hello world', $result[0]);
-    }
-
-    public function test_get_provider_config_throws_if_provider_not_found()
-    {
-        $translator = $this->createTranslator();
-
-        Config::set('winter.translate::defaultProvider', 'missing');
-
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessage('No provider found: missing');
-
-        $translator->translate(['Foo'], 'en', 'es'); // uses default
     }
 
     public function test_get_provider_config_throws_if_named_provider_not_found()
@@ -135,16 +122,14 @@ class MLAutoTranslateTest extends \Winter\Translate\Tests\TranslatePluginTestCas
         $this->assertSame(['Hello world', 'Whats up?'], $result);
     }
 
-    public function test_it_throws_when_no_providers_exist()
+    public function test_it_throws_when_no_provider_is_provided()
     {
         $translator = $this->createTranslator();
 
-        Config::set('winter.translate::defaultProvider', 'missingProvider');
-
         $this->expectException(Exception::class);
-        $this->expectExceptionMessage('No provider found: missingProvider');
+        $this->expectExceptionMessage('Cannot translate without a provider');
 
-        $translator->translate(['Hello'], 'en', 'es');
+        $translator->translate(['Hello'], 'en', 'es', '');
     }
 
     public function test_it_throws_when_request_fails()

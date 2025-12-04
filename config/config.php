@@ -98,16 +98,17 @@ return [
     |
     | Sets the default provider used when performing auto translation.
     | This must match one of the providers defined in the "providers" section,
-    | otherwise a 'standard' copy will be performed.
+    | otherwise a standard copy will be performed (empty string = no translation).
     |
-    | Default is standard as users will need to setup access to a provider
+    | Default is empty string as users will need to setup access to a provider.
+    | Empty string means "None" - just copy content without translation.
     |
     | Example:
     |   TRANSLATE_PROVIDER=google
     |
     */
 
-    'defaultProvider' => env('TRANSLATE_PROVIDER', 'standard'),
+    'defaultProvider' => env('TRANSLATE_PROVIDER', ''),
 
     /*
     |--------------------------------------------------------------------------

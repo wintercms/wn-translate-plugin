@@ -35,7 +35,7 @@
 
                             <?php
                                 $default = strtolower($defaultProvider ?? '');
-                                $isStandard = ($default === '' || $default === 'standard');
+                                $isNone = ($default === '');
 
                                 // some FormWidgets are not machine translatable, eg. MediaFinder
                                 $translatable = $autoTranslatable ?? true;
@@ -44,8 +44,8 @@
                             <div class="form-group">
                                 <select name="translation_provider_<?= $widgetId ?>" class="form-control">
 
-                                    <option value="standard" <?= $isStandard ? 'selected' : '' ?>>
-                                        <?= e(trans('winter.translate::lang.locale.standard')); ?>
+                                    <option value="" <?= $isNone ? 'selected' : '' ?>>
+                                        <?= e(trans('winter.translate::lang.locale.none')); ?>
                                     </option>
 
                                     <?php if ($translatable) { ?>
