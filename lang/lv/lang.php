@@ -17,6 +17,8 @@ return [
         'component_description' => 'Iekļauj valodu alternatīvas kā lapas hreflang elementus'
     ],
     'locale' => [
+        'label' => 'Valoda',
+        'label_plural' => 'Valodas',
         'title' => 'Pārvaldīt valodas',
         'update_title' => 'Atjaunot valodu',
         'create_title' => 'Izveidot valodu',
@@ -35,6 +37,9 @@ return [
         'hint_locales' => 'Izveidojiet jaunas valodas lapas publiskās daļas satura tulkošanai. Noklusējuma valoda attēlo saturu pirms tas ir ticis tulkots.',
         'reorder_title' => 'Pārkārtot valodas',
         'sort_order' => 'Kārtošanas secība',
+        'copy_from' => 'Kopēt no :locale',
+        'copy_from_label' => 'Kopēt no citas valodas',
+        'copy_confirm' => 'Vai esat pārliecināts, ka vēlaties kopēt vērtību no citas valodas?',
     ],
     'messages' => [
         'title' => 'Tulkot ziņojumus',
@@ -64,4 +69,3 @@ return [
         'found_title' => 'Skenēšanas kļūdas',
     ],
 ];
-
