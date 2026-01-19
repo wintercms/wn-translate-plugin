@@ -1,5 +1,6 @@
 <?php namespace Winter\Translate\Updates;
 
+use App;
 use Config;
 use Schema;
 use Str;
@@ -31,7 +32,7 @@ class MigrateMessageCode extends Migration
            });
         }
 
-        if (in_array('Cms', Config::get('cms.loadModules', []))) {
+        if (!App::runningUnitTests() && in_array('Cms', Config::get('cms.loadModules', []))) {
             ThemeScanner::scan();
         }
 
