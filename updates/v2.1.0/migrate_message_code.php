@@ -12,6 +12,9 @@ class MigrateMessageCode extends Migration
 {
     const TABLE_NAME = 'winter_translate_messages';
 
+    /**
+     * Run the migrations.
+     */
     public function up()
     {
         if (!Schema::hasColumn(self::TABLE_NAME, 'code_pre_2_1_0')) {
@@ -48,6 +51,9 @@ class MigrateMessageCode extends Migration
         }
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down()
     {
         if (!Schema::hasTable(self::TABLE_NAME)) {
@@ -69,6 +75,12 @@ class MigrateMessageCode extends Migration
         });
     }
 
+    /**
+     * Generate a legacy message code from the given message ID.
+     *
+     * @param string $messageId The message ID to convert.
+     * @return string The legacy message code.
+     */
     public static function makeLegacyMessageCode($messageId)
     {
         $separator = '.';
