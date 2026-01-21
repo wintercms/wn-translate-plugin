@@ -16,10 +16,6 @@ jobs:
         phpVersion: ['8.1', '8.2', '8.3']
         winterRelease: ['develop']
         winterReleaseDir: ['develop']
-        include:
-          - phpVersion: '7.4'
-            winterRelease: 'v1.1.9'
-            winterReleaseDir: '1.1.9'
       fail-fast: false
     steps:
       - name: Setup Winter
@@ -33,11 +29,5 @@ jobs:
       - name: Run linting
         run: ./vendor/bin/parallel-lint plugins/winter/translate
 
-      - name: Run unit tests (1.2/develop)
-        if: matrix.winterRelease != 'v1.1.9'
+      - name: Run unit tests
         run: php artisan winter:test -p Winter.Translate
-
-      - name: Run unit tests (1.1)
-        if: matrix.winterRelease == 'v1.1.9'
-        working-directory: plugins/winter/translate
-        run: ../../../vendor/bin/phpunit --bootstrap ../../../tests/bootstrap.php
