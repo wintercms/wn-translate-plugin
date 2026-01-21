@@ -77,11 +77,8 @@ class MigrateMessageCode extends Migration
 
     /**
      * Generate a legacy message code from the given message ID.
-     *
-     * @param string $messageId The message ID to convert.
-     * @return string The legacy message code.
      */
-    public static function makeLegacyMessageCode($messageId)
+    public static function makeLegacyMessageCode(string $messageId): string
     {
         $separator = '.';
 
