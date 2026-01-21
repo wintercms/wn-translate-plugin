@@ -176,7 +176,8 @@ class ThemeScanner
         try {
             $stream = $twigEnvironment->tokenize($source);
         } catch (\Exception $exception) {
-            // If tokenization fails, return empty array
+            // If tokenization fails, log and return empty array
+            \Log::debug('ThemeScanner: Twig tokenization failed', ['error' => $exception->getMessage()]);
             return [];
         }
 
