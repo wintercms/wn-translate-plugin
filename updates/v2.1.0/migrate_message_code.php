@@ -1,5 +1,6 @@
 <?php namespace Winter\Translate\Updates;
 
+use App;
 use Config;
 use Schema;
 use Str;
@@ -11,6 +12,9 @@ class MigrateMessageCode extends Migration
 {
     const TABLE_NAME = 'winter_translate_messages';
 
+    /**
+     * Run the migrations.
+     */
     public function up()
     {
         if (!Schema::hasColumn(self::TABLE_NAME, 'code_pre_2_1_0')) {
@@ -31,7 +35,7 @@ class MigrateMessageCode extends Migration
            });
         }
 
-        if (in_array('Cms', Config::get('cms.loadModules', []))) {
+        if (!App::runningUnitTests() && in_array('Cms', Config::get('cms.loadModules', []))) {
             ThemeScanner::scan();
         }
 
@@ -47,6 +51,9 @@ class MigrateMessageCode extends Migration
         }
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down()
     {
         if (!Schema::hasTable(self::TABLE_NAME)) {
@@ -68,7 +75,10 @@ class MigrateMessageCode extends Migration
         });
     }
 
-    public static function makeLegacyMessageCode($messageId)
+    /**
+     * Generate a legacy message code from the given message ID.
+     */
+    public static function makeLegacyMessageCode(string $messageId): string
     {
         $separator = '.';
 
