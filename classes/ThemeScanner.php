@@ -8,7 +8,7 @@ use Cms\Classes\Partial;
 use Cms\Classes\Theme;
 use Event;
 use System\Models\MailTemplate;
-use Winter\Translate\Classes\Translator;
+use Twig\Token;
 use Winter\Translate\Models\Message;
 
 /**
@@ -19,6 +19,11 @@ use Winter\Translate\Models\Message;
  */
 class ThemeScanner
 {
+    /**
+     * Cached list of translatable filters
+     */
+    private static ?array $translatableFilters = null;
+
     /**
      * Helper method for scanForMessages()
      * @return void
@@ -137,43 +142,76 @@ class ThemeScanner
     }
 
     /**
-     * Parse the known language tag types in to messages.
-     * @param  string $content
+     * Parse the known language tag types into messages.
+     * @param string $content
      * @return array
      */
-    public function parseContent($content)
+    public function parseContent(?string $content): array
     {
-        $messages = [];
-        if ($content) {
-            $messages = array_merge($messages, $this->processStandardTags($content));
+        if ($content === null) {
+            return [];
+        }
+        return $this->processStandardTags($content);
+    }
+
+    /**
+     * Searches for strings to be translated within a given Twig string
+     *
+     * Looks for patterns like {{ 'string' | translatableFilter }} where 'translatableFilter' is a registered filter.
+     *
+     * @param string $content The Twig template content
+     * @return array List of translatable strings found
+     */
+    public function processStandardTags(string $content): array
+    {
+        // Early return for empty or whitespace-only content to avoid unnecessary processing
+        if (trim($content) === '') {
+            return [];
         }
 
-        return $messages;
-    }
+        $arrayLoader = new \Twig\Loader\ArrayLoader();
+        $twigEnvironment = new \Twig\Environment($arrayLoader);
+        $source = new \Twig\Source($content, 'translator');
 
-    /**
-     * Process standard language filter tag (_|)
-     * @param  string $content
-     * @return array
-     */
-    public function processStandardTags($content)
-    {
-        $messages = [];
+        try {
+            $stream = $twigEnvironment->tokenize($source);
+        } catch (\Exception $exception) {
+            // If tokenization fails, return empty array
+            return [];
+        }
 
-        $messages = self::getMessages(preg_quote("'"), $content);
+        // Collect all tokens
+        $tokens = [];
+        while (! $stream->isEOF()) {
+            $tokens[] = $stream->next();
+        }
 
-        return array_merge($messages, self::getMessages(preg_quote('"'), $content));
-    }
+        $totalTokens = count($tokens);
+        $translatableStrings = [];
 
-    /**
-     * Apply regex on string to extract value to translate
-     * @param  string $quoteChar
-     * @return array
-     */
-    protected static function getMessages($quoteChar, $content)
-    {
-        preg_match_all('/\{\{\s*'.$quoteChar.'([^'.$quoteChar.']+)'.$quoteChar.'\s*\|\s*(?:localeUrl|transRaw|transRawPlural|_{1,2})(?:\(.*\)){0,1}\s*(?:\|[^|\s\}]+){0,}\s*\}\}/x', $content, $match);
+        // Fetch registered filters once for performance (cached statically)
+        if (self::$translatableFilters === null) {
+            self::$translatableFilters = array_keys(
+                \System\Classes\PluginManager::instance()
+                    ->findByIdentifier('Winter.Translate')
+                    ->registerMarkupTags()['filters']
+            );
+        }
 
-        return $match[1] ?? [];
+        // Iterate through tokens to find translatable strings
+        for ($i = 0; $i < $totalTokens; $i++) {
+            // Check for translatable string pattern: string | filter
+            if (
+                $i + 2 < $totalTokens
+                && $tokens[$i]->test(Token::STRING_TYPE)
+                && $tokens[$i + 1]->test(Token::OPERATOR_TYPE, '|')
+                && $tokens[$i + 2]->test(Token::NAME_TYPE, self::$translatableFilters)
+            ) {
+                $translatableStrings[] = $tokens[$i]->getValue();
+                $i += 2; // Skip the | and filter tokens
+            }
+        }
+
+        return $translatableStrings;
     }
 }
