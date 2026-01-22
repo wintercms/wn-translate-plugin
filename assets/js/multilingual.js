@@ -28,7 +28,6 @@
         this.$copyDropdown = $('ul.ml-copy-dropdown-menu', this.$el)
         this.$dropdown     = $('ul.ml-dropdown-menu', this.$el)
         this.$placeholder  = $(this.options.placeholderField)
-        this.$modal = $('.ml-modal', this.$el)
 
 
         /*
@@ -38,26 +37,32 @@
         this.$activeField = this.getLocaleElement(this.activeLocale)
         this.$activeButton.text(this.activeLocale)
 
-        // MODAL
-        this.$modal.on('click', '[data-selected-locale]', function(_event) {
-            var copyFromLocale = $(this).attr('data-selected-locale')
-            self.copyLocale(copyFromLocale)
-        });
-
         this.$copyDropdown.on('click', '[data-copy-locale]', function(_event) {
             var currentLocale = self.activeLocale
             var copyFromLocale = $(this).data('copy-locale')
 
             if (!copyFromLocale || currentLocale === copyFromLocale) return;
 
-            const spanCurrentLocale = $('[data-display-active-locale]', self.$modal)
-            const spanCopyFromLocale = $('[data-display-locale]', self.$modal)
-            spanCurrentLocale.text(currentLocale)
-            spanCopyFromLocale.text(copyFromLocale)
+            self.$el.on('complete.oc.popup', function (e, $source, $popup) {
+                const $button = $popup.find(`[data-widget-id="${self.$el.attr('id')}"]`)
+                $button.on('click', function(event) {
+                    const provider = $popup.find('select[name^="translation_provider_"]').val() ?? ""
+                    var copyFromLocale = $(this).attr('data-selected-locale')
+                    self.copyLocale(copyFromLocale, provider)
+                    // Blur the button before closing to prevent accessibility warning
+                    $(this).blur();
+                    $button.off('click');
+                })
+                self.$el.off('complete.oc.popup');
+            });
 
-            const copyLocaleBtn = $('[data-selected-locale]', self.$modal)
-            copyLocaleBtn.attr('data-selected-locale', copyFromLocale)
-            self.$modal.modal("show")
+            self.$el.popup({
+                handler: $(this).data('copy-open-handler'),
+                extraData: {
+                    _copy_from_locale: copyFromLocale,
+                    _current_locale: currentLocale,
+                }
+            })
         });
 
         this.$dropdown.on('click', '[data-switch-locale]', this.$activeButton, function(event){
@@ -114,11 +119,6 @@
         return value ? value.val() : null
     }
 
-    MultiLingual.prototype.getProvider = function() {
-        const $select = $('select[name^="translation_provider_"]', this.$modal);
-        return $select.val() ?? '';
-    }
-
     MultiLingual.prototype.setLocaleValue = function(value, locale) {
         if (locale) {
             this.getLocaleElement(locale).val(value)
@@ -161,9 +161,8 @@
         })
     }
 
-    MultiLingual.prototype.copyLocale = function(copyFromLocale) {
+    MultiLingual.prototype.copyLocale = function(copyFromLocale, provider) {
         var currentLocale = this.activeLocale
-        const provider = this.getProvider()
         var copyFromLocaleValue = this.getLocaleValue(copyFromLocale)
         this.$activeField.val(copyFromLocaleValue)
         this.$placeholder.val(copyFromLocaleValue)
