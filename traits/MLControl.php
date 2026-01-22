@@ -279,4 +279,14 @@ trait MLControl
 
         return method_exists($object, $method);
     }
+    /**
+     * Handle the translation method selector popup request
+     */
+    public function onShowTranslationMethodSelector()
+    {
+        $this->vars['copy_from_locale'] = post('_copy_from_locale');
+        $this->vars['current_locale'] = post('_current_locale');
+        $this->prepareLocaleVars();
+        return $this->makeMLPartial('translation_method_popup');
+    }
 }

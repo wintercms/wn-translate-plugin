@@ -3,7 +3,7 @@
     <div class="form-control"><?= nl2br(e($field->value)) ?></div>
 <?php else: ?>
     <div
-        id="<?= $this->getId() ?>"
+        id="<?= $this->getId('mlControl') ?>"
         data-control="mltextarea"
         data-copy-confirm="<?= e(trans('winter.translate::lang.locale.copy_confirm')); ?>"
         data-default-locale="<?= $defaultLocale->code ?>"
