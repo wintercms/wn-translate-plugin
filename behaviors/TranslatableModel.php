@@ -83,6 +83,7 @@ class TranslatableModel extends TranslatableBehavior
         } elseif ($defaultLocaleFallback) {
             $query->where($index, $operator, $value);
         } else {
+            // return empty result set
             $query->whereRaw('1 = 0');
         }
 
