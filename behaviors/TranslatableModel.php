@@ -63,7 +63,7 @@ class TranslatableModel extends TranslatableBehavior
      * @param  string $locale
      * @return Builder
      */
-    public function scopeTransWhere($query, $index, $value, $locale = null, $operator = '=', $fallbackToBase = true)
+    public function scopeTransWhere($query, $index, $value, $locale = null, $operator = '=', $defaultLocaleFallback = false)
     {
         if (!$locale) {
             $locale = $this->translatableContext;
