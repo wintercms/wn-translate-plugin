@@ -63,7 +63,7 @@ class TranslatableModel extends TranslatableBehavior
      * @param  string $locale
      * @return Builder
      */
-    public function scopeTransWhere($query, $index, $value, $locale = null, $operator = '=')
+    public function scopeTransWhere($query, $index, $value, $locale = null, $operator = '=', $defaultLocaleFallback = false)
     {
         if (!$locale) {
             $locale = $this->translatableContext;
@@ -80,8 +80,11 @@ class TranslatableModel extends TranslatableBehavior
 
         if ($translateIndexes->count()) {
             $query->whereIn($this->model->getQualifiedKeyName(), $translateIndexes);
-        } else {
+        } elseif ($defaultLocaleFallback) {
             $query->where($index, $operator, $value);
+        } else {
+            // return empty result set
+            $query->whereRaw('1 = 0');
         }
 
         return $query;
