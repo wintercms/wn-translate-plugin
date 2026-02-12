@@ -244,7 +244,7 @@ class Plugin extends PluginBase
                 return;
             }
             $translator = Translator::instance();
-            if (false && !config('winter.translate::prefixDefaultLocale') && Request::segment(1) === $translator->getDefaultLocale()) {
+            if (!config('winter.translate::prefixDefaultLocale') && Request::segment(1) === $translator->getDefaultLocale()) {
                 return Redirect::to(
                     Url::to(preg_replace('#' . Request::segment(1) . '/?#', '', Request::path())),
                     config('winter.translate::redirectStatus')
