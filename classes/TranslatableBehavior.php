@@ -256,7 +256,7 @@ abstract class TranslatableBehavior extends ExtensionBase
          * If the default locale is passed, the attributes are retreived from the model,
          * otherwise fetch the attributes from the $translatableAttributes property
          */
-        if ($locale == $this->translatableDefault) {
+        if ($locale === $this->translatableDefault) {
             $translatableAttributes = $this->model->attributes;
         }
         else {

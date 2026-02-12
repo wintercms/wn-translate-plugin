@@ -80,7 +80,7 @@ class TranslatableModel extends TranslatableBehavior
 
         if ($translateIndexes->count()) {
             $query->whereIn($this->model->getQualifiedKeyName(), $translateIndexes);
-        } elseif ($defaultLocaleFallback) {
+        } elseif ($this->translatableDefault == $locale || $defaultLocaleFallback) {
             $query->where($index, $operator, $value);
         } else {
             // return empty result set
