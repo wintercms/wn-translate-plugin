@@ -12,11 +12,14 @@ use DOMElement;
 use Event;
 use Lang;
 use Model;
+use Redirect;
+use Request;
 use System\Classes\CombineAssets;
 use System\Classes\PluginBase;
 use System\Classes\PluginManager;
 use System\Models\File;
 use System\Models\MailTemplate;
+use Url;
 use Winter\Sitemap\Classes\DefinitionItem;
 use Winter\Sitemap\Models\Definition;
 use Winter\Translate\Classes\EventRegistry;
@@ -237,6 +240,17 @@ class Plugin extends PluginBase
 
         // Set the page context for translation caching with high priority.
         Event::listen('cms.page.init', function($controller, $page) {
+            if (!$page) {
+                return;
+            }
+            $translator = Translator::instance();
+            if (!config('winter.translate::prefixDefaultLocale') && Request::segment(1) === $translator->getDefaultLocale()) {
+                return Redirect::to(
+                    Url::to($page->url),
+                    config('winter.translate::redirectStatus')
+                );
+            }
+
             EventRegistry::instance()->setMessageContext($page);
         }, 100);
 
