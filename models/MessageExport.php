@@ -6,13 +6,13 @@ use Backend\Models\ExportModel;
 
 class MessageExport extends ExportModel
 {
-    /*
+    /**
      * @deprecated since version 2.3.2, use \Winter\Translate\Models\Message::CODE_COLUMN_NAME directly
      * @see \Winter\Translate\Models\Message::CODE_COLUMN_NAME
      */
     const CODE_COLUMN_NAME = \Winter\Translate\Models\Message::CODE_COLUMN_NAME;
 
-    /*
+    /**
      * @deprecated since version 2.3.2, use \Winter\Translate\Models\Message::DEFAULT_COLUMN_NAME directly
      * @see \Winter\Translate\Models\Message::DEFAULT_COLUMN_NAME
      */
@@ -43,7 +43,9 @@ class MessageExport extends ExportModel
     }
 
     /**
-     * Returns columns for export (import columns + 'found' flag)
+     * Returns columns for export. These are the importable columns from Message::getColumns()
+     * plus an export-only metadata flag named 'found' that is included for human review
+     * and intentionally excluded from import because it is recalculated on import.
      */
     public static function getColumns(): array
     {
