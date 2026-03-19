@@ -11,6 +11,14 @@ class MessageImport extends ImportModel
     ];
 
     /**
+     * Returns columns for import
+     */
+    public static function getColumns(): array
+    {
+        return Message::getColumns();
+    }
+
+    /**
      * Import the message data from a csv with the following schema:
      *
      * code  | en    | de    | fr
@@ -25,12 +33,10 @@ class MessageImport extends ImportModel
      * doesn't contain this code. As a result you can incrementally update the
      * messages by just adding the new codes and messages to the csv.
      *
-     * @param $results
-     * @param null $sessionKey
      */
     public function importData($results, $sessionKey = null)
     {
-        $codeName = MessageExport::CODE_COLUMN_NAME;
+        $codeName = Message::CODE_COLUMN_NAME;
         $defaultName = Message::DEFAULT_LOCALE;
 
         foreach ($results as $index => $result) {
