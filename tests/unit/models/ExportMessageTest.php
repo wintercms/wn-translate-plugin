@@ -88,10 +88,11 @@ class ExportMessageTest extends \Winter\Translate\Tests\TranslatePluginTestCase
         $columns = MessageExport::getColumns();
 
         $this->assertEquals([
-            MessageExport::CODE_COLUMN_NAME => MessageExport::CODE_COLUMN_NAME,
-            Message::DEFAULT_LOCALE => MessageExport::DEFAULT_COLUMN_NAME,
+            Message::CODE_COLUMN_NAME => Message::CODE_COLUMN_NAME,
+            Message::DEFAULT_LOCALE => Message::DEFAULT_COLUMN_NAME,
             'en' => 'en',
             'de' => 'de',
+            'found' => 'found',
         ], $columns);
     }
 }
