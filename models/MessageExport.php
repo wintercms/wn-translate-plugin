@@ -27,7 +27,7 @@ class MessageExport extends ExportModel
      * name      | Name      | Name  | Name  | Prénom| 0
      * ...
      */
-    public function exportData(array $columns, ?string $sessionKey = null): array
+    public function exportData($columns, $sessionKey = null)
     {
         return Message::all()->map(function ($message) use ($columns) {
             $data = $message->message_data ?: [];

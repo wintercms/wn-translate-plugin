@@ -34,7 +34,7 @@ class MessageImport extends ImportModel
      * messages by just adding the new codes and messages to the csv.
      *
      */
-    public function importData(array $results, ?string $sessionKey = null): void
+    public function importData($results, $sessionKey = null)
     {
         $codeName = Message::CODE_COLUMN_NAME;
         $defaultName = Message::DEFAULT_LOCALE;
