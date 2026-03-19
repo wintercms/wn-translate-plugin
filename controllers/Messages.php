@@ -13,6 +13,7 @@ use Winter\Translate\Classes\ThemeScanner;
 use Winter\Translate\Models\Locale;
 use Winter\Translate\Models\Message;
 use Winter\Translate\Models\MessageExport;
+use Winter\Translate\Models\MessageImport;
 
 /**
  * Messages Backend Controller
@@ -37,7 +38,7 @@ class Messages extends Controller
         $this->addJs('/plugins/winter/translate/assets/js/messages.js');
         $this->addCss('/plugins/winter/translate/assets/css/messages.css');
 
-        $this->importColumns = MessageExport::getColumns();
+        $this->importColumns = MessageImport::getColumns();
         $this->exportColumns = MessageExport::getColumns();
     }
 

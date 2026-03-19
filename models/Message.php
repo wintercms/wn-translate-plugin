@@ -13,6 +13,8 @@ use Model;
 class Message extends Model
 {
     const DEFAULT_LOCALE = 'x';
+    const CODE_COLUMN_NAME = 'code';
+    const DEFAULT_COLUMN_NAME = 'default';
 
     /**
      * @var string The database table used by the model.
@@ -297,5 +299,17 @@ class Message extends Model
     public static function makeMessageCode($message)
     {
         return md5(trim($message));
+    }
+
+    /**
+     * Returns base/common columns for import/export: code + default locale + all existing locales.
+     * These are the default columns, but specific procedures (ex: export) may add or remove columns.
+     */
+    public static function getColumns(): array
+    {
+        return array_merge([
+            self::CODE_COLUMN_NAME => self::CODE_COLUMN_NAME,
+            self::DEFAULT_LOCALE => self::DEFAULT_COLUMN_NAME,
+        ], Locale::lists(self::CODE_COLUMN_NAME, self::CODE_COLUMN_NAME));
     }
 }

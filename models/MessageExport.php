@@ -6,49 +6,47 @@ use Backend\Models\ExportModel;
 
 class MessageExport extends ExportModel
 {
-    const CODE_COLUMN_NAME = 'code';
-    const DEFAULT_COLUMN_NAME = 'default';
+    /*
+     * @deprecated since version 2.3.2, use \Winter\Translate\Models\Message::CODE_COLUMN_NAME directly
+     * @see \Winter\Translate\Models\Message::CODE_COLUMN_NAME
+     */
+    const CODE_COLUMN_NAME = \Winter\Translate\Models\Message::CODE_COLUMN_NAME;
+
+    /*
+     * @deprecated since version 2.3.2, use \Winter\Translate\Models\Message::DEFAULT_COLUMN_NAME directly
+     * @see \Winter\Translate\Models\Message::DEFAULT_COLUMN_NAME
+     */
+    const DEFAULT_COLUMN_NAME = \Winter\Translate\Models\Message::DEFAULT_COLUMN_NAME;
 
     /**
      * Exports the message data with each locale in a separate column.
      *
-     * code      | default   | en    | de    | fr
-     * ----------------------------------------------
-     * title     | Title     | Title | Titel | Titre
-     * name      | Name      | Name  | Name  | Prénom
+     * code      | default   | en    | de    | fr    | found
+     * --------------------------------------------------
+     * title     | Title     | Title | Titel | Titre | 1
+     * name      | Name      | Name  | Name  | Prénom| 0
      * ...
-     *
-     * @param $columns
-     * @param null $sessionKey
-     * @return mixed
      */
-    public function exportData($columns, $sessionKey = null)
+    public function exportData(array $columns, ?string $sessionKey = null): array
     {
         return Message::all()->map(function ($message) use ($columns) {
             $data = $message->message_data;
-            // Add code to data to simplify algorithm
-            $data[self::CODE_COLUMN_NAME] = $message->code;
 
             $result = [];
             foreach ($columns as $column) {
-                $result[$column] = isset($data[$column]) ? $data[$column] : '';
+                $result[$column] = array_key_exists($column, $data)
+                    ? $data[$column]
+                    : ($message->$column ?? '');
             }
             return $result;
         })->toArray();
     }
 
     /**
-     * getColumns
-     *
-     * code, default column + all existing locales
-     *
-     * @return array
+     * Returns columns for export (import columns + 'found' flag)
      */
-    public static function getColumns()
+    public static function getColumns(): array
     {
-        return array_merge([
-            self::CODE_COLUMN_NAME => self::CODE_COLUMN_NAME,
-            Message::DEFAULT_LOCALE => self::DEFAULT_COLUMN_NAME,
-        ], Locale::lists(self::CODE_COLUMN_NAME, self::CODE_COLUMN_NAME));
+        return Message::getColumns() + ['found' => 'found'];
     }
 }
