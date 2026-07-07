@@ -27,9 +27,9 @@ class GoogleTranslateProvider implements TranslationProvider
             $query .= '&q=' . urlencode($text);
         }
 
-        $endpoint = rtrim($this->config['url'], '/') . '?' . $query;
-
-        $response = Http::get($endpoint);
+        $endpoint = rtrim($this->config['url'], '/');
+        
+        $response = Http::withBody($query, 'application/x-www-form-urlencoded')->post($endpoint);
 
         if (!$response->successful()) {
             throw new Exception("Google Translation failed: " . $response->body());
