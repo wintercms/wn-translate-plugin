@@ -65,6 +65,20 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Disable Copy & Translate
+    |--------------------------------------------------------------------------
+    |
+    | Multilingual form fields show a copy button that copies the content of
+    | another locale into the active one, optionally machine-translating it
+    | through one of the providers configured below. Set this to true to
+    | hide that button.
+    |
+    */
+
+    'disable_copy' => env('TRANSLATE_DISABLE_COPY', false),
+
+    /*
+    |--------------------------------------------------------------------------
     | Auto Translation Whitelist
     |--------------------------------------------------------------------------
     |
