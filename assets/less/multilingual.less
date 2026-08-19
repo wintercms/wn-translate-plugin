@@ -1,7 +1,6 @@
 @import "../../../../../modules/backend/assets/less/core/boot.less";
 
 @multilingual-btn-color: #555555;
-@copy-btn-right-offset: 41px;
 @copy-btn-top-offset: 28px;
 
 .field-multilingual {
@@ -31,9 +30,19 @@
         position: absolute;
         width: 42px;
         top: 0;
+        // The wrapper spans the full field height; only its actual controls
+        // may capture clicks
+        pointer-events: none;
+
+        > .btn,
+        > .dropdown-menu {
+            pointer-events: auto;
+        }
 
         &.ml-copy-dropdown {
-            right: @copy-btn-right-offset;
+            // Sit against the locale button, whose width follows the length
+            // of the locale code (e.g. "nl" vs "nl-BE")
+            right: calc(~"var(--ml-btn-width, 44px) - 3px");
         }
 
         &:not(.ml-copy-dropdown) {
@@ -69,12 +78,6 @@
         .dropdown.ml-dropdown.open>.dropdown-menu,
         .dropdown.ml-copy-dropdown.open>.dropdown-menu {
             top: -10px;
-        }
-
-        .dropdown.ml-dropdown:not(.open),
-        // to stop it from overlapping with the upload button
-        .dropdown.ml-copy-dropdown:not(.open) {
-            height: 3px;
         }
 
         .ml-btn,
@@ -125,11 +128,6 @@
             top: 37px;
         }
 
-        .dropdown.ml-dropdown:not(.open),
-        .dropdown.ml-copy-dropdown:not(.open) {
-            height: 3px;
-        }
-
         .ml-btn {
             border-radius: 0;
             border-bottom-left-radius: .375rem;
@@ -178,8 +176,10 @@
     bottom: 1px;
     right: 1px;
 
-    width: 44px;
+    width: auto;
+    min-width: 44px;
     height: 36px;
+    white-space: nowrap;
 
     color: lighten(@multilingual-btn-color, 15%);
     background-color: #f8f6f3;

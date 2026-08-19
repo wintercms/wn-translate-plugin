@@ -37,6 +37,16 @@
         this.$activeField = this.getLocaleElement(this.activeLocale)
         this.$activeButton.text(this.activeLocale)
 
+        /*
+         * Track the rendered button width so the CSS can position the copy
+         * button next to locale codes of any length (e.g. "nl" vs "nl-BE")
+         */
+        if (window.ResizeObserver && this.$activeButton.length) {
+            new ResizeObserver(function() {
+                self.updateActiveButtonWidth()
+            }).observe(this.$activeButton.get(0))
+        }
+
         this.$copyDropdown.on('click', '[data-copy-locale]', function(_event) {
             var currentLocale = self.activeLocale
             var copyFromLocale = $(this).data('copy-locale')
@@ -107,6 +117,13 @@
         defaultLocale: 'en',
         defaultField: null,
         placeholderField: null
+    }
+
+    MultiLingual.prototype.updateActiveButtonWidth = function() {
+        var width = this.$activeButton.outerWidth()
+        if (width) {
+            this.$el.get(0).style.setProperty('--ml-btn-width', Math.ceil(width) + 'px')
+        }
     }
 
     MultiLingual.prototype.getLocaleElement = function(locale) {
