@@ -6,10 +6,6 @@
 .field-multilingual {
     position: relative;
 
-    .lang-code-display {
-        margin-bottom: 2rem;
-        text-transform: uppercase;
-    }
     .form-control:focus {
         z-index: 20;
     }
@@ -152,6 +148,41 @@
             right: 0;
         }
     }
+}
+
+// Translation method popup
+.ml-locale-flow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.ml-locale-chip {
+    padding: 5px 12px;
+
+    color: @multilingual-btn-color;
+    background: #F8F6F3;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.ml-locale-arrow {
+    color: #9ca3af;
+    font-size: 15px;
+}
+
+.ml-provider-label {
+    display: block;
+    margin-bottom: 6px;
+
+    color: #374151;
+    font-size: 13px;
+    font-weight: 600;
 }
 
 // Fancy layout overrides

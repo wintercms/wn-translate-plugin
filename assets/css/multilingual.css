@@ -1,6 +1,4 @@
-.ml-modal label{color:#333 !important;text-transform:none !important}
 .field-multilingual{position:relative}
-.field-multilingual .lang-code-display{margin-bottom:2rem;text-transform:uppercase}
 .field-multilingual .form-control:focus{z-index:20}
 .field-multilingual .ml-btn,
 .field-multilingual .ml-copy-btn{z-index:12;position:absolute;top:1px;bottom:1px;right:1px;width:auto;min-width:44px;height:36px;white-space:nowrap;color:#7b7b7b;background-color:#F8F6F3;box-shadow:none;font-size:11px;letter-spacing:1px;text-transform:uppercase;margin:0 !important;padding:0 12px;border-top-left-radius:0;border-bottom-left-radius:0;transition:color 420ms ease}
@@ -56,6 +54,10 @@
 .field-multilingual.field-multilingual-nestedform .ml-dropdown-menu,
 .field-multilingual.field-multilingual-repeater .ml-copy-dropdown>.dropdown-menu,
 .field-multilingual.field-multilingual-nestedform .ml-copy-dropdown>.dropdown-menu{top:calc(28px - 20px);right:0}
+.ml-locale-flow{display:flex;align-items:center;gap:10px}
+.ml-locale-chip{padding:5px 12px;color:#555;background:#F8F6F3;border:1px solid #e5e7eb;border-radius:6px;font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase}
+.ml-locale-arrow{color:#9ca3af;font-size:15px}
+.ml-provider-label{display:block;margin-bottom:6px;color:#374151;font-size:13px;font-weight:600}
 .fancy-layout .form-tabless-fields .field-multilingual .ml-btn,
 .fancy-layout .form-tabless-fields .field-multilingual .ml-copy-btn{background-color:rgba(248,246,243,0.75)}
 .fancy-layout .form-tabless-fields .field-multilingual .ml-btn:hover,
