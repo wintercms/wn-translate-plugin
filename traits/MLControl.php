@@ -125,13 +125,17 @@ trait MLControl
     public function prepareLocaleVars()
     {
         $usableProviders = $this->getUsableTranslateProviders();
-        $default = (string) Config::get('winter.translate::defaultProvider');
 
         $this->vars['defaultLocale'] = $this->defaultLocale;
         $this->vars['locales'] = Locale::listAvailable();
         $this->vars['providers'] = $usableProviders;
-        // Fall back to "none" if the configured default provider isn't usable.
-        $this->vars['defaultProvider'] = isset($usableProviders[$default]) ? $default : '';
+        // Pre-select a provider only when exactly one is usable — a lone configured
+        // provider is an unambiguous default that saves a click. With several, stay
+        // on "None" so the user consciously picks a service rather than silently
+        // defaulting to a paid one.
+        $this->vars['defaultProvider'] = count($usableProviders) === 1
+            ? (string) array_key_first($usableProviders)
+            : '';
         $this->vars['field'] = $this->makeRenderFormField();
     }
 

@@ -179,15 +179,14 @@ Every multilingual backend field has a "copy from another locale" action. When a
 Providers are configured under `config/config.php` (or an app override in `config/winter/translate/config.php`) and are keyed via environment variables:
 
 ```dotenv
-# Use Google by default
-TRANSLATE_PROVIDER=google
-
 # Google Cloud Translation (v2)
 GOOGLE_TRANSLATE_KEY=your-google-api-key
 
 # DeepL (optional)
 DEEPL_API_KEY=your-deepl-api-key
 ```
+
+A provider only appears in the picker once its key is set. When exactly one provider is configured it is pre-selected automatically; with several configured the picker defaults to *None* so translation stays a deliberate choice.
 
 **Getting a Google key:** in the [Google Cloud Console](https://console.cloud.google.com) create/select a project, enable billing, enable the **Cloud Translation API**, then create an API key (restrict it to the Cloud Translation API) and set it as `GOOGLE_TRANSLATE_KEY`.
 

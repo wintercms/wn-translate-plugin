@@ -77,7 +77,6 @@ class MLAutoTranslateTest extends \Winter\Translate\Tests\TranslatePluginTestCas
         $translator = $this->createTranslator();
         Config::set('winter.translate::providers.google.url', 'https://fake-endpoint.com/translate');
         Config::set('winter.translate::providers.google.key', 'fakekey');
-        Config::set('winter.translate::defaultProvider', 'google');
 
         Http::fake([
             'https://fake-endpoint.com/*' => Http::response([
@@ -100,7 +99,6 @@ class MLAutoTranslateTest extends \Winter\Translate\Tests\TranslatePluginTestCas
         $translator = $this->createTranslator();
         Config::set('winter.translate::providers.google.url', 'https://fake-endpoint.com/translate');
         Config::set('winter.translate::providers.google.key', 'fakekey');
-        Config::set('winter.translate::defaultProvider', 'google');
 
         Http::fake([
             'https://fake-endpoint.com/*' => Http::response([
@@ -137,7 +135,6 @@ class MLAutoTranslateTest extends \Winter\Translate\Tests\TranslatePluginTestCas
         $translator = $this->createTranslator();
         Config::set('winter.translate::providers.google.url', 'https://fake-endpoint.com/translate');
         Config::set('winter.translate::providers.google.key', 'fakekey');
-        Config::set('winter.translate::defaultProvider', 'google');
 
         Http::fake([
             'https://fake-endpoint.com/*' => Http::response([
