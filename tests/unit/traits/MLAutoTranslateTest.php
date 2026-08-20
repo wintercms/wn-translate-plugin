@@ -151,6 +151,36 @@ class MLAutoTranslateTest extends \Winter\Translate\Tests\TranslatePluginTestCas
         $translator->translate(['Hola'], 'en', 'es', 'google');
     }
 
+    public function test_google_preserves_literal_percent()
+    {
+        $translator = $this->createTranslator();
+        Config::set('winter.translate::providers.google.url', 'https://fake-endpoint.com/translate');
+        Config::set('winter.translate::providers.google.key', 'fakekey');
+
+        Http::fake([
+            'https://fake-endpoint.com/*' => Http::response([
+                'data' => ['translations' => [['translatedText' => '100% zeker, zie A/B']]],
+            ], 200)
+        ]);
+
+        // A literal "%" (and "/") must survive: the provider only decodes HTML
+        // entities, it must not urldecode the translated text.
+        $result = $translator->translate(['100% sure, see A/B'], 'nl', 'en', 'google');
+        $this->assertSame('100% zeker, zie A/B', $result[0]);
+    }
+
+    public function test_auto_translate_array_returns_unchanged_when_whitelist_empty()
+    {
+        $translator = $this->createTranslator();
+        Config::set('winter.translate::autoTranslateWhiteList', []);
+
+        // With nothing whitelisted the values are copied verbatim (no throw, no
+        // provider call).
+        $data = ['0' => ['name' => 'Foo', 'content' => 'Bar']];
+        $result = $translator->autoTranslateArray($data, 'nl', 'en', 'google');
+        $this->assertSame($data, $result);
+    }
+
     public function test_flatten_and_expand_object()
     {
         $translator = $this->createTranslator();
