@@ -6,10 +6,10 @@ use Exception;
 use Illuminate\Support\Facades\Config;
 use Winter\Translate\Providers\ProviderFactory;
 
-/*
-* Used to intercept locale copy actions and auto translate
-* the response so it fits the target language
-*/
+/**
+ * Used to intercept locale copy actions and auto translate
+ * the response so it fits the target language
+ */
 trait MLAutoTranslate
 {
     /**
