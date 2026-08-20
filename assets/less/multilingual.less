@@ -45,9 +45,8 @@
             right: 0;
         }
     }
-
-    .dropdown.ml-dropdown.open>.dropdown-menu,
-    .dropdown.ml-copy-dropdown.open>.dropdown-menu {
+    .dropdown.ml-dropdown.open > .dropdown-menu,
+    .dropdown.ml-copy-dropdown.open > .dropdown-menu {
         top: @copy-btn-top-offset;
     }
 
@@ -55,14 +54,12 @@
     // Repeater-specific override
     &.field-multilingual-repeater,
     &.field-multilingual-nestedform {
-
         .ml-btn,
         .ml-copy-btn {
             top: -36px;
         }
-
-        .dropdown.ml-dropdown.open>.dropdown-menu,
-        .dropdown.ml-copy-dropdown.open>.dropdown-menu {
+        .dropdown.ml-dropdown.open > .dropdown-menu,
+        .dropdown.ml-copy-dropdown.open > .dropdown-menu {
             top: -10px;
         }
     }
@@ -71,8 +68,8 @@
     // media finder specific stuff
     &.field-multilingual-mediafinder {
 
-        .dropdown.ml-dropdown.open>.dropdown-menu,
-        .dropdown.ml-copy-dropdown.open>.dropdown-menu {
+        .dropdown.ml-dropdown.open > .dropdown-menu,
+        .dropdown.ml-copy-dropdown.open > .dropdown-menu {
             top: -10px;
         }
 
@@ -94,13 +91,12 @@
         }
 
         .ml-dropdown-menu,
-        .ml-copy-dropdown>.dropdown-menu {
+        .ml-copy-dropdown > .dropdown-menu {
             top: @copy-btn-top-offset;
         }
     }
 
     &.field-multilingual-markdowneditor {
-
         .mode-tab .editor-write,
         .mode-split .editor-preview {
             padding-right: 2rem;
@@ -113,17 +109,14 @@
 
     &.field-multilingual-markdowneditor,
     &.field-multilingual-richeditor {
-
         .ml-btn,
         .ml-copy-btn {
             height: 38px;
         }
-
-        .dropdown.ml-dropdown.open>.dropdown-menu,
-        .dropdown.ml-copy-dropdown.open>.dropdown-menu {
+        .dropdown.ml-dropdown.open > .dropdown-menu,
+        .dropdown.ml-copy-dropdown.open > .dropdown-menu {
             top: 37px;
         }
-
         .ml-btn {
             border-radius: 0;
             border-bottom-left-radius: .375rem;
@@ -141,10 +134,9 @@
 
     &.field-multilingual-repeater,
     &.field-multilingual-nestedform {
-
         .ml-dropdown-menu,
-        .ml-copy-dropdown>.dropdown-menu {
-            top: calc(@copy-btn-top-offset - 20px);
+        .ml-copy-dropdown > .dropdown-menu {
+            top: calc(@copy-btn-top-offset - 20px );
             right: 0;
         }
     }
@@ -188,7 +180,6 @@
 // Fancy layout overrides
 .fancy-layout {
     .form-tabless-fields .field-multilingual {
-
         .ml-btn,
         .ml-copy-btn {
             background-color: rgba(248, 246, 243, 0.75);
