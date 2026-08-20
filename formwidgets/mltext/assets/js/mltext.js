@@ -58,13 +58,15 @@
     }
 
     MLText.prototype.onAutoTranslateSuccess = function(e, data) {
-        const translatedValue = data.translatedValue[0]
-        if (data.translatedValue && data.translatedLocale) {
+        if (data && Array.isArray(data.translatedValue) && data.translatedValue.length && data.translatedLocale) {
+            const translatedValue = data.translatedValue[0]
             const $visibleInput = $('input.form-control', this.$el)
             $visibleInput.val(translatedValue).trigger('input')
             this.$el.multiLingual('setLocaleValue', translatedValue, data.translatedLocale)
         }
     }
+
+    var old = $.fn.mlText
 
     $.fn.mlText = function(option) {
         return this.each(function() {

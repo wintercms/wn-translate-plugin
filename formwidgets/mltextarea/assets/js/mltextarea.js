@@ -73,23 +73,33 @@
         var scrollHeight = $element.scrollHeight
         var showScrollbar = (scrollHeight - elementHeight) > 0
 
+        // The copy controls ($copyBtn/$copyDropdown) are absent when `disable_copy`
+        // is set, so every control is guarded before its style is touched.
         if (showScrollbar) {
             var scrollbarWidth = $element.offsetWidth - $element.clientWidth
             $element.style.paddingRight = (scrollbarWidth + 23) + 'px'
-            $btn.style.right = (scrollbarWidth - 1) + 'px'
-            $btn.style.borderTopRightRadius = '0px'
-            $dropdown.style.right = (scrollbarWidth - 2) + 'px'
-            $copyBtn.style.right = (scrollbarWidth - 1) + 'px'
-            $copyBtn.style.borderTopRightRadius = '0px'
-            $copyDropdown.style.right = (scrollbarWidth - 2) + 'px'
+            if ($btn) {
+                $btn.style.right = (scrollbarWidth - 1) + 'px'
+                $btn.style.borderTopRightRadius = '0px'
+            }
+            if ($dropdown) $dropdown.style.right = (scrollbarWidth - 2) + 'px'
+            if ($copyBtn) {
+                $copyBtn.style.right = (scrollbarWidth - 1) + 'px'
+                $copyBtn.style.borderTopRightRadius = '0px'
+            }
+            if ($copyDropdown) $copyDropdown.style.right = (scrollbarWidth - 2) + 'px'
         } else {
             $element.style.paddingRight = ''
-            $btn.style.right = ''
-            $btn.style.borderTopRightRadius = ''
-            $dropdown.style.right = ''
-            $copyBtn.style.right = ''
-            $copyBtn.style.borderTopRightRadius = ''
-            $copyDropdown.style.right = ''
+            if ($btn) {
+                $btn.style.right = ''
+                $btn.style.borderTopRightRadius = ''
+            }
+            if ($dropdown) $dropdown.style.right = ''
+            if ($copyBtn) {
+                $copyBtn.style.right = ''
+                $copyBtn.style.borderTopRightRadius = ''
+            }
+            if ($copyDropdown) $copyDropdown.style.right = ''
         }
     }
 
