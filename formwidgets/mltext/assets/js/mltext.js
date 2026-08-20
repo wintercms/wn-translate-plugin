@@ -58,12 +58,11 @@
     }
 
     MLText.prototype.onAutoTranslateSuccess = function(e, data) {
-        if (data && Array.isArray(data.translatedValue) && data.translatedValue.length && data.translatedLocale) {
-            const translatedValue = data.translatedValue[0]
-            const $visibleInput = $('input.form-control', this.$el)
-            $visibleInput.val(translatedValue).trigger('input')
-            this.$el.multiLingual('setLocaleValue', translatedValue, data.translatedLocale)
-        }
+        var self = this
+        $.wn.translate.applyAutoTranslateResponse(data, function(value, locale) {
+            $('input.form-control', self.$el).val(value).trigger('input')
+            self.$el.multiLingual('setLocaleValue', value, locale)
+        })
     }
 
     var old = $.fn.mlText

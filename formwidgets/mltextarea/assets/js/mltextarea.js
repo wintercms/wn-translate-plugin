@@ -108,11 +108,11 @@
     }
 
     MLTextarea.prototype.onAutoTranslateSuccess = function(e, data) {
-        if (data.translatedValue && data.translatedLocale) {
-            var translatedValue = data.translatedValue[0]
-            this.$textarea.val(translatedValue).trigger('input')
-            this.$el.multiLingual('setLocaleValue', translatedValue, data.translatedLocale)
-        }
+        var self = this
+        $.wn.translate.applyAutoTranslateResponse(data, function(value, locale) {
+            self.$textarea.val(value).trigger('input')
+            self.$el.multiLingual('setLocaleValue', value, locale)
+        })
     }
 
     $.fn.mlTextarea = function(option) {

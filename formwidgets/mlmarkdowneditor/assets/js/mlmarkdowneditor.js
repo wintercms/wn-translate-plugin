@@ -96,12 +96,14 @@
     }
 
     MLMarkdownEditor.prototype.onAutoTranslateSuccess = function(e, data) {
-        const translatedValue = data.translatedValue[0]
-        if (typeof translatedValue != 'string' || !this.$markdownEditor.data('oc.markdownEditor')) {
-            return
-        }
-        this.$el.multiLingual('setLocaleValue', translatedValue, data.translatedLocale)
-        this.$markdownEditor.markdownEditor('setContent', translatedValue);
+        var self = this
+        $.wn.translate.applyAutoTranslateResponse(data, function(value, locale) {
+            if (typeof value != 'string' || !self.$markdownEditor.data('oc.markdownEditor')) {
+                return
+            }
+            self.$el.multiLingual('setLocaleValue', value, locale)
+            self.$markdownEditor.markdownEditor('setContent', value)
+        })
     }
 
     MLMarkdownEditor.prototype.onChangeContent = function(ev, markdowneditor, value) {

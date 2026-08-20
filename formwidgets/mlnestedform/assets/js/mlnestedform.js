@@ -126,7 +126,7 @@
     // MLNESTEDFORM PLUGIN DEFINITION
     // ============================
 
-    var old = $.fn.mlNEstedForm
+    var old = $.fn.mlNestedForm
 
     $.fn.mlNestedForm = function (option) {
         var args = Array.prototype.slice.call(arguments, 1), result
@@ -148,7 +148,7 @@
     // =================
 
     $.fn.mlNestedForm.noConflict = function () {
-        $.fn.MLNestedForm = old
+        $.fn.mlNestedForm = old
         return this
     }
 

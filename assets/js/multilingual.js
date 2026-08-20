@@ -230,6 +230,18 @@
         return this
     }
 
+    // SHARED ML HELPERS
+    // =================
+    // Centralises the auto-translate success handling that every ML widget repeats,
+    // validating the response shape before handing the value + locale to the widget.
+    $.wn = $.wn || {}
+    $.wn.translate = $.wn.translate || {}
+    $.wn.translate.applyAutoTranslateResponse = function (data, setValue) {
+        if (data && Array.isArray(data.translatedValue) && data.translatedValue.length && data.translatedLocale) {
+            setValue(data.translatedValue[0], data.translatedLocale)
+        }
+    }
+
     // MULTILINGUAL DATA-API
     // ===============
     $(document).render(function () {

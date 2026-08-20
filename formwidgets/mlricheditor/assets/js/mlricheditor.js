@@ -101,12 +101,14 @@
     }
 
     MLRichEditor.prototype.onAutoTranslateSuccess = function(e, data) {
-        const translatedValue = data.translatedValue[0]
-        if (typeof translatedValue != 'string' || !this.$richeditor.data('oc.richEditor')) {
-            return
-        }
-        this.$el.multiLingual('setLocaleValue', translatedValue, data.translatedLocale)
-        this.$richeditor.richEditor('setContent', translatedValue);
+        var self = this
+        $.wn.translate.applyAutoTranslateResponse(data, function(value, locale) {
+            if (typeof value != 'string' || !self.$richeditor.data('oc.richEditor')) {
+                return
+            }
+            self.$el.multiLingual('setLocaleValue', value, locale)
+            self.$richeditor.richEditor('setContent', value)
+        })
     }
 
     MLRichEditor.prototype.onSyncContent = function(ev, richeditor, value) {
