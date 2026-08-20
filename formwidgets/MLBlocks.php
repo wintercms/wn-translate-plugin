@@ -107,8 +107,8 @@ class MLBlocks extends Blocks
 
     public function onCopyItemLocale()
     {
-        $copyFromLocale = post('_blocks_copy_locale');
-        $currentLocale = post('_blocks_current_locale');
+        $copyFromLocale = (string) post('_blocks_copy_locale');
+        $currentLocale = (string) post('_blocks_current_locale');
         $provider = (string) post('_provider');
 
         $copyFromValues = $this->getLocaleSaveDataAsArray($copyFromLocale);

@@ -1,19 +1,17 @@
 <?php
 
 namespace Winter\Translate\Traits;
+
+use Exception;
+use Illuminate\Support\Facades\Config;
+use Winter\Translate\Providers\ProviderFactory;
+
 /*
 * Used to intercept locale copy actions and auto translate
 * the response so it fits the target language
 */
-
-use Exception;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Config;
-use Winter\Translate\Providers\ProviderFactory;
-
 trait MLAutoTranslate
 {
-
     /**
      * Flatten nested widgets into a list of whitelisted values, preserving order.
      *
@@ -75,7 +73,7 @@ trait MLAutoTranslate
         return $copy;
     }
 
-    public function autoTranslateArray($copyFromValues, $currentLocale, $copyFromLocale, $provider)
+    public function autoTranslateArray(array $copyFromValues, string $currentLocale, string $copyFromLocale, string $provider): array
     {
         $whitelist = $this->getAutoTranslatableFields();
         $flattenedValues = $this->flatten($copyFromValues, $whitelist);

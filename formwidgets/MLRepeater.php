@@ -107,8 +107,8 @@ class MLRepeater extends Repeater
 
     public function onCopyItemLocale()
     {
-        $copyFromLocale = post('_repeater_copy_locale');
-        $currentLocale = post('_repeater_current_locale');
+        $copyFromLocale = (string) post('_repeater_copy_locale');
+        $currentLocale = (string) post('_repeater_current_locale');
         $provider = (string) post('_provider');
 
         $copyFromValues = $this->getLocaleSaveDataAsArray($copyFromLocale);
