@@ -7,10 +7,27 @@ use Winter\Translate\Traits\MLAutoTranslate;
 class MLAutoTranslateTest extends \Winter\Translate\Tests\TranslatePluginTestCase
 {
 
-    protected function createTranslator()
+    /**
+     * Builds a bare consumer of the trait that mimics a composite ML widget by
+     * exposing the properties getTranslatableFieldDefinitions() reads:
+     *  - 'form' => ['fields' => [...]]  (repeater / nestedform single form)
+     *  - 'useGroups' + 'groupDefinitions' (repeater groups / blocks)
+     */
+    protected function createTranslator(array $config = [])
     {
-        return new class {
+        return new class($config) {
             use MLAutoTranslate;
+
+            public $form = null;
+            public $useGroups = false;
+            public $groupDefinitions = [];
+
+            public function __construct(array $config = [])
+            {
+                $this->form = $config['form'] ?? null;
+                $this->useGroups = $config['useGroups'] ?? false;
+                $this->groupDefinitions = $config['groupDefinitions'] ?? [];
+            }
         };
     }
 
@@ -166,16 +183,94 @@ class MLAutoTranslateTest extends \Winter\Translate\Tests\TranslatePluginTestCas
         $this->assertSame('100% zeker, zie A/B', $result[0]);
     }
 
-    public function test_auto_translate_array_returns_unchanged_when_whitelist_empty()
+    public function test_auto_translate_array_returns_unchanged_when_nothing_translatable()
     {
-        $translator = $this->createTranslator();
-        Config::set('winter.translate::autoTranslateWhiteList', []);
+        // No sub-field declares translatable:true, so the values are copied
+        // verbatim (no throw, no provider call).
+        $translator = $this->createTranslator(['form' => ['fields' => [
+            'name'    => ['type' => 'text'],
+            'content' => ['type' => 'textarea'],
+        ]]]);
 
-        // With nothing whitelisted the values are copied verbatim (no throw, no
-        // provider call).
         $data = ['0' => ['name' => 'Foo', 'content' => 'Bar']];
         $result = $translator->autoTranslateArray($data, 'nl', 'en', 'google');
         $this->assertSame($data, $result);
+    }
+
+    public function test_auto_translate_array_translates_only_flagged_fields()
+    {
+        Config::set('winter.translate::providers.google.url', 'https://fake-endpoint.com/translate');
+        Config::set('winter.translate::providers.google.key', 'fakekey');
+
+        Http::fake([
+            'https://fake-endpoint.com/*' => Http::response([
+                'data' => ['translations' => [
+                    ['translatedText' => 'Naam NL'],
+                    ['translatedText' => 'Inhoud NL'],
+                ]],
+            ], 200)
+        ]);
+
+        // Only name + description opt in; the mediafinder value is copied as-is.
+        $translator = $this->createTranslator(['form' => ['fields' => [
+            'image'       => ['type' => 'mediafinder'],
+            'name'        => ['type' => 'text', 'translatable' => true],
+            'description' => ['type' => 'textarea', 'translatable' => true],
+        ]]]);
+
+        $data = [
+            ['image' => 'photo.jpg', 'name' => 'Name EN', 'description' => 'Desc EN'],
+        ];
+
+        $result = $translator->autoTranslateArray($data, 'nl', 'en', 'google');
+
+        $this->assertSame('photo.jpg', $result[0]['image']);
+        $this->assertSame('Naam NL', $result[0]['name']);
+        $this->assertSame('Inhoud NL', $result[0]['description']);
+    }
+
+    public function test_get_auto_translatable_fields_derives_from_field_definitions()
+    {
+        // translatable:true opts a field in; nested form fields are collected
+        // recursively; "@context" suffixes are stripped; duplicate names de-duped.
+        $translator = $this->createTranslator(['form' => ['fields' => [
+            'image'        => ['type' => 'mediafinder'],
+            'title@update' => ['type' => 'text', 'translatable' => true],
+            'body'         => ['type' => 'textarea', 'translatable' => true],
+            'contacts'     => [
+                'type' => 'nestedform',
+                'form' => ['fields' => [
+                    'label' => ['type' => 'text', 'translatable' => true],
+                    'phone' => ['type' => 'text'],
+                    'body'  => ['type' => 'textarea', 'translatable' => true], // duplicate name
+                ]],
+            ],
+        ]]]);
+
+        $fields = $translator->getAutoTranslatableFields();
+        sort($fields);
+        $this->assertSame(['body', 'label', 'title'], $fields);
+    }
+
+    public function test_get_auto_translatable_fields_collects_group_fields()
+    {
+        // Repeater groups / blocks: fields are merged across every group.
+        $translator = $this->createTranslator([
+            'useGroups' => true,
+            'groupDefinitions' => [
+                'block_a' => ['fields' => [
+                    'heading' => ['type' => 'text', 'translatable' => true],
+                    'image'   => ['type' => 'mediafinder'],
+                ]],
+                'block_b' => ['fields' => [
+                    'caption' => ['type' => 'text', 'translatable' => true],
+                ]],
+            ],
+        ]);
+
+        $fields = $translator->getAutoTranslatableFields();
+        sort($fields);
+        $this->assertSame(['caption', 'heading'], $fields);
     }
 
     public function test_flatten_and_expand_object()

@@ -79,34 +79,6 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Auto Translation Whitelist
-    |--------------------------------------------------------------------------
-    |
-    | Specifies which form inputs should be automatically translated when using
-    | auto-translation.
-    |
-    | Example scenario:
-    |       fields:
-    |           does_not_work: <- this is the key you put into the whitelist
-    |               label: Does not work
-    |               trigger:
-    |                   action: hide
-    |                   field: is_delayed
-    |                   condition: checked
-    |
-    | Important Notes:
-    | - Only applies to formwidgets that have multiple inputs (e.g. NestedForm),
-    |   otherwise it's ignored.
-    |
-    | Example:
-    |   'autoTranslateWhiteList' => ['name', 'content']
-    |
-    */
-
-    'autoTranslateWhiteList' => [],
-
-    /*
-    |--------------------------------------------------------------------------
     | Auto Translation Providers
     |--------------------------------------------------------------------------
     |

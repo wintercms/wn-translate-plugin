@@ -194,13 +194,24 @@ A provider only appears in the picker once its key is set. When exactly one prov
 
 ### Translating nested fields (repeater / nested form / blocks)
 
-For composite widgets, only the nested fields you whitelist are translated (other values are copied verbatim). List the field names in config:
+For composite widgets, only the sub-fields that opt in are machine-translated — every other value (images, switches, numbers, …) is copied verbatim. A sub-field opts in with `translatable: true` in its field definition:
 
-```php
-'autoTranslateWhiteList' => ['name', 'content'],
+```yaml
+gallery:
+    type: mlrepeater
+    form:
+        fields:
+            image:
+                type: mediafinder     # copied as-is across locales
+            alt_text:
+                type: text
+                translatable: true    # machine-translated on copy
+            description:
+                type: textarea
+                translatable: true    # machine-translated on copy
 ```
 
-With an empty whitelist a composite widget is still copied — the nested fields simply aren't translated.
+If no sub-field is marked `translatable`, the widget is still copied between locales — the nested values simply aren't translated. This is declared per field, so different widgets and models can each translate exactly the sub-fields that make sense for them.
 
 ### Adding a provider
 
