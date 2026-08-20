@@ -3,7 +3,6 @@
 namespace Winter\Translate\FormWidgets;
 
 use Backend\Classes\FormWidgetBase;
-use Exception;
 
 /**
  * ML Text

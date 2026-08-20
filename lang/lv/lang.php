@@ -39,7 +39,6 @@ return [
         'sort_order' => 'Kārtošanas secība',
         'copy_from' => 'Kopēt no :locale',
         'copy_from_label' => 'Kopēt no citas valodas',
-        'copy_confirm' => 'Vai esat pārliecināts, ka vēlaties kopēt vērtību no citas valodas?',
     ],
     'messages' => [
         'title' => 'Tulkot ziņojumus',

@@ -123,19 +123,6 @@ trait MLAutoTranslate
             'translatedLocale' => $currentLocale
         ];
     }
-    public function getProviderConfig($provider = "")
-    {
-
-        if ($provider == "") {
-            $provider = Config::get('winter.translate::defaultProvider');
-        }
-
-        $providerConfig = Config::get('winter.translate::providers.' . $provider);
-        if (!$providerConfig) {
-            throw new Exception("No config for provider: " . $provider);
-        }
-        return $providerConfig;
-    }
 
     public function getAutoTranslatableFields()
     {
