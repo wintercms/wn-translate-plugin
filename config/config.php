@@ -133,27 +133,29 @@ return [
     | You may define multiple providers; each provider will appear in the
     | dropdown list when choosing a translation service.
     |
-    | To create new providers create a new class that implements TranslationProvider
-    | and add it to the ProviderFactory, see translate/providers.
-    |
     | Each provider must include:
-    |   - url : API endpoint
-    |   - key : API key or authentication token
+    |   - class : a class implementing Winter\Translate\Providers\TranslationProvider
+    |             (extend AbstractTranslationProvider for batching/timeouts)
+    |   - url   : API endpoint
+    |   - key   : API key or authentication token
+    |
+    | A provider with an empty key is ignored in the UI, so a provider only
+    | appears once its key is configured (e.g. via the env vars below).
     |
     */
 
     'providers' => [
 
         'google' => [
-            'url' => env('GOOGLE_TRANSLATE_URL', 'https://translation.googleapis.com/language/translate/v2'),
-            'key' => env('GOOGLE_TRANSLATE_KEY', ''),
+            'class' => \Winter\Translate\Providers\GoogleTranslateProvider::class,
+            'url'   => env('GOOGLE_TRANSLATE_URL', 'https://translation.googleapis.com/language/translate/v2'),
+            'key'   => env('GOOGLE_TRANSLATE_KEY', ''),
         ],
 
-        // Example for adding an additional provider:
-        //
-        // 'deepl' => [
-        //     'url' => env('DEEPL_API_URL', 'https://api.deepl.com/v2/translate'),
-        //     'key' => env('DEEPL_API_KEY', ''),
-        // ],
+        'deepl' => [
+            'class' => \Winter\Translate\Providers\DeepLTranslateProvider::class,
+            'url'   => env('DEEPL_API_URL', 'https://api.deepl.com/v2/translate'),
+            'key'   => env('DEEPL_API_KEY', ''),
+        ],
     ],
 ];

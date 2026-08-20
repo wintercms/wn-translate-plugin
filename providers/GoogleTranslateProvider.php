@@ -2,20 +2,17 @@
 
 namespace Winter\Translate\Providers;
 
-use Winter\Translate\Providers\TranslationProvider;
 use Exception;
 use Illuminate\Support\Facades\Http;
 
-class GoogleTranslateProvider implements TranslationProvider
+class GoogleTranslateProvider extends AbstractTranslationProvider
 {
-    protected array $config;
+    /**
+     * @var int Google Cloud Translation v2 allows up to 128 `q` segments per request.
+     */
+    protected int $batchLimit = 100;
 
-    public function __construct(array $config)
-    {
-        $this->config = $config;
-    }
-
-    public function translate(array $input, string $targetLocale, string $currentLocale): array
+    protected function translateBatch(array $input, string $targetLocale, string $currentLocale): array
     {
         $query = http_build_query([
             'target' => $targetLocale,
@@ -23,16 +20,20 @@ class GoogleTranslateProvider implements TranslationProvider
             'key'    => $this->config['key'],
         ]);
 
+        // The payload (key, target/source, q values) travels in the POST body to avoid
+        // Google's request-line length limit on long fields.
         foreach ($input as $text) {
             $query .= '&q=' . urlencode($text);
         }
 
         $endpoint = rtrim($this->config['url'], '/');
-        
-        $response = Http::withBody($query, 'application/x-www-form-urlencoded')->post($endpoint);
+
+        $response = Http::timeout($this->timeout)
+            ->withBody($query, 'application/x-www-form-urlencoded')
+            ->post($endpoint);
 
         if (!$response->successful()) {
-            throw new Exception("Google Translation failed: " . $response->body());
+            throw new Exception('Google Translation failed: HTTP ' . $response->status());
         }
 
         $json = $response->json();
