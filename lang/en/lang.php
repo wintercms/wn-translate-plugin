@@ -43,6 +43,7 @@ return [
         'translate_method' => 'Translate Method',
         'none' => 'None',
         'copy_button' => 'Copy',
+        'invalid_locale' => 'Invalid locale selection.',
     ],
     'messages' => [
         'title' => 'Translate messages',

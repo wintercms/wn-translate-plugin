@@ -98,13 +98,14 @@ trait MLAutoTranslate
         $copyFromLocale = post('_copy_from_locale');
         $copyFromValue = post('_copy_from_value');
         $currentLocale = post('_current_locale');
-        $provider = post('_provider');
+        $provider = (string) post('_provider');
 
         if (!$copyFromLocale || !$currentLocale) {
             throw new Exception("Missing locale selection");
         }
 
-        if (!$copyFromValue) {
+        // Note: a literal "0" is valid translatable content, so only treat null/"" as empty.
+        if ($copyFromValue === null || $copyFromValue === '') {
             throw new Exception("Nothing to translate");
         }
 

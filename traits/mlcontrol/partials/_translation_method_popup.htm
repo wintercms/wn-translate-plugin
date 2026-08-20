@@ -34,8 +34,8 @@
             <?php if ($translatable) { ?>
             <?php foreach ($providers as $providerName => $providerConfig): ?>
             <?php $selected = ($default === strtolower($providerName)) ? 'selected' : ''; ?>
-            <option value="<?= $providerName ?>" <?= $selected ?>>
-                <?= ucfirst($providerName) ?>
+            <option value="<?= e($providerName) ?>" <?= $selected ?>>
+                <?= e(ucfirst($providerName)) ?>
             </option>
             <?php endforeach ?>
             <?php } ?>
@@ -51,7 +51,7 @@
         <?= e(trans('backend::lang.form.cancel')); ?></button>
     <button
         data-widget-id="<?= $this->getId('mlControl') ?>"
-        data-selected-locale="<?= $copy_from_locale ?>"
+        data-selected-locale="<?= e($copy_from_locale) ?>"
         type="button"
         class="btn btn-primary"
         data-dismiss="modal"

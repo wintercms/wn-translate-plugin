@@ -3,6 +3,7 @@
 namespace Winter\Translate\Traits;
 
 use Str;
+use ApplicationException;
 use Winter\Storm\Html\Helper as HtmlHelper;
 use Winter\Translate\Models\Locale;
 use Illuminate\Support\Facades\Config;
@@ -284,8 +285,21 @@ trait MLControl
      */
     public function onShowTranslationMethodSelector()
     {
-        $this->vars['copy_from_locale'] = post('_copy_from_locale');
-        $this->vars['current_locale'] = post('_current_locale');
+        // Validate the posted locales against the configured ones before reflecting
+        // them back into the popup or forwarding them to a translation provider.
+        $availableLocales = array_keys(Locale::listAvailable());
+        $copyFromLocale = post('_copy_from_locale');
+        $currentLocale = post('_current_locale');
+
+        if (
+            !in_array($copyFromLocale, $availableLocales, true) ||
+            !in_array($currentLocale, $availableLocales, true)
+        ) {
+            throw new ApplicationException(trans('winter.translate::lang.locale.invalid_locale'));
+        }
+
+        $this->vars['copy_from_locale'] = $copyFromLocale;
+        $this->vars['current_locale'] = $currentLocale;
         $this->prepareLocaleVars();
         return $this->makeMLPartial('translation_method_popup');
     }
