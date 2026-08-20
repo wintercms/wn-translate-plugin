@@ -79,8 +79,12 @@ trait MLAutoTranslate
     {
         $whitelist = $this->getAutoTranslatableFields();
         $flattenedValues = $this->flatten($copyFromValues, $whitelist);
-        if (count($flattenedValues) == 0) {
-            throw new Exception("None of the fields on this widget are auto translatable, update config.autoTranslateWhiteList with the label of each input you wish to include, eg. name, content");
+
+        // No fields are whitelisted for translation on this widget: keep the plain
+        // copy rather than failing. Nested translation is opt-in via
+        // config.autoTranslateWhiteList (e.g. ['name', 'content']).
+        if (count($flattenedValues) === 0) {
+            return $copyFromValues;
         }
 
         $translatedValues = $this->translate(

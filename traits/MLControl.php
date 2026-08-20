@@ -124,11 +124,38 @@ trait MLControl
      */
     public function prepareLocaleVars()
     {
+        $usableProviders = $this->getUsableTranslateProviders();
+        $default = (string) Config::get('winter.translate::defaultProvider');
+
         $this->vars['defaultLocale'] = $this->defaultLocale;
         $this->vars['locales'] = Locale::listAvailable();
-        $this->vars['providers'] = Config::get('winter.translate::providers');
-        $this->vars['defaultProvider'] = Config::get('winter.translate::defaultProvider');
+        $this->vars['providers'] = $usableProviders;
+        // Fall back to "none" if the configured default provider isn't usable.
+        $this->vars['defaultProvider'] = isset($usableProviders[$default]) ? $default : '';
         $this->vars['field'] = $this->makeRenderFormField();
+    }
+
+    /**
+     * Returns the configured translation providers that are actually usable
+     * (i.e. have an API key). Keyless providers can't translate, so they should
+     * not be offered in the UI.
+     */
+    public function getUsableTranslateProviders(): array
+    {
+        $providers = Config::get('winter.translate::providers', []);
+
+        return array_filter((array) $providers, function ($config) {
+            return is_array($config) && !empty($config['key']);
+        });
+    }
+
+    /**
+     * Whether at least one usable translation provider is configured. When none
+     * are, the copy UI stays a plain one-click copy with no provider popup.
+     */
+    public function hasUsableTranslateProviders(): bool
+    {
+        return count($this->getUsableTranslateProviders()) > 0;
     }
 
     /**

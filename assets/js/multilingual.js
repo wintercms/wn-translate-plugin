@@ -53,6 +53,14 @@
 
             if (!copyFromLocale || currentLocale === copyFromLocale) return;
 
+            // No usable translation provider configured: keep the original one-click
+            // copy (no method popup, no clutter).
+            var copyOpenHandler = $(this).data('copy-open-handler')
+            if (!copyOpenHandler) {
+                self.copyLocale(copyFromLocale, '')
+                return
+            }
+
             self.$el.on('complete.oc.popup', function (e, $source, $popup) {
                 const $button = $popup.find(`[data-widget-id="${self.$el.attr('id')}"]`)
                 $button.on('click', function(event) {
