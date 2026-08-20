@@ -29,7 +29,6 @@
         this.$dropdown     = $('ul.ml-dropdown-menu', this.$el)
         this.$placeholder  = $(this.options.placeholderField)
 
-
         /*
          * Init locale
          */

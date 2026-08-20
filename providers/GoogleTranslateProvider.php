@@ -38,14 +38,19 @@ class GoogleTranslateProvider extends AbstractTranslationProvider
 
         $json = $response->json();
 
-        if (!isset($json['data']['translations'])) {
+        if (!isset($json['data']['translations']) || !is_array($json['data']['translations'])) {
             throw new Exception('Google Translation returned an unexpected response.');
         }
 
         // Google returns HTML-entity-encoded text (not URL-encoded); only decode entities,
         // otherwise literal percent sequences in the source (e.g. "20%25") get corrupted.
         return array_map(
-            fn($t) => html_entity_decode($t['translatedText'] ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8'),
+            function ($t) {
+                if (!isset($t['translatedText']) || !is_string($t['translatedText'])) {
+                    throw new Exception('Google Translation returned an unexpected response.');
+                }
+                return html_entity_decode($t['translatedText'], ENT_QUOTES | ENT_HTML5, 'UTF-8');
+            },
             $json['data']['translations']
         );
     }

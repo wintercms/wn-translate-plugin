@@ -36,7 +36,15 @@ abstract class AbstractTranslationProvider implements TranslationProvider
 
         $output = [];
         foreach (array_chunk(array_values($input), max(1, $this->batchLimit)) as $chunk) {
-            $output = array_merge($output, $this->translateBatch($chunk, $targetLocale, $currentLocale));
+            $translated = $this->translateBatch($chunk, $targetLocale, $currentLocale);
+
+            // A batch must return exactly one string per input segment, otherwise the
+            // caller's flatten/expand pass silently misaligns and keeps source values.
+            if (count($translated) !== count($chunk) || array_filter($translated, 'is_string') !== $translated) {
+                throw new \Exception('Translation provider returned a malformed or partial result.');
+            }
+
+            $output = array_merge($output, $translated);
         }
 
         return $output;

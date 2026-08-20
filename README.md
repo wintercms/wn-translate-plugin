@@ -178,7 +178,7 @@ Every multilingual backend field has a "copy from another locale" action. When a
 
 Providers are configured under `config/config.php` (or an app override in `config/winter/translate/config.php`) and are keyed via environment variables:
 
-```
+```dotenv
 # Use Google by default
 TRANSLATE_PROVIDER=google
 

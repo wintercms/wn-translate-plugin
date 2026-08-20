@@ -40,7 +40,7 @@ class DeepLTranslateProvider extends AbstractTranslationProvider
 
         $json = $response->json();
 
-        if (!isset($json['translations'])) {
+        if (!isset($json['translations']) || !is_array($json['translations'])) {
             throw new Exception('DeepL Translation returned an unexpected response.');
         }
 
