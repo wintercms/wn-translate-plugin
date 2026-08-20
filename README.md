@@ -168,6 +168,55 @@ This plugin activates a feature in the CMS that allows content files to use lang
 * **welcome.ru.htm** will contain the content in Russian.
 * **welcome.fr.htm** will contain the content in French.
 
+## Machine translation on copy
+
+Every multilingual backend field has a "copy from another locale" action. When a machine-translation provider is configured, that action can also translate the copied content into the target locale. Supported providers: **Google Cloud Translation** and **DeepL**.
+
+**This is opt-in and invisible by default:** with no provider configured, the copy action stays a plain one-click copy — no provider popup, no extra UI. As soon as a provider key is set, a small "translation method" picker appears so the user can choose *None*, *Google* or *DeepL* when copying.
+
+### Configuring a provider
+
+Providers are configured under `config/config.php` (or an app override in `config/winter/translate/config.php`) and are keyed via environment variables:
+
+```
+# Use Google by default
+TRANSLATE_PROVIDER=google
+
+# Google Cloud Translation (v2)
+GOOGLE_TRANSLATE_KEY=your-google-api-key
+
+# DeepL (optional)
+DEEPL_API_KEY=your-deepl-api-key
+```
+
+**Getting a Google key:** in the [Google Cloud Console](https://console.cloud.google.com) create/select a project, enable billing, enable the **Cloud Translation API**, then create an API key (restrict it to the Cloud Translation API) and set it as `GOOGLE_TRANSLATE_KEY`.
+
+**Getting a DeepL key:** sign up for the [DeepL API](https://www.deepl.com/pro-api), copy your auth key into `DEEPL_API_KEY`. Use `DEEPL_API_URL=https://api-free.deepl.com/v2/translate` for a free-tier key.
+
+### Translating nested fields (repeater / nested form / blocks)
+
+For composite widgets, only the nested fields you whitelist are translated (other values are copied verbatim). List the field names in config:
+
+```php
+'autoTranslateWhiteList' => ['name', 'content'],
+```
+
+With an empty whitelist a composite widget is still copied — the nested fields simply aren't translated.
+
+### Adding a provider
+
+Implement `Winter\Translate\Providers\TranslationProvider` (or extend `AbstractTranslationProvider` for batching + timeouts) and reference the class from config:
+
+```php
+'providers' => [
+    'myprovider' => [
+        'class' => \Acme\Translate\MyProvider::class,
+        'url'   => env('MY_PROVIDER_URL'),
+        'key'   => env('MY_PROVIDER_KEY'),
+    ],
+],
+```
+
 ## Mail template translation
 
 This plugin activates a feature in the CMS that allows Mail template files to use language suffixes, for example:
