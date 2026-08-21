@@ -184,14 +184,37 @@
     }
 
     MultiLingual.prototype.copyLocale = function(copyFromLocale, provider) {
+        var self = this
         var currentLocale = this.activeLocale
 
-        // Copying overwrites the active locale's value: confirm before discarding
-        // any existing content so an accidental copy can't silently destroy work.
-        if (!this.confirmOverwrite(currentLocale, copyFromLocale)) {
+        // Copying overwrites the active locale's value. When there's existing content
+        // that would be discarded, confirm first so an accidental copy can't silently
+        // destroy work; copying into an empty locale proceeds without a prompt.
+        if (!this.localeHasContent(currentLocale)) {
+            this.applyCopyLocale(copyFromLocale, provider)
             return
         }
 
+        var message = 'This replaces the current "' + currentLocale + '" content with the ' +
+            'value copied from "' + copyFromLocale + '". Continue?'
+
+        // Prefer the backend's styled confirm; fall back to a native one.
+        if ($.wn && typeof $.wn.confirm === 'function') {
+            $.wn.confirm(message, function(isConfirm) {
+                if (isConfirm) self.applyCopyLocale(copyFromLocale, provider)
+            })
+        }
+        else if (window.confirm(message)) {
+            this.applyCopyLocale(copyFromLocale, provider)
+        }
+    }
+
+    /*
+     * Performs the actual copy of a locale's value into the active locale, notifying
+     * the widget so it can update / auto-translate.
+     */
+    MultiLingual.prototype.applyCopyLocale = function(copyFromLocale, provider) {
+        var currentLocale = this.activeLocale
         var copyFromLocaleValue = this.getLocaleValue(copyFromLocale)
         this.$activeField.val(copyFromLocaleValue)
         this.$placeholder.val(copyFromLocaleValue)
@@ -202,20 +225,6 @@
             currentLocale: currentLocale,
             provider: provider,
         }])
-    }
-
-    /*
-     * Confirms a destructive copy. Only prompts when the active locale already has
-     * content that would be replaced; copying into an empty locale needs no warning.
-     */
-    MultiLingual.prototype.confirmOverwrite = function(currentLocale, copyFromLocale) {
-        if (!this.localeHasContent(currentLocale)) {
-            return true
-        }
-        return window.confirm(
-            'This replaces the current "' + currentLocale + '" content with the value ' +
-            'copied from "' + copyFromLocale + '". Continue?'
-        )
     }
 
     MultiLingual.prototype.setLocale = function(locale) {
