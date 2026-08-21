@@ -3,8 +3,10 @@
 namespace Winter\Translate\Traits;
 
 use Str;
+use ApplicationException;
 use Winter\Storm\Html\Helper as HtmlHelper;
 use Winter\Translate\Models\Locale;
+use Illuminate\Support\Facades\Config;
 
 /**
  * Generic ML Control
@@ -78,8 +80,7 @@ trait MLControl
             $this->originalViewPath = $this->viewPath;
             $this->assetPath = $this->getParentAssetPath();
             $this->viewPath = $this->getParentViewPath();
-        }
-        else {
+        } else {
             $this->assetPath = $this->originalAssetPath;
             $this->viewPath = $this->originalViewPath;
         }
@@ -123,9 +124,42 @@ trait MLControl
      */
     public function prepareLocaleVars()
     {
+        $usableProviders = $this->getUsableTranslateProviders();
+
         $this->vars['defaultLocale'] = $this->defaultLocale;
         $this->vars['locales'] = Locale::listAvailable();
+        $this->vars['providers'] = $usableProviders;
+        // Pre-select a provider only when exactly one is usable — a lone configured
+        // provider is an unambiguous default that saves a click. With several, stay
+        // on "None" so the user consciously picks a service rather than silently
+        // defaulting to a paid one.
+        $this->vars['defaultProvider'] = count($usableProviders) === 1
+            ? (string) array_key_first($usableProviders)
+            : '';
         $this->vars['field'] = $this->makeRenderFormField();
+    }
+
+    /**
+     * Returns the configured translation providers that are actually usable
+     * (i.e. have an API key). Keyless providers can't translate, so they should
+     * not be offered in the UI.
+     */
+    public function getUsableTranslateProviders(): array
+    {
+        $providers = Config::get('winter.translate::providers', []);
+
+        return array_filter((array) $providers, function ($config) {
+            return is_array($config) && !empty($config['key']);
+        });
+    }
+
+    /**
+     * Whether at least one usable translation provider is configured. When none
+     * are, the copy UI stays a plain one-click copy with no provider popup.
+     */
+    public function hasUsableTranslateProviders(): bool
+    {
+        return count($this->getUsableTranslateProviders()) > 0;
     }
 
     /**
@@ -150,15 +184,13 @@ trait MLControl
          * Get the translated values from the model
          */
         $studKey = Str::studly(implode(' ', HtmlHelper::nameToArray($key)));
-        $mutateMethod = 'get'.$studKey.'AttributeTranslated';
+        $mutateMethod = 'get' . $studKey . 'AttributeTranslated';
 
         if ($this->objectMethodExists($this->model, $mutateMethod)) {
             $value = $this->model->$mutateMethod($locale);
-        }
-        elseif ($this->objectMethodExists($this->model, 'getAttributeTranslated') && $this->defaultLocale->code != $locale) {
+        } elseif ($this->objectMethodExists($this->model, 'getAttributeTranslated') && $this->defaultLocale->code != $locale) {
             $value = $this->model->setTranslatableUseFallback(false)->getAttributeTranslated($key, $locale);
-        }
-        else {
+        } else {
             $value = $this->formField->value;
         }
 
@@ -192,14 +224,13 @@ trait MLControl
          * Set the translated values to the model
          */
         $studKey = Str::studly(implode(' ', HtmlHelper::nameToArray($key)));
-        $mutateMethod = 'set'.$studKey.'AttributeTranslated';
+        $mutateMethod = 'set' . $studKey . 'AttributeTranslated';
 
         if ($this->objectMethodExists($this->model, $mutateMethod)) {
             foreach ($localeData as $locale => $value) {
                 $this->model->$mutateMethod($value, $locale);
             }
-        }
-        elseif ($this->objectMethodExists($this->model, 'setAttributeTranslated')) {
+        } elseif ($this->objectMethodExists($this->model, 'setAttributeTranslated')) {
             foreach ($localeData as $locale => $value) {
                 $this->model->setAttributeTranslated($key, $value, $locale);
             }
@@ -279,5 +310,28 @@ trait MLControl
         }
 
         return method_exists($object, $method);
+    }
+    /**
+     * Handle the translation method selector popup request
+     */
+    public function onShowTranslationMethodSelector()
+    {
+        // Validate the posted locales against the configured ones before reflecting
+        // them back into the popup or forwarding them to a translation provider.
+        $availableLocales = array_keys(Locale::listAvailable());
+        $copyFromLocale = post('_copy_from_locale');
+        $currentLocale = post('_current_locale');
+
+        if (
+            !in_array($copyFromLocale, $availableLocales, true) ||
+            !in_array($currentLocale, $availableLocales, true)
+        ) {
+            throw new ApplicationException(trans('winter.translate::lang.locale.invalid_locale'));
+        }
+
+        $this->vars['copy_from_locale'] = $copyFromLocale;
+        $this->vars['current_locale'] = $currentLocale;
+        $this->prepareLocaleVars();
+        return $this->makeMLPartial('translation_method_popup');
     }
 }

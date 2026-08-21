@@ -168,6 +168,74 @@ This plugin activates a feature in the CMS that allows content files to use lang
 * **welcome.ru.htm** will contain the content in Russian.
 * **welcome.fr.htm** will contain the content in French.
 
+## Machine translation on copy
+
+Every multilingual backend field has a "copy from another locale" action. When a machine-translation provider is configured, that action can also translate the copied content into the target locale. Supported providers: **Google Cloud Translation** and **DeepL**.
+
+**This is opt-in and invisible by default:** with no provider configured, the copy action stays a plain one-click copy — no provider popup, no extra UI. As soon as a provider key is set, a small "translation method" picker appears so the user can choose *None*, *Google* or *DeepL* when copying.
+
+### Configuring a provider
+
+The easiest way is the backend settings screen: **Settings → Translation Providers**. It has a guided tab for each provider with step-by-step instructions (and direct links to each provider's console) beside a masked field for the API key:
+
+- **Google Translate** — paste your Cloud Translation API key.
+- **DeepL** — paste your authentication key and pick your plan (*Free* or *Pro*, which selects the correct API endpoint).
+
+Keys entered here are stored in the settings table and used ahead of any environment/config value. The screen is gated by the `winter.translate.manage_settings` permission.
+
+Prefer to configure via environment instead (e.g. for deployment)? The same providers read from `config/config.php` (or an app override in `config/winter/translate/config.php`), keyed via environment variables:
+
+```dotenv
+# Google Cloud Translation (v2)
+GOOGLE_TRANSLATE_KEY=your-google-api-key
+
+# DeepL (optional)
+DEEPL_API_KEY=your-deepl-api-key
+# Free-tier DeepL keys use a different endpoint:
+DEEPL_API_URL=https://api-free.deepl.com/v2/translate
+```
+
+An env/config key keeps working even with the settings screen left blank — the settings page shows it as *configured via environment* and only overrides it when you enter a key. A provider only appears in the picker once its key is set (via either method). When exactly one provider is configured it is pre-selected automatically; with several configured the picker defaults to *None* so translation stays a deliberate choice.
+
+**Getting a Google key:** in the [Google Cloud Console](https://console.cloud.google.com) create/select a project, enable billing, enable the **Cloud Translation API**, then create an API key (restrict it to the Cloud Translation API).
+
+**Getting a DeepL key:** sign up for the [DeepL API](https://www.deepl.com/pro-api), then copy your *Authentication Key for DeepL API* from **Account → API keys**.
+
+### Translating nested fields (repeater / nested form / blocks)
+
+For composite widgets, only the sub-fields that opt in are machine-translated — every other value (images, switches, numbers, …) is copied verbatim. A sub-field opts in with `translatable: true` in its field definition:
+
+```yaml
+gallery:
+    type: mlrepeater
+    form:
+        fields:
+            image:
+                type: mediafinder     # copied as-is across locales
+            alt_text:
+                type: text
+                translatable: true    # machine-translated on copy
+            description:
+                type: textarea
+                translatable: true    # machine-translated on copy
+```
+
+If no sub-field is marked `translatable`, the widget is still copied between locales — the nested values simply aren't translated. This is declared per field, so different widgets and models can each translate exactly the sub-fields that make sense for them.
+
+### Adding a provider
+
+Implement `Winter\Translate\Providers\TranslationProvider` (or extend `AbstractTranslationProvider` for batching + timeouts) and reference the class from config:
+
+```php
+'providers' => [
+    'myprovider' => [
+        'class' => \Acme\Translate\MyProvider::class,
+        'url'   => env('MY_PROVIDER_URL'),
+        'key'   => env('MY_PROVIDER_KEY'),
+    ],
+],
+```
+
 ## Mail template translation
 
 This plugin activates a feature in the CMS that allows Mail template files to use language suffixes, for example:

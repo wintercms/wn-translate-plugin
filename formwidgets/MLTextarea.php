@@ -14,6 +14,7 @@ use Backend\Classes\FormWidgetBase;
 class MLTextarea extends FormWidgetBase
 {
     use \Winter\Translate\Traits\MLControl;
+    use \Winter\Translate\Traits\MLAutoTranslate;
 
     /**
      * {@inheritDoc}

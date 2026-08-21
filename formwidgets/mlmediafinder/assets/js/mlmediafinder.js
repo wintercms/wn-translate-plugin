@@ -96,8 +96,8 @@
         this.setPath(localeValue)
     }
 
-    MLMediaFinder.prototype.onCopyLocale = function(e, locale, localeValue) {
-        this.setPath(localeValue)
+    MLMediaFinder.prototype.onCopyLocale = function(e, {copyFromLocale, copyFromValue, currentLocale, provider}) {
+        this.setPath(copyFromValue)
     }
 
     MLMediaFinder.prototype.setPath = function(localeValue) {

@@ -2,6 +2,7 @@
 
 namespace Winter\Translate;
 
+use App;
 use Backend;
 use Backend\Models\UserRole;
 use Cms\Classes\Page;
@@ -74,6 +75,11 @@ class Plugin extends PluginBase
                 'tab'   => 'winter.translate::lang.plugin.tab',
                 'label' => 'winter.translate::lang.plugin.manage_messages',
                 'roles' => [UserRole::CODE_DEVELOPER, UserRole::CODE_PUBLISHER],
+            ],
+            'winter.translate.manage_settings' => [
+                'tab'   => 'winter.translate::lang.plugin.tab',
+                'label' => 'winter.translate::lang.plugin.manage_settings',
+                'roles' => [UserRole::CODE_DEVELOPER],
             ]
         ];
     }
@@ -101,6 +107,16 @@ class Plugin extends PluginBase
                 'order'       => 551,
                 'category'    => 'winter.translate::lang.plugin.name',
                 'permissions' => ['winter.translate.manage_messages']
+            ],
+            'providers' => [
+                'label'       => 'winter.translate::lang.settings.title',
+                'description' => 'winter.translate::lang.settings.description',
+                'icon'        => 'icon-key',
+                'class'       => \Winter\Translate\Models\Setting::class,
+                'order'       => 552,
+                'category'    => 'winter.translate::lang.plugin.name',
+                'permissions' => ['winter.translate.manage_settings'],
+                'keywords'    => 'google deepl translation api key provider machine translate',
             ]
         ];
     }
@@ -183,11 +199,33 @@ class Plugin extends PluginBase
      */
     public function boot(): void
     {
+        $this->applyProviderSettings();
         $this->extendBackendModule();
         $this->extendCmsModule();
         $this->extendSystemModule();
         $this->extendWinterPagesPlugin();
         $this->extendWinterSitemapPlugin();
+    }
+
+    /**
+     * Pushes the backend-configured provider credentials into config so the
+     * existing ProviderFactory resolves them. Only runs in the backend (the copy
+     * / auto-translate feature is backend-only), and is guarded so early boot —
+     * before the settings table exists, e.g. during install/migrate — fails
+     * silently and leaves the file/env config in place.
+     */
+    protected function applyProviderSettings(): void
+    {
+        if (!App::runningInBackend()) {
+            return;
+        }
+
+        try {
+            \Winter\Translate\Models\Setting::applyConfigValues();
+        }
+        catch (\Throwable $e) {
+            // Settings table not available yet (install/migrate) — keep env config.
+        }
     }
 
     /**

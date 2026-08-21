@@ -63,4 +63,38 @@ return [
 
     'redirectStatus' => env('TRANSLATE_REDIRECT_STATUS', 302),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Auto Translation Providers
+    |--------------------------------------------------------------------------
+    |
+    | Configure the translation API services available to your application.
+    | You may define multiple providers; each provider will appear in the
+    | dropdown list when choosing a translation service.
+    |
+    | Each provider must include:
+    |   - class : a class implementing Winter\Translate\Providers\TranslationProvider
+    |             (extend AbstractTranslationProvider for batching/timeouts)
+    |   - url   : API endpoint
+    |   - key   : API key or authentication token
+    |
+    | A provider with an empty key is ignored in the UI, so a provider only
+    | appears once its key is configured (e.g. via the env vars below).
+    |
+    */
+
+    'providers' => [
+
+        'google' => [
+            'class' => \Winter\Translate\Providers\GoogleTranslateProvider::class,
+            'url'   => env('GOOGLE_TRANSLATE_URL', 'https://translation.googleapis.com/language/translate/v2'),
+            'key'   => env('GOOGLE_TRANSLATE_KEY', ''),
+        ],
+
+        'deepl' => [
+            'class' => \Winter\Translate\Providers\DeepLTranslateProvider::class,
+            'url'   => env('DEEPL_API_URL', 'https://api.deepl.com/v2/translate'),
+            'key'   => env('DEEPL_API_KEY', ''),
+        ],
+    ],
 ];

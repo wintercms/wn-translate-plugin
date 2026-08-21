@@ -48,6 +48,7 @@
 
         this.$el.on('setLocale.oc.multilingual', this.proxy(this.onSetLocale))
         this.$el.on('copyLocale.oc.multilingual', this.proxy(this.onCopyLocale))
+        this.$el.on('autoTranslateSuccess.oc.multilingual', this.proxy(this.onAutoTranslateSuccess))
         this.$textarea.on('syncContent.oc.richeditor', this.proxy(this.onSyncContent))
 
         this.editor.events.on('focus', this.proxy(this.toggleIsFocused));
@@ -67,6 +68,7 @@
     MLRichEditor.prototype.dispose = function() {
         this.$el.off('setLocale.oc.multilingual', this.proxy(this.onSetLocale))
         this.$el.off('copyLocale.oc.multilingual', this.proxy(this.onCopyLocale))
+        this.$el.off('autoTranslateSuccess.oc.multilingual', this.proxy(this.onAutoTranslateSuccess))
         this.$textarea.off('syncContent.oc.richeditor', this.proxy(this.onSyncContent))
         $(window).off('resize', this.proxy(this.updateLayout))
         $(window).off('oc.updateUi', this.proxy(this.updateLayout))
@@ -91,10 +93,22 @@
             this.$richeditor.richEditor('setContent', localeValue);
         }
     }
-    MLRichEditor.prototype.onCopyLocale = function(e, locale, localeValue) {
-        if (typeof localeValue === 'string' && this.$richeditor.data('oc.richEditor')) {
-            this.$richeditor.richEditor('setContent', localeValue);
+    MLRichEditor.prototype.onCopyLocale = function(e, {copyFromLocale, copyFromValue, currentLocale, provider}) {
+        if (typeof copyFromValue === 'string' && this.$richeditor.data('oc.richEditor')) {
+            this.$richeditor.richEditor('setContent', copyFromValue);
         }
+        this.$el.multiLingual('autoTranslate', copyFromLocale, provider)
+    }
+
+    MLRichEditor.prototype.onAutoTranslateSuccess = function(e, data) {
+        var self = this
+        $.wn.translate.applyAutoTranslateResponse(data, function(value, locale) {
+            if (typeof value != 'string' || !self.$richeditor.data('oc.richEditor')) {
+                return
+            }
+            self.$el.multiLingual('setLocaleValue', value, locale)
+            self.$richeditor.richEditor('setContent', value)
+        })
     }
 
     MLRichEditor.prototype.onSyncContent = function(ev, richeditor, value) {
@@ -104,8 +118,6 @@
     MLRichEditor.prototype.updateLayout = function() {
         var $btn = $('.ml-btn[data-active-locale]:first', this.$el),
             $dropdown = $('.ml-dropdown-menu[data-locale-dropdown]:first', this.$el),
-            $copyBtn = $('.ml-copy-btn:first', this.$el),
-            $copyDropdown = $('.ml-copy-dropdown-menu:first', this.$el),
             $toolbar = $('.fr-toolbar', this.$el),
             $element = $('.fr-element', this.$el)
 
@@ -114,18 +126,14 @@
             if (height) {
                 $btn.css('top', height + 1)
                 $dropdown.css('top', height + 34)
-                $copyBtn.css('top', height + 1)
-                $copyDropdown.css('top', height + 34)
             }
         }
 
-        // Hide locale buttons while editor is focused
+        // Hide the locale button while the editor is focused
         if (this.isFocused) {
             $btn.hide()
-            $copyBtn.hide()
         } else {
             $btn.show()
-            $copyBtn.show()
         }
         // set ML button position
         var hasScrollbar = false

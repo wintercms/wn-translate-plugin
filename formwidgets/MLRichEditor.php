@@ -15,6 +15,7 @@ use Winter\Translate\Models\Locale;
 class MLRichEditor extends RichEditor
 {
     use \Winter\Translate\Traits\MLControl;
+    use \Winter\Translate\Traits\MLAutoTranslate;
 
     /**
      * {@inheritDoc}

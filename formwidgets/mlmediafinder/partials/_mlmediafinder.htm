@@ -2,15 +2,12 @@
 <div
     id="<?= $this->getId('mlControl') ?>"
     data-control="mlmediafinder"
-    data-copy-confirm="<?= e(trans('winter.translate::lang.locale.copy_confirm')); ?>"
     data-default-locale="<?= $defaultLocale->code ?>"
     data-media-path="<?= $mediaPath ?>"
     class="field-multilingual field-multilingual-mediafinder dropdown"
     >
 
     <?= $mediafinder ?>
-
-    <?= $this->makeMLPartial('locale_copy') ?>
 
     <?= $this->makeMLPartial('locale_selector') ?>
 

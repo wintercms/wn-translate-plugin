@@ -14,6 +14,7 @@ use Backend\Classes\FormWidgetBase;
 class MLText extends FormWidgetBase
 {
     use \Winter\Translate\Traits\MLControl;
+    use \Winter\Translate\Traits\MLAutoTranslate;
 
     /**
      * {@inheritDoc}
@@ -57,5 +58,6 @@ class MLText extends FormWidgetBase
     protected function loadAssets()
     {
         $this->loadLocaleAssets();
+        $this->addJs('js/mltext.js');
     }
 }

@@ -49,6 +49,7 @@
 
         this.$el.on('setLocale.oc.multilingual', this.proxy(this.onSetLocale))
         this.$el.on('copyLocale.oc.multilingual', this.proxy(this.onCopyLocale))
+        this.$el.on('autoTranslateSuccess.oc.multilingual', this.proxy(this.onAutoTranslateSuccess))
         this.$textarea.on('changeContent.oc.markdowneditor', this.proxy(this.onChangeContent))
 
         this.codeEditor.on('blur', this.proxy(this.toggleIsFocused))
@@ -64,6 +65,7 @@
     MLMarkdownEditor.prototype.dispose = function() {
         this.$el.off('setLocale.oc.multilingual', this.proxy(this.onSetLocale))
         this.$el.off('copyLocale.oc.multilingual', this.proxy(this.onCopyLocale))
+        this.$el.off('autoTranslateSuccess.oc.multilingual', this.proxy(this.onAutoTranslateSuccess))
         this.$textarea.off('changeContent.oc.markdowneditor', this.proxy(this.onChangeContent))
         this.$el.off('dispose-control', this.proxy(this.dispose))
         this.codeEditor.off('blur', this.proxy(this.toggleIsFocused))
@@ -86,10 +88,22 @@
         }
     }
 
-    MLMarkdownEditor.prototype.onCopyLocale = function(e, locale, localeValue) {
-        if (typeof localeValue === 'string' && this.$markdownEditor.data('oc.markdownEditor')) {
-            this.$markdownEditor.markdownEditor('setContent', localeValue);
+    MLMarkdownEditor.prototype.onCopyLocale = function(e, {copyFromLocale, copyFromValue, currentLocale, provider}) {
+        if (typeof copyFromValue === 'string' && this.$markdownEditor.data('oc.markdownEditor')) {
+            this.$markdownEditor.markdownEditor('setContent', copyFromValue);
         }
+        this.$el.multiLingual('autoTranslate', copyFromLocale, provider)
+    }
+
+    MLMarkdownEditor.prototype.onAutoTranslateSuccess = function(e, data) {
+        var self = this
+        $.wn.translate.applyAutoTranslateResponse(data, function(value, locale) {
+            if (typeof value != 'string' || !self.$markdownEditor.data('oc.markdownEditor')) {
+                return
+            }
+            self.$el.multiLingual('setLocaleValue', value, locale)
+            self.$markdownEditor.markdownEditor('setContent', value)
+        })
     }
 
     MLMarkdownEditor.prototype.onChangeContent = function(ev, markdowneditor, value) {
@@ -104,8 +118,6 @@
     MLMarkdownEditor.prototype.updateLayout = function() {
         var $btn = $('.ml-btn[data-active-locale]:first', this.$el),
             $dropdown = $('.ml-dropdown-menu[data-locale-dropdown]:first', this.$el),
-            $copyBtn = $('.ml-copy-btn:first', this.$el),
-            $copyDropdown = $('.ml-copy-dropdown-menu:first', this.$el),
             $toolbar = $('.control-toolbar', this.$el),
             $container = $('.editor-write', this.$el),
             $scrollbar = $('.ace_scrollbar', this.$el),
@@ -116,8 +128,6 @@
             if (height) {
                 $btn.css('top', height + 1)
                 $dropdown.css('top', height + 34)
-                $copyBtn.css('top', height + 1)
-                $copyDropdown.css('top', height + 34)
             }
         }
         // set ML button position
@@ -126,13 +136,11 @@
             $scrollbar = $('.ace_scrollbar', this.$el),
             $input = $('.ace_text-input', this.$el)
 
-        // Hide locale buttons while editor is focused
+        // Hide the locale button while the editor is focused
         if (this.isFocused) {
             $btn.hide()
-            $copyBtn.hide()
         } else {
             $btn.show()
-            $copyBtn.show()
         }
 
         // fix exit fullscreen

@@ -15,6 +15,7 @@ use Request;
 class MLNestedForm extends NestedForm
 {
     use \Winter\Translate\Traits\MLControl;
+    use \Winter\Translate\Traits\MLAutoTranslate;
 
     /**
      * {@inheritDoc}
@@ -96,9 +97,19 @@ class MLNestedForm extends NestedForm
 
     public function onCopyItemLocale()
     {
-        $copyFromLocale = post('_repeater_copy_locale');
+        $copyFromLocale = (string) post('_repeater_copy_locale');
+        $currentLocale = (string) post('_repeater_current_locale');
+        $provider = (string) post('_provider');
 
         $copyFromValues = $this->getLocaleSaveDataAsArray($copyFromLocale);
+        if ($provider !== '' && !empty($copyFromValues)) {
+            $copyFromValues = $this->autoTranslateArray(
+                $copyFromValues,
+                $currentLocale,
+                $copyFromLocale,
+                $provider
+            );
+        }
 
         $this->reprocessLocaleItems($copyFromValues);
 

@@ -3,11 +3,11 @@
     <span class="form-control"><?= $field->value ? e($field->value) : '&nbsp;' ?></span>
 <?php else: ?>
     <div
-        id="<?= $this->getId() ?>"
-        data-control="multilingual"
-        data-copy-confirm="<?= e(trans('winter.translate::lang.locale.copy_confirm')); ?>"
+        id="<?= $this->getId('mlControl') ?>"
+        data-control="mltext"
         data-default-locale="<?= $defaultLocale->code ?>"
         data-placeholder-field="#<?= $field->getId('placeholderField') ?>"
+        data-auto-translate-handler="<?= $this->getEventHandler('onAutoTranslate') ?>"
         class="field-multilingual field-multilingual-text dropdown">
 
         <input
@@ -21,8 +21,6 @@
             <?= $field->hasAttribute('maxlength') ? '' : 'maxlength="255"' ?>
             <?= $field->getAttributes() ?>
         />
-
-        <?= $this->makeMLPartial('locale_copy') ?>
 
         <?= $this->makeMLPartial('locale_selector') ?>
 

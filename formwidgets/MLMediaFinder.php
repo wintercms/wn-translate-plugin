@@ -62,6 +62,7 @@ class MLMediaFinder extends MediaFinder
         parent::prepareVars();
         $this->prepareLocaleVars();
         // make root path of media files accessible
+        $this->vars['autoTranslatable'] = false;
         $this->vars['mediaPath'] = $this->mediaPath = MediaLibrary::url('/');
     }
 

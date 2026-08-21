@@ -18,6 +18,7 @@ use Winter\Translate\Models\Locale;
 class MLBlocks extends Blocks
 {
     use \Winter\Translate\Traits\MLControl;
+    use \Winter\Translate\Traits\MLAutoTranslate;
 
     /**
      * {@inheritDoc}
@@ -106,9 +107,19 @@ class MLBlocks extends Blocks
 
     public function onCopyItemLocale()
     {
-        $copyFromLocale = post('_blocks_copy_locale');
+        $copyFromLocale = (string) post('_blocks_copy_locale');
+        $currentLocale = (string) post('_blocks_current_locale');
+        $provider = (string) post('_provider');
 
         $copyFromValues = $this->getLocaleSaveDataAsArray($copyFromLocale);
+        if ($provider !== '' && !empty($copyFromValues)) {
+            $copyFromValues = $this->autoTranslateArray(
+                $copyFromValues,
+                $currentLocale,
+                $copyFromLocale,
+                $provider
+            );
+        }
 
         $this->reprocessLocaleItems($copyFromValues);
         foreach ($this->formWidgets as $key => $widget) {

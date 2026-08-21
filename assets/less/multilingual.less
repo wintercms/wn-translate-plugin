@@ -1,7 +1,6 @@
 @import "../../../../../modules/backend/assets/less/core/boot.less";
 
 @multilingual-btn-color: #555555;
-@copy-btn-right-offset: 41px;
 @copy-btn-top-offset: 28px;
 
 .field-multilingual {
@@ -9,35 +8,35 @@
 
     .form-control:focus {
         z-index: 20;
+
+        // Hide the locale controls while the field is focused. Raising the input's
+        // z-index only covers them when the input is opaque; under the fancy form
+        // layout the input background is transparent, so they'd stay visible over the
+        // text. Hiding on focus works regardless of layout.
+        ~ .ml-dropdown {
+            display: none;
+        }
     }
 
-    // Shared styles for both buttons
-    .ml-btn,
-    .ml-copy-btn {
+    .ml-btn {
         .multilingual-button-style();
     }
 
-    // Individual tweaks
-    .ml-copy-btn {
-        border-radius: 0;
-    }
-
-    .ml-dropdown,
-    .ml-copy-dropdown {
+    .ml-dropdown {
         position: absolute;
         width: 42px;
         top: 0;
+        right: 0;
+        // The wrapper spans the full field height; only its actual controls
+        // may capture clicks
+        pointer-events: none;
 
-        &.ml-copy-dropdown {
-            right: @copy-btn-right-offset;
-        }
-
-        &:not(.ml-copy-dropdown) {
-            right: 0;
+        > .btn,
+        > .dropdown-menu {
+            pointer-events: auto;
         }
     }
-    .dropdown.ml-dropdown.open > .dropdown-menu,
-    .dropdown.ml-copy-dropdown.open > .dropdown-menu {
+    .dropdown.ml-dropdown.open > .dropdown-menu {
         top: @copy-btn-top-offset;
     }
 
@@ -45,12 +44,10 @@
     // Repeater-specific override
     &.field-multilingual-repeater,
     &.field-multilingual-nestedform {
-        .ml-btn,
-        .ml-copy-btn {
+        .ml-btn {
             top: -36px;
         }
-        .dropdown.ml-dropdown.open > .dropdown-menu,
-        .dropdown.ml-copy-dropdown.open > .dropdown-menu {
+        .dropdown.ml-dropdown.open > .dropdown-menu {
             top: -10px;
         }
     }
@@ -59,17 +56,11 @@
     // media finder specific stuff
     &.field-multilingual-mediafinder {
 
-        .dropdown.ml-dropdown.open > .dropdown-menu,
-        .dropdown.ml-copy-dropdown.open > .dropdown-menu {
+        .dropdown.ml-dropdown.open > .dropdown-menu {
             top: -10px;
         }
 
-        .dropdown.ml-dropdown:not(.open),// to stop it from overlapping with the upload button
-        .dropdown.ml-copy-dropdown:not(.open) {
-            height: 3px;
-        }
-        .ml-btn,
-        .ml-copy-btn {
+        .ml-btn {
             top: -36px;
         }
     }
@@ -79,14 +70,12 @@
             padding-right: 2rem;
         }
 
-        .ml-btn,
-        .ml-copy-btn {
+        .ml-btn {
             border-bottom-right-radius: 0;
             border-bottom-left-radius: .375rem;
         }
 
-        .ml-dropdown-menu,
-        .ml-copy-dropdown > .dropdown-menu {
+        .ml-dropdown-menu {
             top: @copy-btn-top-offset;
         }
     }
@@ -104,17 +93,11 @@
 
     &.field-multilingual-markdowneditor,
     &.field-multilingual-richeditor {
-        .ml-btn,
-        .ml-copy-btn {
+        .ml-btn {
             height: 38px;
         }
-        .dropdown.ml-dropdown.open > .dropdown-menu,
-        .dropdown.ml-copy-dropdown.open > .dropdown-menu {
+        .dropdown.ml-dropdown.open > .dropdown-menu {
             top: 37px;
-        }
-        .dropdown.ml-dropdown:not(.open),
-        .dropdown.ml-copy-dropdown:not(.open) {
-            height: 3px;
         }
         .ml-btn {
             border-radius: 0;
@@ -127,26 +110,175 @@
         }
     }
 
+    .loading-indicator {
+        z-index: 99;
+    }
+
     &.field-multilingual-repeater,
     &.field-multilingual-nestedform {
-        .ml-dropdown-menu,
-        .ml-copy-dropdown > .dropdown-menu {
+        .ml-dropdown-menu {
             top: calc(@copy-btn-top-offset - 20px );
             right: 0;
         }
     }
+
+    // Untranslated marker: an amber dot on the locale button while any non-default
+    // locale is still empty. The .ml-btn is already absolutely positioned, so the
+    // ::after anchors to it without altering the button's position.
+    &.ml-has-untranslated .ml-btn::after {
+        content: "";
+        position: absolute;
+        top: 3px;
+        right: 3px;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #f59e0b;
+        box-shadow: 0 0 0 1px #fff;
+        pointer-events: none;
+    }
+}
+
+// Translation method popup
+.ml-locale-flow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.ml-locale-chip {
+    padding: 5px 12px;
+
+    color: @multilingual-btn-color;
+    background: #F8F6F3;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.ml-locale-arrow {
+    color: #9ca3af;
+    font-size: 15px;
+}
+
+.ml-provider-label {
+    display: block;
+    margin-bottom: 6px;
+
+    color: #374151;
+    font-size: 13px;
+    font-weight: 600;
 }
 
 // Fancy layout overrides
 .fancy-layout {
     .form-tabless-fields .field-multilingual {
-        .ml-btn,
-        .ml-copy-btn {
-            background-color: rgba(248, 246, 243, 0.75);
+        // The tabless header inputs are taller than a normal input and sit on the
+        // accent colour with white text. Fill that height and blend the control in
+        // (light text on a translucent frosted background) rather than floating it
+        // as a short, out-of-place pale box.
+        .ml-btn {
+            height: 48px;
+
+            color: rgba(255, 255, 255, 0.85);
+            background-color: rgba(255, 255, 255, 0.15);
 
             &:hover {
-                background-color: rgba(248, 246, 243, 0.85);
+                color: #fff;
+                background-color: rgba(255, 255, 255, 0.28);
             }
+        }
+    }
+}
+
+// Per-locale translation status dot shown against each locale in the switcher:
+// grey = default/source, green = translated, dashed = empty (falls back).
+.ml-locale-status {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin-right: 8px;
+    border-radius: 50%;
+    vertical-align: middle;
+    box-sizing: border-box;
+    background: transparent;
+    border: 1px solid #cbd5e1;
+
+    &.is-filled {
+        background: #22c55e;
+        border-color: #22c55e;
+    }
+
+    &.is-empty {
+        background: transparent;
+        border: 1px dashed #cbd5e1;
+    }
+
+    &.is-default {
+        background: #94a3b8;
+        border-color: #94a3b8;
+    }
+}
+
+// Trailing "copy from this locale" button on each row of the language selector.
+.ml-dropdown-menu {
+    li {
+        position: relative;
+    }
+
+    // Faintly highlight the locale currently being edited so it's obvious which
+    // one is active in the list. Descendant selectors are used throughout because
+    // the backend's dropdown widget rewraps the list (li.dropdown-container etc.),
+    // which breaks direct-child (> li > a) matching.
+    a.is-current-locale {
+        background-color: rgba(0, 0, 0, .05);
+        font-weight: 600;
+    }
+
+    // Leave room for the trailing copy button next to the locale name.
+    &.ml-dropdown-menu--with-copy a[data-switch-locale] {
+        padding-right: 44px;
+    }
+
+    // The copy button is a full-height hit area on the right of the row — the padding
+    // that sizes the tap target lives on the button itself (around the icon), not as
+    // dead space beside a small button.
+    .ml-locale-copy {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        padding: 0 14px;
+
+        border: 0;
+        background: transparent;
+        color: #9ca3af;
+        font-size: 14px;
+        line-height: 1;
+        cursor: pointer;
+        transition: background-color 150ms ease, color 150ms ease, opacity 150ms ease;
+
+        &::before {
+            margin: 0;
+        }
+
+        &:hover:not(:disabled) {
+            background: rgba(0, 0, 0, .06);
+            color: #374151;
+        }
+
+        &:disabled {
+            opacity: .2;
+            cursor: default;
         }
     }
 }
@@ -158,8 +290,10 @@
     bottom: 1px;
     right: 1px;
 
-    width: 44px;
+    width: auto;
+    min-width: 44px;
     height: 36px;
+    white-space: nowrap;
 
     color: lighten(@multilingual-btn-color, 15%);
     background-color: #f8f6f3;

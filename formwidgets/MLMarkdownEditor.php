@@ -15,6 +15,7 @@ use Winter\Translate\Models\Locale;
 class MLMarkdownEditor extends MarkdownEditor
 {
     use \Winter\Translate\Traits\MLControl;
+    use \Winter\Translate\Traits\MLAutoTranslate;
 
     /**
      * {@inheritDoc}

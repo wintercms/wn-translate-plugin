@@ -29,13 +29,19 @@
     },
     "require": {
         "php": ">=8.1",
-        "winter/wn-backend-module": ">=1.2.8",
-        "composer/installers": "~1.0"
+        "winter/wn-backend-module": ">=1.2.8 || dev-develop",
+        "composer/installers": "~1.0",
+        "guzzlehttp/guzzle": "^7.15.2 || ^8.0.1"
     },
     "replace": {
         "rainlab/translate-plugin": "~1.6"
     },
     "extra": {
         "installer-name": "translate"
+    },
+    "config": {
+        "allow-plugins": {
+            "composer/installers": true
+        }
     }
 }

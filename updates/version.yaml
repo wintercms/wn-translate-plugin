@@ -151,3 +151,9 @@
 "2.3.0": "Make use of controller behavior default views present in Winter v1.2.8+."
 "2.3.1": "Add ability to copy content from one language to another to simplify the translation process"
 "2.3.2": "Refactor Message model with shared column definitions"
+"2.4.0":
+    - "Add machine translation on copy via Google Cloud Translation and DeepL providers"
+    - "Add a guided Translation Providers settings page for configuring provider API keys in the backend"
+    - "Move the copy-from action into the language selector and confirm before overwriting existing values"
+    - "Show per-locale translation status indicators on multilingual fields"
+    - "Auto-translate opted-in nested fields (translatable: true) inside repeater, nested form and blocks widgets"
