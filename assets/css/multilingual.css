@@ -1,5 +1,6 @@
 .field-multilingual{position:relative}
 .field-multilingual .form-control:focus{z-index:20}
+.field-multilingual .form-control:focus ~ .dropdown:is(.ml-dropdown,.ml-copy-dropdown){display:none}
 .field-multilingual .ml-btn,
 .field-multilingual .ml-copy-btn{z-index:12;position:absolute;top:1px;bottom:1px;right:1px;width:auto;min-width:44px;height:36px;white-space:nowrap;color:#7b7b7b;background-color:#f8f6f3;box-shadow:none;font-size:11px;letter-spacing:1px;text-transform:uppercase;margin:0 !important;padding:0 12px;border-top-left-radius:0;border-bottom-left-radius:0;transition:color 420ms ease}
 .field-multilingual .ml-btn:hover,
@@ -60,9 +61,9 @@
 .ml-locale-arrow{color:#9ca3af;font-size:15px}
 .ml-provider-label{display:block;margin-bottom:6px;color:#374151;font-size:13px;font-weight:600}
 .fancy-layout .form-tabless-fields .field-multilingual .ml-btn,
-.fancy-layout .form-tabless-fields .field-multilingual .ml-copy-btn{background-color:rgba(248,246,243,0.75)}
+.fancy-layout .form-tabless-fields .field-multilingual .ml-copy-btn{height:48px;color:rgba(255,255,255,0.85);background-color:rgba(255,255,255,0.15)}
 .fancy-layout .form-tabless-fields .field-multilingual .ml-btn:hover,
-.fancy-layout .form-tabless-fields .field-multilingual .ml-copy-btn:hover{background-color:rgba(248,246,243,0.85)}
+.fancy-layout .form-tabless-fields .field-multilingual .ml-copy-btn:hover{color:#fff;background-color:rgba(255,255,255,0.28)}
 .ml-locale-status{display:inline-block;width:8px;height:8px;margin-right:8px;border-radius:50%;vertical-align:middle;box-sizing:border-box;background:transparent;border:1px solid #cbd5e1}
 .ml-locale-status.is-filled{background:#22c55e;border-color:#22c55e}
 .ml-locale-status.is-empty{background:transparent;border:1px dashed #cbd5e1}

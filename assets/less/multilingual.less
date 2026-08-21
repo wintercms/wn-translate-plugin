@@ -8,6 +8,14 @@
 
     .form-control:focus {
         z-index: 20;
+
+        // Hide the locale/copy controls while the field is focused. Raising the
+        // input's z-index only covers the controls when the input is opaque; under
+        // the fancy form layout the input background is transparent, so they'd stay
+        // visible over the text. Hiding them on focus works regardless of layout.
+        ~ .dropdown:is(.ml-dropdown, .ml-copy-dropdown) {
+            display: none;
+        }
     }
 
     // Shared styles for both buttons
@@ -196,12 +204,20 @@
 // Fancy layout overrides
 .fancy-layout {
     .form-tabless-fields .field-multilingual {
+        // The tabless header inputs are taller than a normal input and sit on the
+        // accent colour with white text. Fill that height and blend the controls in
+        // (light text on a translucent frosted background) rather than floating them
+        // as short, out-of-place pale boxes.
         .ml-btn,
         .ml-copy-btn {
-            background-color: rgba(248, 246, 243, 0.75);
+            height: 48px;
+
+            color: rgba(255, 255, 255, 0.85);
+            background-color: rgba(255, 255, 255, 0.15);
 
             &:hover {
-                background-color: rgba(248, 246, 243, 0.85);
+                color: #fff;
+                background-color: rgba(255, 255, 255, 0.28);
             }
         }
     }
