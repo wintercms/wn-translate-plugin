@@ -102,7 +102,17 @@
 
         this.$placeholder.on('input', function(){
             self.$activeField.val(this.value)
+            self.updateLocaleIndicators()
         })
+
+        /*
+         * Keep the indicators in sync after a copy / auto-translate writes a value.
+         */
+        this.$el.on('copyLocale.oc.multilingual autoTranslateSuccess.oc.multilingual', function(){
+            setTimeout(function(){ self.updateLocaleIndicators() }, 0)
+        })
+
+        this.updateLocaleIndicators()
 
         /*
          * Handle oc.inputPreset.beforeUpdate event
@@ -206,6 +216,54 @@
 
         this.$placeholder.val(this.getLocaleValue(locale))
         this.$el.trigger('setLocale.oc.multilingual', [locale, this.getLocaleValue(locale)])
+        this.updateLocaleIndicators()
+    }
+
+    /*
+     * Whether the field holds meaningful content for the given locale. Empty
+     * strings and empty JSON containers (repeater/nestedform/blocks) count as
+     * untranslated, i.e. the locale falls back to the default.
+     */
+    MultiLingual.prototype.localeHasContent = function(locale) {
+        var $el = this.getLocaleElement(locale)
+        if (!$el || !$el.length) return false
+        var raw = $el.val()
+        if (raw == null) return false
+        var v = ('' + raw).trim()
+        return !(v === '' || v === 'null' || v === '[]' || v === '{}' || v === '""')
+    }
+
+    /*
+     * Marks each locale in the switcher as translated / empty and flags the
+     * control when any non-default locale is still untranslated, so editors can
+     * see at a glance what remains without opening every field.
+     */
+    MultiLingual.prototype.updateLocaleIndicators = function() {
+        var self = this
+        var total = 0, untranslated = 0
+
+        $('[data-switch-locale]', this.$dropdown).each(function() {
+            var code = '' + $(this).data('switch-locale')
+            var isDefault = (code === self.options.defaultLocale)
+            var filled = isDefault || self.localeHasContent(code)
+
+            $('[data-locale-status="' + code + '"]', this)
+                .toggleClass('is-default', isDefault)
+                .toggleClass('is-filled', filled && !isDefault)
+                .toggleClass('is-empty', !filled)
+
+            if (!isDefault) {
+                total++
+                if (!filled) untranslated++
+            }
+        })
+
+        this.$el.toggleClass('ml-has-untranslated', untranslated > 0)
+        this.$activeButton.attr('title', total === 0
+            ? ''
+            : (untranslated > 0
+                ? (untranslated + '/' + total + ' locales untranslated')
+                : 'All locales translated'))
     }
 
     // MULTILINGUAL PLUGIN DEFINITION

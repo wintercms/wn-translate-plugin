@@ -62,3 +62,10 @@
 .fancy-layout .form-tabless-fields .field-multilingual .ml-copy-btn{background-color:rgba(248,246,243,0.75)}
 .fancy-layout .form-tabless-fields .field-multilingual .ml-btn:hover,
 .fancy-layout .form-tabless-fields .field-multilingual .ml-copy-btn:hover{background-color:rgba(248,246,243,0.85)}
+/* Translation status indicators (per-locale filled/empty dots + untranslated marker) */
+.ml-locale-status{display:inline-block;width:8px;height:8px;margin-right:8px;border-radius:50%;vertical-align:middle;box-sizing:border-box;background:transparent;border:1px solid #cbd5e1}
+.ml-locale-status.is-filled{background:#22c55e;border-color:#22c55e}
+.ml-locale-status.is-empty{background:transparent;border:1px dashed #cbd5e1}
+.ml-locale-status.is-default{background:#94a3b8;border-color:#94a3b8}
+/* The .ml-btn is already position:absolute, so the ::after anchors to it without any position override (overriding its position moves the button). */
+.field-multilingual.ml-has-untranslated .ml-btn::after{content:"";position:absolute;top:3px;right:3px;width:7px;height:7px;border-radius:50%;background:#f59e0b;box-shadow:0 0 0 1px #fff;pointer-events:none}
