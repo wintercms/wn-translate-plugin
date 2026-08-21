@@ -252,6 +252,57 @@
     }
 }
 
+// Trailing "copy from this locale" button on each row of the language selector.
+.ml-dropdown-menu {
+    li {
+        position: relative;
+    }
+
+    // Leave room for the trailing copy button next to the locale name.
+    &.ml-dropdown-menu--with-copy > li > a {
+        padding-right: 36px;
+    }
+
+    .ml-locale-copy {
+        position: absolute;
+        top: 50%;
+        right: 6px;
+        transform: translateY(-50%);
+
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 26px;
+        height: 26px;
+        padding: 0;
+
+        border: 0;
+        border-radius: 4px;
+        background: transparent;
+        color: #9ca3af;
+        font-size: 13px;
+        line-height: 1;
+        cursor: pointer;
+        opacity: .75;
+        transition: background-color 150ms ease, color 150ms ease, opacity 150ms ease;
+
+        &::before {
+            margin: 0;
+        }
+
+        &:hover:not(:disabled) {
+            background: rgba(0, 0, 0, .06);
+            color: #374151;
+            opacity: 1;
+        }
+
+        &:disabled {
+            opacity: .2;
+            cursor: default;
+        }
+    }
+}
+
 .multilingual-button-style() {
     z-index: 12;
     position: absolute;

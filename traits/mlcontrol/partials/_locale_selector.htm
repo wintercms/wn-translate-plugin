@@ -1,3 +1,7 @@
+<?php
+    $disableCopy = config('winter.translate::disable_copy', false);
+    $hasProviders = $this->hasUsableTranslateProviders();
+?>
 <!-- Language selector -->
 <div class="dropdown ml-dropdown">
     <button
@@ -8,7 +12,7 @@
     </button>
 
     <ul
-        class="dropdown-menu pull-right ml-dropdown-menu"
+        class="dropdown-menu pull-right ml-dropdown-menu<?= $disableCopy ? '' : ' ml-dropdown-menu--with-copy' ?>"
         role="menu"
         data-locale-dropdown
         data-dropdown-title="<?= e(trans('winter.translate::lang.locale.select_label')) ?>">
@@ -22,6 +26,15 @@
                 <span class="ml-locale-status" data-locale-status="<?= $code ?>"></span>
                 <?= $name ?>
             </a>
+            <?php if (!$disableCopy): ?>
+            <button
+                type="button"
+                class="ml-locale-copy icon-copy"
+                data-copy-locale="<?= e($code) ?>"
+                <?php if ($hasProviders): ?>data-copy-open-handler="<?= e($this->getEventHandler('onShowTranslationMethodSelector')) ?>"<?php endif ?>
+                title="<?= e(trans('winter.translate::lang.locale.copy_from', ['locale' => $name])) ?>">
+            </button>
+            <?php endif ?>
         </li>
         <?php endforeach ?>
     </ul>

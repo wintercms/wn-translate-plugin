@@ -1,24 +1,5 @@
-<?php if (!config('winter.translate::disable_copy', false)): ?>
-<!-- Language Copy Dropdown -->
-<div class="dropdown ml-copy-dropdown">
-    <button class="icon-copy btn ml-copy-btn" data-toggle="dropdown" type="button">
-    </button>
-    <?php $hasProviders = $this->hasUsableTranslateProviders(); ?>
-    <ul class="dropdown-menu pull-right ml-copy-dropdown-menu" role="menu" data-dropdown-title="<?= e(trans('winter.translate::lang.locale.copy_from_label')) ?>">
-        <?php foreach ($locales as $code => $name): ?>
-        <li role="presentation">
-            <a
-                role="menuitem"
-                tabindex="-1"
-                <?php if ($hasProviders): ?>data-copy-open-handler="<?= e($this->getEventHandler('onShowTranslationMethodSelector')) ?>"<?php endif ?>
-                data-copy-locale="<?= e($code) ?>"
-                href="javascript:;"
-            >
-                <?= e(trans('winter.translate::lang.locale.copy_from', ['locale' => $name])); ?>
-            </a>
-        </li>
-        <?php endforeach ?>
-    </ul>
-</div>
-
-<?php endif; ?>
+<?php
+// The "copy from another locale" action now lives inside the language selector
+// (a trailing copy button on each locale row, see _locale_selector.htm), so there
+// is no longer a separate always-visible copy button/dropdown to render here.
+?>

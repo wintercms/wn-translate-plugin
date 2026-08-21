@@ -68,3 +68,9 @@
 .ml-locale-status.is-filled{background:#22c55e;border-color:#22c55e}
 .ml-locale-status.is-empty{background:transparent;border:1px dashed #cbd5e1}
 .ml-locale-status.is-default{background:#94a3b8;border-color:#94a3b8}
+.ml-dropdown-menu li{position:relative}
+.ml-dropdown-menu.ml-dropdown-menu--with-copy>li>a{padding-right:36px}
+.ml-dropdown-menu .ml-locale-copy{position:absolute;top:50%;right:6px;transform:translateY(-50%);display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;padding:0;border:0;border-radius:4px;background:transparent;color:#9ca3af;font-size:13px;line-height:1;cursor:pointer;opacity:0.75;transition:background-color 150ms ease,color 150ms ease,opacity 150ms ease}
+.ml-dropdown-menu .ml-locale-copy::before{margin:0}
+.ml-dropdown-menu .ml-locale-copy:hover:not(:disabled){background:rgba(0,0,0,0.06);color:#374151;opacity:1}
+.ml-dropdown-menu .ml-locale-copy:disabled{opacity:0.2;cursor:default}

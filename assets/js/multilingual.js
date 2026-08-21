@@ -25,7 +25,6 @@
 
         this.$activeField  = null
         this.$activeButton = $('[data-active-locale]', this.$el)
-        this.$copyDropdown = $('ul.ml-copy-dropdown-menu', this.$el)
         this.$dropdown     = $('ul.ml-dropdown-menu', this.$el)
         this.$placeholder  = $(this.options.placeholderField)
 
@@ -46,14 +45,20 @@
             }).observe(this.$activeButton.get(0))
         }
 
-        this.$copyDropdown.on('click', '[data-copy-locale]', function(_event) {
+        // Copy-from action: a trailing button on each locale row in the selector
+        // copies that row's locale value into the currently-active locale. The
+        // overwrite confirmation lives in copyLocale(), covering both paths below.
+        this.$dropdown.on('click', '.ml-locale-copy[data-copy-locale]', function(event) {
+            event.preventDefault()
+            event.stopPropagation()
+
             var currentLocale = self.activeLocale
             var copyFromLocale = $(this).data('copy-locale')
 
+            // Can't copy a locale onto itself.
             if (!copyFromLocale || currentLocale === copyFromLocale) return;
 
-            // No usable translation provider configured: keep the original one-click
-            // copy (no method popup, no clutter).
+            // No usable translation provider configured: keep the plain one-click copy.
             var copyOpenHandler = $(this).data('copy-open-handler')
             if (!copyOpenHandler) {
                 self.copyLocale(copyFromLocale, '')
@@ -74,7 +79,7 @@
             });
 
             self.$el.popup({
-                handler: $(this).data('copy-open-handler'),
+                handler: copyOpenHandler,
                 extraData: {
                     _copy_from_locale: copyFromLocale,
                     _current_locale: currentLocale,
@@ -197,6 +202,13 @@
 
     MultiLingual.prototype.copyLocale = function(copyFromLocale, provider) {
         var currentLocale = this.activeLocale
+
+        // Copying overwrites the active locale's value: confirm before discarding
+        // any existing content so an accidental copy can't silently destroy work.
+        if (!this.confirmOverwrite(currentLocale, copyFromLocale)) {
+            return
+        }
+
         var copyFromLocaleValue = this.getLocaleValue(copyFromLocale)
         this.$activeField.val(copyFromLocaleValue)
         this.$placeholder.val(copyFromLocaleValue)
@@ -207,6 +219,20 @@
             currentLocale: currentLocale,
             provider: provider,
         }])
+    }
+
+    /*
+     * Confirms a destructive copy. Only prompts when the active locale already has
+     * content that would be replaced; copying into an empty locale needs no warning.
+     */
+    MultiLingual.prototype.confirmOverwrite = function(currentLocale, copyFromLocale) {
+        if (!this.localeHasContent(currentLocale)) {
+            return true
+        }
+        return window.confirm(
+            'This replaces the current "' + currentLocale + '" content with the value ' +
+            'copied from "' + copyFromLocale + '". Continue?'
+        )
     }
 
     MultiLingual.prototype.setLocale = function(locale) {
@@ -256,6 +282,13 @@
                 total++
                 if (!filled) untranslated++
             }
+        })
+
+        // Disable the copy button on the active locale's row — copying a locale
+        // onto itself is a no-op.
+        $('.ml-locale-copy', this.$dropdown).each(function() {
+            var isCurrent = ('' + $(this).data('copy-locale')) === self.activeLocale
+            $(this).prop('disabled', isCurrent).attr('aria-disabled', isCurrent ? 'true' : 'false')
         })
 
         this.$el.toggleClass('ml-has-untranslated', untranslated > 0)
