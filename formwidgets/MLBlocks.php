@@ -29,6 +29,7 @@ class MLBlocks extends Blocks
      */
     public function init()
     {
+        $this->registerLocaleDatatableHandlers();
         parent::init();
         $this->initLocale();
     }
