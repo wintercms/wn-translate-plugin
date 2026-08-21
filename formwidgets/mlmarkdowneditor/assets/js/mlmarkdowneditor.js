@@ -118,8 +118,6 @@
     MLMarkdownEditor.prototype.updateLayout = function() {
         var $btn = $('.ml-btn[data-active-locale]:first', this.$el),
             $dropdown = $('.ml-dropdown-menu[data-locale-dropdown]:first', this.$el),
-            $copyBtn = $('.ml-copy-btn:first', this.$el),
-            $copyDropdown = $('.ml-copy-dropdown-menu:first', this.$el),
             $toolbar = $('.control-toolbar', this.$el),
             $container = $('.editor-write', this.$el),
             $scrollbar = $('.ace_scrollbar', this.$el),
@@ -130,8 +128,6 @@
             if (height) {
                 $btn.css('top', height + 1)
                 $dropdown.css('top', height + 34)
-                $copyBtn.css('top', height + 1)
-                $copyDropdown.css('top', height + 34)
             }
         }
         // set ML button position
@@ -140,13 +136,11 @@
             $scrollbar = $('.ace_scrollbar', this.$el),
             $input = $('.ace_text-input', this.$el)
 
-        // Hide locale buttons while editor is focused
+        // Hide the locale button while the editor is focused
         if (this.isFocused) {
             $btn.hide()
-            $copyBtn.hide()
         } else {
             $btn.show()
-            $copyBtn.show()
         }
 
         // fix exit fullscreen

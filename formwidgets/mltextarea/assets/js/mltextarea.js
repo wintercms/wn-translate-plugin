@@ -65,16 +65,12 @@
         var $parent = $element.parentElement
         var $btn = $parent.querySelector('.ml-btn[data-active-locale]')
         var $dropdown = $parent.querySelector('.ml-dropdown-menu[data-locale-dropdown]')
-        var $copyBtn = $parent.querySelector('.ml-copy-btn')
-        var $copyDropdown = $parent.querySelector('.ml-copy-dropdown-menu')
 
-        // set ML button position
+        // set ML button position (each control is guarded before its style is touched)
         var elementHeight = $element.offsetHeight
         var scrollHeight = $element.scrollHeight
         var showScrollbar = (scrollHeight - elementHeight) > 0
 
-        // The copy controls ($copyBtn/$copyDropdown) are absent when `disable_copy`
-        // is set, so every control is guarded before its style is touched.
         if (showScrollbar) {
             var scrollbarWidth = $element.offsetWidth - $element.clientWidth
             $element.style.paddingRight = (scrollbarWidth + 23) + 'px'
@@ -83,11 +79,6 @@
                 $btn.style.borderTopRightRadius = '0px'
             }
             if ($dropdown) $dropdown.style.right = (scrollbarWidth - 2) + 'px'
-            if ($copyBtn) {
-                $copyBtn.style.right = (scrollbarWidth - 1) + 'px'
-                $copyBtn.style.borderTopRightRadius = '0px'
-            }
-            if ($copyDropdown) $copyDropdown.style.right = (scrollbarWidth - 2) + 'px'
         } else {
             $element.style.paddingRight = ''
             if ($btn) {
@@ -95,11 +86,6 @@
                 $btn.style.borderTopRightRadius = ''
             }
             if ($dropdown) $dropdown.style.right = ''
-            if ($copyBtn) {
-                $copyBtn.style.right = ''
-                $copyBtn.style.borderTopRightRadius = ''
-            }
-            if ($copyDropdown) $copyDropdown.style.right = ''
         }
     }
 
