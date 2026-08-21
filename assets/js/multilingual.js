@@ -284,11 +284,12 @@
             }
         })
 
-        // Disable the copy button on the active locale's row — copying a locale
-        // onto itself is a no-op.
+        // Disable a row's copy button when it's the active locale (copying onto
+        // itself is a no-op) or when that locale has nothing to copy from.
         $('.ml-locale-copy', this.$dropdown).each(function() {
-            var isCurrent = ('' + $(this).data('copy-locale')) === self.activeLocale
-            $(this).prop('disabled', isCurrent).attr('aria-disabled', isCurrent ? 'true' : 'false')
+            var code = '' + $(this).data('copy-locale')
+            var disabled = (code === self.activeLocale) || !self.localeHasContent(code)
+            $(this).prop('disabled', disabled).attr('aria-disabled', disabled ? 'true' : 'false')
         })
 
         this.$el.toggleClass('ml-has-untranslated', untranslated > 0)
