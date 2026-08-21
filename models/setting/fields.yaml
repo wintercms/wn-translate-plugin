@@ -1,0 +1,56 @@
+# ===================================
+#  Translation provider settings
+# ===================================
+
+tabs:
+    fields:
+
+        ##
+        ## Google Cloud Translation
+        ##
+        _google_help:
+            tab: winter.translate::lang.settings.tab_google
+            type: partial
+            span: left
+            path: ~/plugins/winter/translate/models/setting/_google_help.php
+
+        google_api_key:
+            tab: winter.translate::lang.settings.tab_google
+            label: winter.translate::lang.settings.google_api_key
+            commentAbove: winter.translate::lang.settings.google_api_key_comment
+            type: sensitive
+            span: right
+            hideManageMode: true
+
+        google_api_url:
+            tab: winter.translate::lang.settings.tab_google
+            label: winter.translate::lang.settings.google_api_url
+            commentAbove: winter.translate::lang.settings.api_url_comment
+            span: right
+            placeholder: https://translation.googleapis.com/language/translate/v2
+            cssClass: collapsed
+
+        ##
+        ## DeepL
+        ##
+        _deepl_help:
+            tab: winter.translate::lang.settings.tab_deepl
+            type: partial
+            span: left
+            path: ~/plugins/winter/translate/models/setting/_deepl_help.php
+
+        deepl_api_key:
+            tab: winter.translate::lang.settings.tab_deepl
+            label: winter.translate::lang.settings.deepl_api_key
+            commentAbove: winter.translate::lang.settings.deepl_api_key_comment
+            type: sensitive
+            span: right
+            hideManageMode: true
+
+        deepl_plan:
+            tab: winter.translate::lang.settings.tab_deepl
+            label: winter.translate::lang.settings.deepl_plan
+            commentAbove: winter.translate::lang.settings.deepl_plan_comment
+            type: dropdown
+            span: right
+            default: pro
