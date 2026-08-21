@@ -176,7 +176,14 @@ Every multilingual backend field has a "copy from another locale" action. When a
 
 ### Configuring a provider
 
-Providers are configured under `config/config.php` (or an app override in `config/winter/translate/config.php`) and are keyed via environment variables:
+The easiest way is the backend settings screen: **Settings → Translation Providers**. It has a guided tab for each provider with step-by-step instructions (and direct links to each provider's console) beside a masked field for the API key:
+
+- **Google Translate** — paste your Cloud Translation API key.
+- **DeepL** — paste your authentication key and pick your plan (*Free* or *Pro*, which selects the correct API endpoint).
+
+Keys entered here are stored in the settings table and used ahead of any environment/config value. The screen is gated by the `winter.translate.manage_settings` permission.
+
+Prefer to configure via environment instead (e.g. for deployment)? The same providers read from `config/config.php` (or an app override in `config/winter/translate/config.php`), keyed via environment variables:
 
 ```dotenv
 # Google Cloud Translation (v2)
@@ -184,13 +191,15 @@ GOOGLE_TRANSLATE_KEY=your-google-api-key
 
 # DeepL (optional)
 DEEPL_API_KEY=your-deepl-api-key
+# Free-tier DeepL keys use a different endpoint:
+DEEPL_API_URL=https://api-free.deepl.com/v2/translate
 ```
 
-A provider only appears in the picker once its key is set. When exactly one provider is configured it is pre-selected automatically; with several configured the picker defaults to *None* so translation stays a deliberate choice.
+An env/config key keeps working even with the settings screen left blank — the settings page shows it as *configured via environment* and only overrides it when you enter a key. A provider only appears in the picker once its key is set (via either method). When exactly one provider is configured it is pre-selected automatically; with several configured the picker defaults to *None* so translation stays a deliberate choice.
 
-**Getting a Google key:** in the [Google Cloud Console](https://console.cloud.google.com) create/select a project, enable billing, enable the **Cloud Translation API**, then create an API key (restrict it to the Cloud Translation API) and set it as `GOOGLE_TRANSLATE_KEY`.
+**Getting a Google key:** in the [Google Cloud Console](https://console.cloud.google.com) create/select a project, enable billing, enable the **Cloud Translation API**, then create an API key (restrict it to the Cloud Translation API).
 
-**Getting a DeepL key:** sign up for the [DeepL API](https://www.deepl.com/pro-api), copy your auth key into `DEEPL_API_KEY`. Use `DEEPL_API_URL=https://api-free.deepl.com/v2/translate` for a free-tier key.
+**Getting a DeepL key:** sign up for the [DeepL API](https://www.deepl.com/pro-api), then copy your *Authentication Key for DeepL API* from **Account → API keys**.
 
 ### Translating nested fields (repeater / nested form / blocks)
 
