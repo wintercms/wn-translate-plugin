@@ -273,6 +273,61 @@ class MLAutoTranslateTest extends \Winter\Translate\Tests\TranslatePluginTestCas
         $this->assertSame(['caption', 'heading'], $fields);
     }
 
+    public function test_get_auto_translatable_fields_collects_groups_sharing_field_names()
+    {
+        // Groups routinely reuse the same field name (e.g. a shared `data`
+        // nestedform); each group must be scanned separately so later groups
+        // are not dropped by a keyed merge.
+        $translator = $this->createTranslator([
+            'useGroups' => true,
+            'groupDefinitions' => [
+                'block_a' => ['fields' => [
+                    'data' => [
+                        'type' => 'nestedform',
+                        'form' => ['fields' => [
+                            'heading' => ['type' => 'text', 'translatable' => true],
+                        ]],
+                    ],
+                ]],
+                'block_b' => ['fields' => [
+                    'data' => [
+                        'type' => 'nestedform',
+                        'form' => ['fields' => [
+                            'caption' => ['type' => 'text', 'translatable' => true],
+                        ]],
+                    ],
+                ]],
+            ],
+        ]);
+
+        $fields = $translator->getAutoTranslatableFields();
+        sort($fields);
+        $this->assertSame(['caption', 'heading'], $fields);
+    }
+
+    public function test_get_auto_translatable_fields_collects_tab_organized_nested_forms()
+    {
+        // A nested form may organize its fields under form.tabs.fields /
+        // form.secondaryTabs.fields instead of form.fields.
+        $translator = $this->createTranslator(['form' => ['fields' => [
+            'data' => [
+                'type' => 'nestedform',
+                'form' => [
+                    'tabs' => ['fields' => [
+                        'heading' => ['type' => 'text', 'translatable' => true],
+                    ]],
+                    'secondaryTabs' => ['fields' => [
+                        'caption' => ['type' => 'text', 'translatable' => true],
+                    ]],
+                ],
+            ],
+        ]]]);
+
+        $fields = $translator->getAutoTranslatableFields();
+        sort($fields);
+        $this->assertSame(['caption', 'heading'], $fields);
+    }
+
     public function test_flatten_and_expand_object()
     {
         $translator = $this->createTranslator();
