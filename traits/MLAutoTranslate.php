@@ -137,7 +137,17 @@ trait MLAutoTranslate
     public function getAutoTranslatableFields(): array
     {
         $names = [];
-        $this->collectTranslatableFieldNames($this->getTranslatableFieldDefinitions(), $names);
+
+        // Repeater / Blocks group mode: scan every group separately — groups
+        // routinely reuse the same field names (e.g. a shared `data` nestedform),
+        // so merging their fields by key would drop all but the first group.
+        if (!empty($this->useGroups) && !empty($this->groupDefinitions)) {
+            foreach ($this->groupDefinitions as $group) {
+                $this->collectTranslatableFieldNames((array) array_get($group, 'fields', []), $names);
+            }
+        } else {
+            $this->collectTranslatableFieldNames($this->getTranslatableFieldDefinitions(), $names);
+        }
 
         return array_values(array_unique($names));
     }
@@ -145,23 +155,14 @@ trait MLAutoTranslate
     /**
      * Returns the form field definitions to scan for `translatable: true`.
      *
-     * Handles the two shapes used by the composite ML widgets: group mode
-     * (repeater with `groups:` / blocks) and a single `form:` definition
-     * (repeater / nestedform). Non-widget consumers get an empty set.
+     * Handles the single `form:` definition shape (repeater / nestedform);
+     * group mode is handled in getAutoTranslatableFields. Non-widget
+     * consumers get an empty set.
      *
      * @return array
      */
     protected function getTranslatableFieldDefinitions(): array
     {
-        // Repeater / Blocks group mode: merge the fields of every group.
-        if (!empty($this->useGroups) && !empty($this->groupDefinitions)) {
-            $fields = [];
-            foreach ($this->groupDefinitions as $group) {
-                $fields += (array) array_get($group, 'fields', []);
-            }
-            return $fields;
-        }
-
         // Single form definition (repeater / nestedform).
         if (isset($this->form)) {
             return $this->resolveConfigFields($this->form);
@@ -239,7 +240,14 @@ trait MLAutoTranslate
             }
 
             // Descend into nested composite widgets (repeater / nestedform).
-            foreach (['form.fields', 'fields', 'tabs.fields', 'secondaryTabs.fields'] as $childPath) {
+            foreach ([
+                'form.fields',
+                'form.tabs.fields',
+                'form.secondaryTabs.fields',
+                'fields',
+                'tabs.fields',
+                'secondaryTabs.fields',
+            ] as $childPath) {
                 $this->collectTranslatableFieldNames(array_get($config, $childPath, []), $names);
             }
 
