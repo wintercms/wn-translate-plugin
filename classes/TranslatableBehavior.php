@@ -384,59 +384,6 @@ abstract class TranslatableBehavior extends ExtensionBase
     }
 
     /**
-     * Returns translation completeness for this model across the enabled locales.
-     *
-     * For every enabled non-default locale, counts how many translatable
-     * attributes hold a value, so callers can surface "how translated is this
-     * record" (e.g. a backend list column or progress badge).
-     *
-     * Note: this reads translated data per locale, so avoid calling it in tight
-     * loops over very large, unpaginated result sets.
-     *
-     * @return array{percent:int,localesComplete:int,localesTotal:int,attributesTotal:int,perLocale:array<string,int>}
-     */
-    public function getTranslationProgress()
-    {
-        $attributes = $this->getTranslatableAttributes();
-        $attributesTotal = count($attributes);
-
-        $targetLocales = array_values(array_filter(
-            array_keys(\Winter\Translate\Models\Locale::listEnabled()),
-            function ($locale) {
-                return $locale !== $this->translatableDefault;
-            }
-        ));
-
-        $perLocale = [];
-        $filledSlots = 0;
-        $localesComplete = 0;
-
-        foreach ($targetLocales as $locale) {
-            $filled = 0;
-            foreach ($attributes as $attribute) {
-                if ($this->hasTranslation($attribute, $locale)) {
-                    $filled++;
-                }
-            }
-            $perLocale[$locale] = $filled;
-            $filledSlots += $filled;
-            if ($attributesTotal > 0 && $filled === $attributesTotal) {
-                $localesComplete++;
-            }
-        }
-
-        $totalSlots = $attributesTotal * count($targetLocales);
-
-        return [
-            'percent' => $totalSlots > 0 ? (int) round($filledSlots / $totalSlots * 100) : 100,
-            'localesComplete' => $localesComplete,
-            'localesTotal' => count($targetLocales),
-            'attributesTotal' => $attributesTotal,
-            'perLocale' => $perLocale,
-        ];
-    }
-
-    /**
      * Returns the defined options for a translatable attribute.
      * @return array
      */
