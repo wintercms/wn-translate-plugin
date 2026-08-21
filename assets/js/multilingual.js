@@ -273,6 +273,9 @@
             var isDefault = (code === self.options.defaultLocale)
             var filled = isDefault || self.localeHasContent(code)
 
+            // Highlight the row of the locale currently being edited.
+            $(this).toggleClass('is-current-locale', code === self.activeLocale)
+
             $('[data-locale-status="' + code + '"]', this)
                 .toggleClass('is-default', isDefault)
                 .toggleClass('is-filled', filled && !isDefault)

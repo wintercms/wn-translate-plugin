@@ -258,8 +258,17 @@
         position: relative;
     }
 
+    // Faintly highlight the locale currently being edited so it's obvious which
+    // one is active in the list. Descendant selectors are used throughout because
+    // the backend's dropdown widget rewraps the list (li.dropdown-container etc.),
+    // which breaks direct-child (> li > a) matching.
+    a.is-current-locale {
+        background-color: rgba(0, 0, 0, .05);
+        font-weight: 600;
+    }
+
     // Leave room for the trailing copy button next to the locale name.
-    &.ml-dropdown-menu--with-copy > li > a {
+    &.ml-dropdown-menu--with-copy a[data-switch-locale] {
         padding-right: 44px;
     }
 
