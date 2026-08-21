@@ -1,18 +1,18 @@
 .field-multilingual{position:relative}
 .field-multilingual .form-control:focus{z-index:20}
 .field-multilingual .ml-btn,
-.field-multilingual .ml-copy-btn{z-index:12;position:absolute;top:1px;bottom:1px;right:1px;width:auto;min-width:44px;height:36px;white-space:nowrap;color:#7b7b7b;background-color:#F8F6F3;box-shadow:none;font-size:11px;letter-spacing:1px;text-transform:uppercase;margin:0 !important;padding:0 12px;border-top-left-radius:0;border-bottom-left-radius:0;transition:color 420ms ease}
+.field-multilingual .ml-copy-btn{z-index:12;position:absolute;top:1px;bottom:1px;right:1px;width:auto;min-width:44px;height:36px;white-space:nowrap;color:#7b7b7b;background-color:#f8f6f3;box-shadow:none;font-size:11px;letter-spacing:1px;text-transform:uppercase;margin:0 !important;padding:0 12px;border-top-left-radius:0;border-bottom-left-radius:0;transition:color 420ms ease}
 .field-multilingual .ml-btn:hover,
 .field-multilingual .ml-copy-btn:hover{color:#555}
 .field-multilingual .ml-copy-btn{border-radius:0}
 .field-multilingual .ml-dropdown,
-.field-multilingual .ml-copy-dropdown{position:absolute;height:100%;width:42px;top:0;pointer-events:none}
+.field-multilingual .ml-copy-dropdown{position:absolute;width:42px;top:0;pointer-events:none}
 .field-multilingual .ml-dropdown>.btn,
 .field-multilingual .ml-copy-dropdown>.btn,
 .field-multilingual .ml-dropdown>.dropdown-menu,
 .field-multilingual .ml-copy-dropdown>.dropdown-menu{pointer-events:auto}
 .field-multilingual .ml-dropdown.ml-copy-dropdown,
-.field-multilingual .ml-copy-dropdown.ml-copy-dropdown{right:calc(var(--ml-btn-width, 44px) - 3px)}
+.field-multilingual .ml-copy-dropdown.ml-copy-dropdown{right:calc(var(--ml-btn-width,44px) - 3px)}
 .field-multilingual .ml-dropdown:not(.ml-copy-dropdown),
 .field-multilingual .ml-copy-dropdown:not(.ml-copy-dropdown){right:0}
 .field-multilingual .dropdown.ml-dropdown.open>.dropdown-menu,
@@ -54,6 +54,7 @@
 .field-multilingual.field-multilingual-nestedform .ml-dropdown-menu,
 .field-multilingual.field-multilingual-repeater .ml-copy-dropdown>.dropdown-menu,
 .field-multilingual.field-multilingual-nestedform .ml-copy-dropdown>.dropdown-menu{top:calc(28px - 20px);right:0}
+.field-multilingual.ml-has-untranslated .ml-btn::after{content:"";position:absolute;top:3px;right:3px;width:7px;height:7px;border-radius:50%;background:#f59e0b;box-shadow:0 0 0 1px #fff;pointer-events:none}
 .ml-locale-flow{display:flex;align-items:center;gap:10px}
 .ml-locale-chip{padding:5px 12px;color:#555;background:#F8F6F3;border:1px solid #e5e7eb;border-radius:6px;font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase}
 .ml-locale-arrow{color:#9ca3af;font-size:15px}
@@ -62,10 +63,7 @@
 .fancy-layout .form-tabless-fields .field-multilingual .ml-copy-btn{background-color:rgba(248,246,243,0.75)}
 .fancy-layout .form-tabless-fields .field-multilingual .ml-btn:hover,
 .fancy-layout .form-tabless-fields .field-multilingual .ml-copy-btn:hover{background-color:rgba(248,246,243,0.85)}
-/* Translation status indicators (per-locale filled/empty dots + untranslated marker) */
 .ml-locale-status{display:inline-block;width:8px;height:8px;margin-right:8px;border-radius:50%;vertical-align:middle;box-sizing:border-box;background:transparent;border:1px solid #cbd5e1}
 .ml-locale-status.is-filled{background:#22c55e;border-color:#22c55e}
 .ml-locale-status.is-empty{background:transparent;border:1px dashed #cbd5e1}
 .ml-locale-status.is-default{background:#94a3b8;border-color:#94a3b8}
-/* The .ml-btn is already position:absolute, so the ::after anchors to it without any position override (overriding its position moves the button). */
-.field-multilingual.ml-has-untranslated .ml-btn::after{content:"";position:absolute;top:3px;right:3px;width:7px;height:7px;border-radius:50%;background:#f59e0b;box-shadow:0 0 0 1px #fff;pointer-events:none}

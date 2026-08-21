@@ -140,6 +140,22 @@
             right: 0;
         }
     }
+
+    // Untranslated marker: an amber dot on the locale button while any non-default
+    // locale is still empty. The .ml-btn is already absolutely positioned, so the
+    // ::after anchors to it without altering the button's position.
+    &.ml-has-untranslated .ml-btn::after {
+        content: "";
+        position: absolute;
+        top: 3px;
+        right: 3px;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #f59e0b;
+        box-shadow: 0 0 0 1px #fff;
+        pointer-events: none;
+    }
 }
 
 // Translation method popup
@@ -188,6 +204,35 @@
                 background-color: rgba(248, 246, 243, 0.85);
             }
         }
+    }
+}
+
+// Per-locale translation status dot shown against each locale in the switcher:
+// grey = default/source, green = translated, dashed = empty (falls back).
+.ml-locale-status {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin-right: 8px;
+    border-radius: 50%;
+    vertical-align: middle;
+    box-sizing: border-box;
+    background: transparent;
+    border: 1px solid #cbd5e1;
+
+    &.is-filled {
+        background: #22c55e;
+        border-color: #22c55e;
+    }
+
+    &.is-empty {
+        background: transparent;
+        border: 1px dashed #cbd5e1;
+    }
+
+    &.is-default {
+        background: #94a3b8;
+        border-color: #94a3b8;
     }
 }
 
