@@ -280,4 +280,125 @@ trait MLControl
 
         return method_exists($object, $method);
     }
+
+    /**
+     * Ensures any datatable form widget nested inside this multilingual widget posts
+     * its client-memory data during the locale switch/copy AJAX requests, not only on
+     * the form's save handler. Without this the datatable's values are dropped when the
+     * locale changes, since the Table widget only serialises its data for handlers
+     * listed in its `postbackHandlerName` (default `onSave`).
+     *
+     * This injects this widget's namespaced `onSwitchItemLocale` / `onCopyItemLocale`
+     * handlers into the `postbackHandlerName` of every nested datatable field, relying
+     * on the Table widget's list support (winter/winter#560).
+     *
+     * Must run before the inner form is built (i.e. before parent::init()).
+     *
+     * @see https://github.com/wintercms/wn-translate-plugin/issues/33
+     * @return void
+     */
+    protected function registerLocaleDatatableHandlers()
+    {
+        if (!isset($this->config)) {
+            return;
+        }
+
+        $handlers = [
+            $this->getEventHandler('onSwitchItemLocale'),
+            $this->getEventHandler('onCopyItemLocale'),
+        ];
+
+        if (isset($this->config->form)) {
+            $this->config->form = $this->addLocaleDatatableHandlers(
+                $this->normalizeFormConfig($this->config->form),
+                $handlers
+            );
+        }
+
+        if (isset($this->config->groups)) {
+            $groups = $this->normalizeFormConfig($this->config->groups);
+            foreach ($groups as $code => $group) {
+                if (is_array($group)) {
+                    $groups[$code] = $this->addLocaleDatatableHandlers($group, $handlers);
+                }
+            }
+            $this->config->groups = $groups;
+        }
+    }
+
+    /**
+     * Resolves a form/groups config (inline array, config object, or `$/path` reference)
+     * into a plain array so its field definitions can be inspected and modified.
+     *
+     * @param mixed $config
+     * @return array
+     */
+    protected function normalizeFormConfig($config)
+    {
+        if (is_string($config) && $config !== '') {
+            $config = $this->makeConfig($config);
+        }
+
+        if (is_object($config)) {
+            $config = json_decode(json_encode($config), true);
+        }
+
+        return is_array($config) ? $config : [];
+    }
+
+    /**
+     * Appends the given AJAX handlers to the `postbackHandlerName` of every datatable
+     * field within a form config, descending into nested form definitions.
+     *
+     * @param array $form
+     * @param string[] $handlers
+     * @return array
+     */
+    protected function addLocaleDatatableHandlers(array $form, array $handlers)
+    {
+        if (isset($form['fields']) && is_array($form['fields'])) {
+            $form['fields'] = $this->applyLocaleDatatableHandlers($form['fields'], $handlers);
+        }
+
+        foreach (['tabs', 'secondaryTabs'] as $tabKey) {
+            if (isset($form[$tabKey]['fields']) && is_array($form[$tabKey]['fields'])) {
+                $form[$tabKey]['fields'] = $this->applyLocaleDatatableHandlers($form[$tabKey]['fields'], $handlers);
+            }
+        }
+
+        return $form;
+    }
+
+    /**
+     * @param array $fields
+     * @param string[] $handlers
+     * @return array
+     */
+    protected function applyLocaleDatatableHandlers(array $fields, array $handlers)
+    {
+        foreach ($fields as $name => $config) {
+            if (!is_array($config)) {
+                continue;
+            }
+
+            if (($config['type'] ?? null) === 'datatable') {
+                $existing = $config['postbackHandlerName'] ?? 'onSave';
+                $list = is_array($existing)
+                    ? $existing
+                    : array_map('trim', explode(',', (string) $existing));
+                $config['postbackHandlerName'] = implode(',', array_values(array_unique(
+                    array_merge(array_filter($list), $handlers)
+                )));
+            }
+
+            // Descend into nested form definitions (nested form / repeater sub-fields).
+            if (isset($config['form']) && is_array($config['form'])) {
+                $config['form'] = $this->addLocaleDatatableHandlers($config['form'], $handlers);
+            }
+
+            $fields[$name] = $config;
+        }
+
+        return $fields;
+    }
 }

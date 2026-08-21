@@ -26,6 +26,7 @@ class MLNestedForm extends NestedForm
      */
     public function init()
     {
+        $this->registerLocaleDatatableHandlers();
         parent::init();
         $this->initLocale();
     }

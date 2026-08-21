@@ -29,6 +29,7 @@ class MLRepeater extends Repeater
      */
     public function init()
     {
+        $this->registerLocaleDatatableHandlers();
         parent::init();
         $this->initLocale();
     }
