@@ -56,7 +56,7 @@
                 return
             }
 
-            if (defaultProvider) {
+            if (defaultProvider && event.shiftKey) {
                 self.copyLocale(copyFromLocale, defaultProvider)
                 return
             }

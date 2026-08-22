@@ -1,5 +1,6 @@
 <?php namespace Winter\Translate\Models;
 
+use Config;
 use Model;
 
 /**
@@ -78,5 +79,19 @@ class Setting extends Model
             $config->set('winter.translate::providers.deepl.key', $key);
             $config->set('winter.translate::providers.deepl.url', $settings->getDeeplUrl());
         }
+        $config->set('winter.translate::defaultProvider', $settings->defaultProvider);
+    }
+
+    public function filterFields($fields)
+    {
+        $providers = [];
+        if (!empty($fields->google_api_key->value)) {
+            $providers['google'] = 'Google';
+        }
+        if (!empty($fields->deepl_api_key->value)) {
+            $providers['deepl'] = 'Deepl';
+        }
+
+        $fields->defaultProvider->options = $providers;
     }
 }
