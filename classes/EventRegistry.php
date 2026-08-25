@@ -129,12 +129,12 @@ class EventRegistry
 
 
         // Nested forms are skipped: their fields belong to a separate data scope and do
-        // not map to the model's translatable attributes. Forms that share their parent's
-        // scope (ie. the fieldset widget) are the exception; the property check keeps this
-        // working on core releases that predate Form::$sharesParentScope.
-        $sharesParentScope = property_exists($widget, 'sharesParentScope') && $widget->sharesParentScope;
+        // not map to the model's translatable attributes. The fieldset widget is the
+        // exception, grouping fields visually without a scope of its own; the property
+        // check keeps this working on core releases that predate Form::$sharesModelScope.
+        $sharesModelScope = property_exists($widget, 'sharesModelScope') && $widget->sharesModelScope;
 
-        if (!$model->hasTranslatableAttributes() || ($widget->isNested && !$sharesParentScope)) {
+        if (!$model->hasTranslatableAttributes() || ($widget->isNested && !$sharesModelScope)) {
             return;
         }
 
