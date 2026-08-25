@@ -1,6 +1,9 @@
 <?php namespace Winter\Translate\Tests\Unit;
 
 use Event;
+use Backend\Classes\Controller;
+use Backend\Classes\WidgetManager;
+use Backend\FormWidgets\FieldSet;
 use Backend\Widgets\Form;
 use Winter\Storm\Database\Model;
 
@@ -42,6 +45,87 @@ class EventRegistryTest extends \Winter\Translate\Tests\TranslatePluginTestCase
         $this->assertEquals('mltext', $form->tabs['fields']['tabTestField']['type']);
         $this->assertEquals('mltext', $form->secondaryTabs['fields']['secondaryTabTestField']['type']);
     }
+
+    public function testFieldsInANestedFormAreNotTranslated()
+    {
+        // A repeater's or nested form's fields belong to their own data scope and do
+        // not map to the model's translatable attributes.
+        $form = $this->makeScopeTestForm(Form::class, ['isNested' => true]);
+
+        $this->assertEquals('text', $form->fields['testField']['type']);
+    }
+
+    public function testFieldsInAScopeSharingNestedFormAreTranslated()
+    {
+        $form = $this->makeScopeTestForm(ScopeSharingFormStub::class, ['isNested' => true]);
+
+        $this->assertEquals('mltext', $form->fields['testField']['type']);
+    }
+
+    public function testFieldSetFieldsAreTranslated()
+    {
+        if (!property_exists(Form::class, 'sharesParentScope')) {
+            $this->markTestSkipped('Requires Form::$sharesParentScope, see wintercms/winter#1529.');
+        }
+
+        WidgetManager::instance()->registerFormWidget(FieldSet::class, 'fieldset');
+
+        $form = $this->makeScopeTestForm(Form::class, [
+            'fields' => [
+                'group' => [
+                    'type' => 'fieldset',
+                    'label' => 'Grouped Fields',
+                    'fields' => [
+                        'testField' => ['type' => 'text'],
+                    ],
+                ],
+            ],
+        ]);
+
+        $fieldSet = $form->getFormWidget('group');
+        $this->assertInstanceOf(FieldSet::class, $fieldSet);
+
+        $inner = \Closure::bind(fn () => $this->formWidget, $fieldSet, FieldSet::class)();
+
+        $this->assertEquals('mltext', $inner->fields['testField']['type']);
+    }
+
+    protected function makeScopeTestForm(string $class, array $config = []): Form
+    {
+        $form = new $class(new Controller, array_merge([
+            'model' => new ScopeTestModel,
+            'arrayName' => 'array',
+            'fields' => [
+                'testField' => [
+                    'type' => 'text',
+                    'label' => 'Test 1',
+                ],
+            ],
+        ], $config));
+
+        $form->bindToController();
+
+        return $form;
+    }
+}
+
+/**
+ * A nested form sharing its parent form's data scope, as the fieldset form widget does.
+ * The property is declared here so that these tests also run against core releases that
+ * predate Form::$sharesParentScope.
+ */
+class ScopeSharingFormStub extends Form
+{
+    public $sharesParentScope = true;
+}
+
+class ScopeTestModel extends Model
+{
+    public $implement = [
+        'Winter.Translate.Behaviors.TranslatableModel',
+    ];
+
+    public $translatable = ['testField'];
 }
 
 class FormTestModel extends Model
