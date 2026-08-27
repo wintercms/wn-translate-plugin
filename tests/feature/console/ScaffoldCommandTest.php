@@ -65,6 +65,29 @@ class ScaffoldCommandTest extends TranslatePluginTestCase
         $this->assertSame(72, Message::count());
     }
 
+    public function testPreservesUserManagedMessageWithCollidingCode()
+    {
+        // A pre-existing, user-managed message whose derived code collides with a
+        // scaffold source string ("Home"), but carrying the developer's own value.
+        $user = new Message();
+        $user->code = Message::makeMessageCode('Home');
+        $user->message_data = [Message::DEFAULT_LOCALE => 'Home', 'fr' => 'MON PROPRE ACCUEIL'];
+        $user->found = true;
+        $user->save();
+
+        // Scaffolding must still run fully (the collision must not short-circuit
+        // it) and must not overwrite the user's translation.
+        $this->assertSame(0, Artisan::call('scaffold:winter.translate'));
+        $this->assertSame(72, Message::count());
+        $this->assertSame('MON PROPRE ACCUEIL', $user->fresh()->message_data['fr']);
+
+        // --fresh must remove scaffold messages but preserve the user's message.
+        $this->assertSame(0, Artisan::call('scaffold:winter.translate', ['--fresh' => true]));
+        $survivor = Message::where('code', Message::makeMessageCode('Home'))->first();
+        $this->assertNotNull($survivor, 'A user-managed message must survive --fresh.');
+        $this->assertSame('MON PROPRE ACCUEIL', $survivor->message_data['fr']);
+    }
+
     public function testRefusesToRunInProduction()
     {
         $this->app['env'] = 'production';

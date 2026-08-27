@@ -62,9 +62,11 @@ class ScaffoldCommand extends Command
         }
 
         $messages = $this->messageSeed();
-        $scaffoldCodes = array_map([Message::class, 'makeMessageCode'], array_keys($messages));
 
-        if (Message::whereIn('code', $scaffoldCodes)->exists()) {
+        // Only treat the data as present when the *complete* managed set exists
+        // and still matches what we seeded — a single pre-existing message (e.g.
+        // a user's own "Home") must not short-circuit seeding the rest.
+        if ($this->isFullyScaffolded($messages)) {
             $this->warn('Translate scaffold data already exists. Use --fresh to recreate it.');
 
             return self::SUCCESS;
@@ -86,35 +88,72 @@ class ScaffoldCommand extends Command
     }
 
     /**
-     * Remove previously scaffolded messages and locales. The default English
-     * locale is protected by both the managed-code list (it is never in it) and
-     * an explicit guard.
+     * Remove previously scaffolded messages. Only messages this command created
+     * (their code matches and their stored data is still exactly what we seeded)
+     * are removed, so a user-managed translation that happens to share a code is
+     * never destroyed.
+     *
+     * Locales are intentionally left in place: a Message code derives from the
+     * source string alone and a locale carries no ownership marker, so there is
+     * no reliable way to tell a scaffold-enabled locale (e.g. 'fr') from one the
+     * developer configured themselves. Deleting them could wipe genuine locale
+     * configuration, so we don't — a re-run reconciles them idempotently.
      */
     protected function deleteExisting(): void
     {
         $messages = $this->messageSeed();
-        $scaffoldCodes = array_map([Message::class, 'makeMessageCode'], array_keys($messages));
-        $deletedMessages = Message::whereIn('code', $scaffoldCodes)->delete();
 
-        $default = Locale::getDefault();
-        $defaultCode = $default ? $default->code : 'en';
+        $deletedMessages = 0;
+        foreach ($messages as $source => $translations) {
+            $message = Message::where('code', Message::makeMessageCode($source))->first();
 
-        $managedCodes = array_diff(array_keys($this->locales), [$defaultCode, 'en']);
-        $deletedLocales = 0;
-        foreach (Locale::whereIn('code', $managedCodes)->get() as $locale) {
-            // Belt-and-braces: never delete the default locale.
-            if ($locale->is_default) {
-                continue;
+            if ($message && $this->isScaffoldOwned($message, $this->scaffoldMessageData($source, $translations))) {
+                $message->delete();
+                $deletedMessages++;
             }
-            $locale->delete();
-            $deletedLocales++;
         }
 
         Locale::clearCache();
 
-        if ($deletedMessages || $deletedLocales) {
-            $this->info("Removed {$deletedMessages} scaffold message(s) and {$deletedLocales} scaffold locale(s).");
+        if ($deletedMessages) {
+            $this->info("Removed {$deletedMessages} scaffold message(s). Scaffold locales are left in place.");
         }
+    }
+
+    /**
+     * Whether the full managed message set already exists and still matches what
+     * this command seeds (used to keep the command idempotent without treating a
+     * single colliding message as proof the scaffold is complete).
+     */
+    protected function isFullyScaffolded(array $messages): bool
+    {
+        foreach ($messages as $source => $translations) {
+            $message = Message::where('code', Message::makeMessageCode($source))->first();
+
+            if (!$message || !$this->isScaffoldOwned($message, $this->scaffoldMessageData($source, $translations))) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Whether a stored message still carries exactly the values this command
+     * seeded for it (i.e. it is scaffold-owned and untouched). If the developer
+     * edited any of the seeded translations, it is treated as user-managed.
+     */
+    protected function isScaffoldOwned(Message $message, array $expected): bool
+    {
+        $actual = (array) $message->message_data;
+
+        foreach ($expected as $locale => $value) {
+            if (($actual[$locale] ?? null) !== $value) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -150,30 +189,51 @@ class ScaffoldCommand extends Command
     /**
      * Seed the translation messages. Each is keyed by its source (English)
      * string and carries translations for the enabled non-default locales.
+     *
+     * Idempotent and non-destructive: an existing message that is not scaffold
+     * -owned (a user-managed translation sharing the derived code) is left
+     * untouched rather than overwritten, and re-running repairs any missing
+     * scaffold records.
      */
     protected function createMessages(array $messages): int
     {
-        $enabledCodes = array_keys(array_filter($this->locales, fn ($l) => $l[1]));
         $count = 0;
 
         foreach ($messages as $source => $translations) {
-            $data = [self::SOURCE_LOCALE => $source];
-            foreach ($translations as $localeCode => $value) {
-                // Only store translations for locales this scaffold enabled.
-                if (in_array($localeCode, $enabledCodes, true)) {
-                    $data[$localeCode] = $value;
-                }
+            $expected = $this->scaffoldMessageData($source, $translations);
+            $message = Message::firstOrNew(['code' => Message::makeMessageCode($source)]);
+
+            // Never clobber a pre-existing, user-managed message with this code.
+            if ($message->exists && !$this->isScaffoldOwned($message, $expected)) {
+                continue;
             }
 
-            $message = new Message();
-            $message->code = Message::makeMessageCode($source);
-            $message->message_data = $data;
+            $message->message_data = $expected;
             $message->found = true;
             $message->save();
             $count++;
         }
 
         return $count;
+    }
+
+    /**
+     * Build the exact message_data this command seeds for a source string: the
+     * source under the default ("x") locale plus its translations for the
+     * scaffold-enabled locales only.
+     */
+    protected function scaffoldMessageData(string $source, array $translations): array
+    {
+        $enabledCodes = array_keys(array_filter($this->locales, fn ($l) => $l[1]));
+
+        $data = [self::SOURCE_LOCALE => $source];
+        foreach ($translations as $localeCode => $value) {
+            if (in_array($localeCode, $enabledCodes, true)) {
+                $data[$localeCode] = $value;
+            }
+        }
+
+        return $data;
     }
 
     /**
