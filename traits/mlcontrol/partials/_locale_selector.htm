@@ -27,6 +27,7 @@
                 type="button"
                 class="ml-locale-copy icon-copy"
                 data-copy-locale="<?= e($code) ?>"
+                <?php if ($defaultProvider): ?>data-default-provider="<?= e($defaultProvider) ?>"<?php endif ?>
                 <?php if ($hasProviders): ?>data-copy-open-handler="<?= e($this->getEventHandler('onShowTranslationMethodSelector')) ?>"<?php endif ?>
                 title="<?= e(trans('winter.translate::lang.locale.copy_from', ['locale' => $name])) ?>">
             </button>
