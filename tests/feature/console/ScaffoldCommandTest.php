@@ -88,6 +88,26 @@ class ScaffoldCommandTest extends TranslatePluginTestCase
         $this->assertSame('MON PROPRE ACCUEIL', $survivor->message_data['fr']);
     }
 
+    public function testPreservesSeededMessageExtendedWithAnExtraLocale()
+    {
+        Artisan::call('scaffold:winter.translate');
+
+        // Developer adds an Italian translation (disabled by default, so not seeded)
+        // to an otherwise scaffold-seeded message.
+        $home = Message::where('code', Message::makeMessageCode('Home'))->first();
+        $this->assertNotNull($home);
+        $data = $home->message_data;
+        $data['it'] = 'Casa';
+        $home->message_data = $data;
+        $home->save();
+
+        // --fresh must now treat that message as user-managed and leave it intact.
+        $this->assertSame(0, Artisan::call('scaffold:winter.translate', ['--fresh' => true]));
+        $survivor = Message::where('code', Message::makeMessageCode('Home'))->first();
+        $this->assertNotNull($survivor, 'A seeded message the developer extended must survive --fresh.');
+        $this->assertSame('Casa', $survivor->message_data['it'] ?? null);
+    }
+
     public function testRefusesToRunInProduction()
     {
         $this->app['env'] = 'production';

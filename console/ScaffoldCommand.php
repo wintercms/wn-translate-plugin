@@ -147,6 +147,13 @@ class ScaffoldCommand extends Command
     {
         $actual = (array) $message->message_data;
 
+        // Require an exact key-set match: a message the developer extended with
+        // an extra locale (e.g. a disabled-by-default Italian translation) is
+        // user-managed and must not be deleted or overwritten by the scaffold.
+        if (count($actual) !== count($expected)) {
+            return false;
+        }
+
         foreach ($expected as $locale => $value) {
             if (($actual[$locale] ?? null) !== $value) {
                 return false;
