@@ -26,6 +26,7 @@ use Winter\Sitemap\Models\Definition;
 use Winter\Translate\Classes\EventRegistry;
 use Winter\Translate\Classes\MLPage;
 use Winter\Translate\Classes\Translator;
+use Winter\Translate\Console\ScaffoldCommand;
 use Winter\Translate\Models\Locale;
 use Winter\Translate\Models\Message;
 
@@ -190,6 +191,7 @@ class Plugin extends PluginBase
          * Register console commands
          */
         $this->registerConsoleCommand('translate.scan', \Winter\Translate\Console\ScanCommand::class);
+        $this->registerConsoleCommand('winter.translate.scaffold', ScaffoldCommand::class);
 
         $this->registerAssetBundles();
     }
@@ -252,7 +254,7 @@ class Plugin extends PluginBase
         /*
          * Handle translated page URLs
          */
-        Page::extend(function($model) {
+        Page::extend(function ($model) {
             $this->extendModel($model, 'page', ['title', 'description', 'meta_title', 'meta_description']);
         });
 
@@ -260,7 +262,7 @@ class Plugin extends PluginBase
          * Add translation support to theme settings
          */
         ThemeData::extend(function ($model) {
-            $model->bindEvent('model.afterFetch', function() use ($model) {
+            $model->bindEvent('model.afterFetch', function () use ($model) {
                 $translatable = [];
                 foreach ($model->getFormFields() as $id => $field) {
                     if (!empty($field['translatable'])) {
@@ -272,12 +274,12 @@ class Plugin extends PluginBase
         });
 
         // Look at session for locale using middleware
-        \Cms\Classes\CmsController::extend(function($controller) {
+        \Cms\Classes\CmsController::extend(function ($controller) {
             $controller->middleware(\Winter\Translate\Classes\LocaleMiddleware::class);
         });
 
         // Set the page context for translation caching with high priority.
-        Event::listen('cms.page.init', function($controller, $page) {
+        Event::listen('cms.page.init', function ($controller, $page) {
             if (!$page) {
                 return;
             }
@@ -293,12 +295,12 @@ class Plugin extends PluginBase
         }, 100);
 
         // Import messages defined by the theme
-        Event::listen('cms.theme.setActiveTheme', function($code) {
+        Event::listen('cms.theme.setActiveTheme', function ($code) {
             EventRegistry::instance()->importMessagesFromTheme();
         });
 
         // Adds language suffixes to content files.
-        Event::listen('cms.page.beforeRenderContent', function($controller, $fileName) {
+        Event::listen('cms.page.beforeRenderContent', function ($controller, $fileName) {
             return EventRegistry::instance()
                 ->findTranslatedContentFile($controller, $fileName)
             ;
@@ -358,7 +360,7 @@ class Plugin extends PluginBase
         });
 
         // Prune localized content files from template list
-        Event::listen('pages.content.templateList', function($widget, $templates) {
+        Event::listen('pages.content.templateList', function ($widget, $templates) {
             return EventRegistry::instance()
                 ->pruneTranslatedContentTemplates($templates)
             ;
@@ -428,7 +430,8 @@ class Plugin extends PluginBase
         }, 1);
 
         $defaultLocale = Locale::getDefault();
-        Event::listen('winter.sitemap.addItem',
+        Event::listen(
+            'winter.sitemap.addItem',
             function (DefinitionItem $item, array $itemInfo, Definition $definition, DOMDocument $xml, DOMElement $urlSet, DOMElement $urlElement) use ($defaultLocale) {
                 if (isset($itemInfo['alternateLinks'])) {
                     foreach ($itemInfo['alternateLinks'] as $locale => $altUrl) {
