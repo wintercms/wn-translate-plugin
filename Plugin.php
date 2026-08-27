@@ -26,6 +26,7 @@ use Winter\Sitemap\Models\Definition;
 use Winter\Translate\Classes\EventRegistry;
 use Winter\Translate\Classes\MLPage;
 use Winter\Translate\Classes\Translator;
+use Winter\Translate\Console\ScaffoldCommand;
 use Winter\Translate\Models\Locale;
 use Winter\Translate\Models\Message;
 
@@ -190,6 +191,7 @@ class Plugin extends PluginBase
          * Register console commands
          */
         $this->registerConsoleCommand('translate.scan', \Winter\Translate\Console\ScanCommand::class);
+        $this->registerConsoleCommand('winter.translate.scaffold', ScaffoldCommand::class);
 
         $this->registerAssetBundles();
     }
