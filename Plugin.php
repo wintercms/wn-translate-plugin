@@ -441,8 +441,15 @@ class Plugin extends PluginBase
                         $linkElement->setAttribute('href', $altUrl);
                         $urlElement->appendChild($linkElement);
                     }
+                    // A listener on pages.menuitem.resolveItem may narrow
+                    // alternateLinks. Without the default locale among them the
+                    // <loc> would keep the untranslated URL, which redirects.
+                    $primaryLocale = isset($itemInfo['alternateLinks'][$defaultLocale->code])
+                        ? $defaultLocale->code
+                        : array_key_first($itemInfo['alternateLinks']);
+
                     foreach ($itemInfo['alternateLinks'] as $locale => $altUrl) {
-                        if ($locale === $defaultLocale->code) {
+                        if ($locale === $primaryLocale) {
                             $loc = $urlElement->getElementsByTagName('loc')->item(0);
                             $loc->nodeValue = $altUrl;
                             continue;
