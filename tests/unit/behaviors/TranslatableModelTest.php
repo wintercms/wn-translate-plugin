@@ -25,8 +25,7 @@ class TranslatableModelTest extends \Winter\Translate\Tests\TranslatePluginTestC
 
         Model::unguard();
 
-        Schema::create('translate_test_countries', function($table)
-Schema::create('translate_test_countries', function ($table) {
+        Schema::create('translate_test_countries', function ($table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
             $table->string('name')->nullable();
