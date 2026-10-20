@@ -139,8 +139,8 @@ trait MLControl
         // provider is an unambiguous default that saves a click. With several, stay
         // on "None" so the user consciously picks a service rather than silently
         // defaulting to a paid one.
-        if (count($usableProviders) === 1) {
-            return (string) array_key_first($usableProviders);
+        if (count($usableProviders) === 1 && ($key = array_key_first($usableProviders) !== null)) {
+            return (string) $key;
         } else {
             return Config::get('winter.translate::defaultProvider');
         }
