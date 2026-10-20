@@ -7,7 +7,7 @@
     <input
         type="hidden"
         name="<?= $field->getName('RLTranslate['.$code.']') ?>"
-        value="<?= e($value) ?>"
+        value="<?= e($value, true) ?>"
         autocomplete="off"
         data-locale-value="<?= $code ?>"
         <?= $field->getAttributes() ?>
