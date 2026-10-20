@@ -4,6 +4,7 @@ use Model;
 use Schema;
 use Winter\Translate\Classes\Translator;
 use Winter\Translate\Tests\Fixtures\Models\Country as CountryModel;
+use Winter\Translate\Tests\Fixtures\Models\ValidatedCountry as ValidatedCountryModel;
 use Winter\Translate\Models\Locale as LocaleModel;
 use Winter\Storm\Database\Relations\Relation;
 
@@ -118,6 +119,29 @@ class TranslatableModelTest extends \Winter\Translate\Tests\TranslatePluginTestC
         $obj->translateContext('fr');
         $this->assertEquals('Australie', $obj->name);
         $this->assertEquals(['a', 'b', 'c'], $obj->states);
+    }
+
+    public function testSaveRestoresTranslateContextAfterValidation()
+    {
+        $this->recycleSampleData();
+
+        $obj = ValidatedCountryModel::first();
+        $obj->setAttributeTranslated('name', 'Australie', 'fr');
+
+        $nameBeforeSave = null;
+        $obj->bindEvent('model.beforeSave', function () use ($obj, &$nameBeforeSave) {
+            $nameBeforeSave = $obj->name;
+        });
+
+        $obj->save();
+
+        $this->assertEquals('Australia', $nameBeforeSave);
+        $this->assertEquals(Translator::instance()->getDefaultLocale(), $obj->translateContext());
+
+        $obj = ValidatedCountryModel::first();
+        $this->assertEquals('Australia', $obj->name);
+        $obj->translateContext('fr');
+        $this->assertEquals('Australie', $obj->name);
     }
 
     public function testGetTranslationValueEagerLoading()
