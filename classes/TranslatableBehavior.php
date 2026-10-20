@@ -474,7 +474,6 @@ abstract class TranslatableBehavior extends ExtensionBase
         $dirty = [];
 
         foreach ($this->translatableAttributes[$locale] as $key => $value) {
-
             if (!array_key_exists($key, $this->translatableOriginals[$locale])) {
                 $dirty[$key] = $value;
             }
