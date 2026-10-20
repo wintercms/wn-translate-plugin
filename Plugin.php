@@ -345,6 +345,15 @@ class Plugin extends PluginBase
                 foreach ($menuItems as $item) {
                     $localeFields = array_get($item->viewBag, "locale.$locale", []);
                     foreach ($localeFields as $fieldName => $fieldValue) {
+                        // Only an item of the "url" type owns its URL. For every other
+                        // type Winter\Pages\Classes\Menu has just resolved it from the
+                        // item's reference, and the form hides the URL field, so a
+                        // localized value left over from an earlier type would override
+                        // that resolved URL without being visible or removable.
+                        if ($fieldName === 'url' && $item->type !== 'url') {
+                            continue;
+                        }
+
                         if ($fieldValue) {
                             $item->$fieldName = $fieldValue;
                         }
