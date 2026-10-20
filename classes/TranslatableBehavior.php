@@ -98,10 +98,16 @@ abstract class TranslatableBehavior extends ExtensionBase
             $this->syncTranslatableAttributes();
 
             if (method_exists($this->model, 'validate')) {
+                $context = $this->translateContext();
+
                 foreach ($this->getDirtyLocales() as $locale) {
                     $this->translateContext($locale);
                     $this->model->validate();
                 }
+
+                // Restore the context so the rest of the save (e.g. beforeSave
+                // handlers) does not run in the last validated locale
+                $this->translateContext($context);
             }
         });
     }
