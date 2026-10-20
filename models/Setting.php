@@ -89,7 +89,7 @@ class Setting extends Model
             $providers['google'] = 'Google';
         }
         if (!empty($fields->deepl_api_key->value)) {
-            $providers['deepl'] = 'Deepl';
+            $providers['deepl'] = 'DeepL';
         }
 
         $fields->defaultProvider->options = $providers;
