@@ -174,6 +174,11 @@ Every multilingual backend field has a "copy from another locale" action. When a
 
 **This is opt-in and invisible by default:** with no provider configured, the copy action stays a plain one-click copy — no provider popup, no extra UI. As soon as a provider key is set, a small "translation method" picker appears so the user can choose *None*, *Google* or *DeepL* when copying.
 
+Note: if the SHIFT key is pressed while clicking the copy icon, the "translation method" picker will be skipped if there is a default provider setup or if there is a single provider configured.
+
+Note: if the CTRL key is pressed while clicking the copy icon, the locale value is copied without translation
+      (same as selecting None as the translation provider).
+
 ### Configuring a provider
 
 The easiest way is the backend settings screen: **Settings → Translation Providers**. It has a guided tab for each provider with step-by-step instructions (and direct links to each provider's console) beside a masked field for the API key:

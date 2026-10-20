@@ -12,6 +12,7 @@ return [
     'settings' => [
         'title' => 'Translation Providers',
         'description' => 'Configure Google &amp; DeepL machine translation.',
+        'default_provider' => 'Default translation provider',
         'tab_google' => 'Google Translate',
         'tab_deepl' => 'DeepL',
 

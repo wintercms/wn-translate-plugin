@@ -2,6 +2,14 @@
 #  Translation provider settings
 # ===================================
 
+fields:
+    defaultProvider:
+        label: winter.translate::lang.settings.default_provider
+        type: dropdown
+        emptyOption: -- select --
+        dependsOn: [google_api_key, deepl_api_key]
+        span: left
+
 tabs:
     fields:
 
