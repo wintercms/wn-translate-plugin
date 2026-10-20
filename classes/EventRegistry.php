@@ -128,7 +128,13 @@ class EventRegistry
         }
 
 
-        if (!$model->hasTranslatableAttributes() || $widget->isNested) {
+        // Nested forms are skipped: their fields belong to a separate data scope and do
+        // not map to the model's translatable attributes. The fieldset widget is the
+        // exception, grouping fields visually without a scope of its own; the property
+        // check keeps this working on core releases that predate Form::$sharesModelScope.
+        $sharesModelScope = property_exists($widget, 'sharesModelScope') && $widget->sharesModelScope;
+
+        if (!$model->hasTranslatableAttributes() || ($widget->isNested && !$sharesModelScope)) {
             return;
         }
 
@@ -205,8 +211,8 @@ class EventRegistry
     {
         try {
             (new ThemeScanner)->scanThemeConfigForMessages();
+        } catch (Exception $ex) {
         }
-        catch (Exception $ex) {}
     }
 
     //
@@ -261,11 +267,11 @@ class EventRegistry
     {
         $locales = LocaleModel::listAvailable();
 
-        $extensions = array_map(function($ext) {
+        $extensions = array_map(function ($ext) {
             return '.'.$ext;
         }, array_keys($locales));
 
-        return $templates->filter(function($template) use ($extensions) {
+        return $templates->filter(function ($template) use ($extensions) {
             return !Str::endsWith($template->getBaseFileName(), $extensions);
         });
     }

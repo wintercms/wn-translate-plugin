@@ -319,6 +319,24 @@ $user->getAttributeTranslated('name', 'fr');
 $user->setAttributeTranslated('name', 'Jean-Claude', 'fr');
 ```
 
+### Fields inside nested form widgets
+
+Translatable attributes only receive their multilingual (`ml*`) form widget on the form that is bound to the model. Fields rendered by a nested form widget such as `repeater`, `nestedform` or `blocks` are skipped: they belong to the widget's own data scope, not to the model's attributes. To translate those, mark the sub-fields as `translatable` instead — see [Translating nested fields](#translating-nested-fields-repeater--nested-form--blocks).
+
+The `fieldset` widget is the exception. It groups fields visually but has no data scope of its own: its values are saved straight onto the model, exactly as if the fields had been declared on the parent form. Winter CMS marks the fieldset's inner form with `Form::$sharesModelScope = true` ([wintercms/winter#1529](https://github.com/wintercms/winter/pull/1529)), and the plugin translates the fields of any nested form that carries this flag. A fieldset placed inside a repeater does not share the model's scope — its fields belong to the repeater item — and stays untranslated like the rest of the repeater's fields.
+
+If you write a custom form widget that embeds a `Form` reusing the parent form's model and `arrayName`, set `sharesModelScope` on the inner form's configuration so its translatable fields are picked up:
+
+```php
+$config = $this->makeConfig($this->form);
+$config->model = $this->model;
+$config->arrayName = $this->arrayName;
+$config->isNested = true;
+$config->sharesModelScope = true;
+```
+
+On Winter CMS releases that predate `Form::$sharesModelScope`, every nested form is skipped, fieldsets included.
+
 ## Extending a plugin with translatable fields
 
 If you are extending a plugin and want the added fields in the backend to be translatable, you have to use the '[backend.form.extendFieldsBefore](https://wintercms.com/docs/events/event/backend.form.extendFieldsBefore)' and tell which fields you want to be translatable by pushing them to the array.
