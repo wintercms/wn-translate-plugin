@@ -1,7 +1,9 @@
 <?php namespace Winter\Translate\Tests\Unit\Behaviors;
 
+use Db;
 use Model;
 use Schema;
+use Winter\Storm\Database\MemoryCache;
 use Winter\Translate\Classes\Translator;
 use Winter\Translate\Tests\Fixtures\Models\Country as CountryModel;
 use Winter\Translate\Tests\Fixtures\Models\ValidatedCountry as ValidatedCountryModel;
@@ -238,6 +240,54 @@ class TranslatableModelTest extends \Winter\Translate\Tests\TranslatePluginTestC
         $obj->translateContext('fr');
         $this->assertEquals('Australie', $obj->name);
         $this->assertEquals(['a', 'b', 'c'], $obj->states);
+    }
+
+    public function testTranslationsAreEagerLoadedOnNonDefaultLocale()
+    {
+        $this->recycleSampleData();
+
+        LocaleModel::firstOrCreate(['code' => 'fr', 'name' => 'French', 'is_enabled' => 1]);
+        LocaleModel::clearCache();
+
+        foreach (['Germany' => 'Allemagne', 'Spain' => 'Espagne'] as $name => $translation) {
+            $obj = CountryModel::create(['name' => $name]);
+            $obj->translateContext('fr');
+            $obj->name = $translation;
+            $obj->save();
+        }
+
+        $this->assertTrue(Translator::instance()->setLocale('fr'));
+        $names = $this->pluckNamesCountingQueries($queries);
+        $this->assertEquals(['Australia', 'Allemagne', 'Espagne'], $names);
+        $this->assertEquals(2, $queries);
+
+        Translator::instance()->setLocale('en');
+        $names = $this->pluckNamesCountingQueries($queries);
+        $this->assertEquals(['Australia', 'Germany', 'Spain'], $names);
+        $this->assertEquals(1, $queries);
+
+        Translator::instance()->setLocale('fr');
+        $this->pluckNamesCountingQueries($queries, fn ($query) => $query->withoutGlobalScope('translatableEagerLoad'));
+        $this->assertEquals(4, $queries);
+        Translator::instance()->setLocale('en');
+    }
+
+    protected function pluckNamesCountingQueries(&$count, ?callable $scope = null): array
+    {
+        MemoryCache::instance()->flush();
+        Db::enableQueryLog();
+        Db::flushQueryLog();
+
+        $query = CountryModel::query();
+        if ($scope) {
+            $scope($query);
+        }
+        $names = $query->get()->map(fn ($obj) => $obj->name)->all();
+
+        $count = count(Db::getQueryLog());
+        Db::disableQueryLog();
+
+        return $names;
     }
 
     public function testAddTranslatableAttributes()

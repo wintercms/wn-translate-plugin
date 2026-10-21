@@ -405,6 +405,29 @@ $user->setTranslatableUseFallback(false)->lang('fr');
 $user->name;
 ```
 
+## Eager loading translations
+
+When the active locale differs from the default locale, translatable models automatically eager load their `translations` relation through the `translatableEagerLoad` global scope. A collection of records then needs a single extra query to resolve its translations instead of one query per record. Nothing is loaded in the default locale.
+
+This can be disabled for a model by declaring the `$translatableEagerLoad` property.
+
+```php
+class User extends Model
+{
+    public $implement = ['Winter.Translate.Behaviors.TranslatableModel'];
+
+    public $translatable = ['name'];
+
+    public $translatableEagerLoad = false;
+}
+```
+
+It can also be disabled for a single query by removing the global scope.
+
+```php
+User::withoutGlobalScope('translatableEagerLoad')->get();
+```
+
 ## Indexed attributes
 
 Translatable model attributes can also be declared as an index by passing the `$translatable` attribute value as an array. The first value is the attribute name, the other values represent options, in this case setting the option `index` to `true`.

@@ -5,6 +5,7 @@ namespace Winter\Translate\Behaviors;
 use Db;
 use DbDongle;
 use Winter\Translate\Classes\TranslatableBehavior;
+use Winter\Translate\Classes\Translator;
 
 /**
  * Translatable model extension
@@ -17,6 +18,9 @@ use Winter\Translate\Classes\TranslatableBehavior;
  *
  *   public $translatable = ['name', 'content'];
  *
+ * Translations are eager-loaded whenever the active locale differs from the
+ * default one. Opt out per model with `public $translatableEagerLoad = false;`
+ * or per query with `->withoutGlobalScope('translatableEagerLoad')`.
  */
 class TranslatableModel extends TranslatableBehavior
 {
@@ -30,6 +34,15 @@ class TranslatableModel extends TranslatableBehavior
         ];
 
         $this->model->bindEvent('model.afterDelete', [$this, 'afterModelDelete']);
+
+        if (!$model->propertyExists('translatableEagerLoad') || $model->translatableEagerLoad) {
+            $model::addGlobalScope('translatableEagerLoad', function ($query) {
+                $translator = Translator::instance();
+                if ($translator->getLocale() !== $translator->getDefaultLocale()) {
+                    $query->with('translations');
+                }
+            });
+        }
     }
 
     public function afterModelDelete()
@@ -129,7 +142,7 @@ class TranslatableModel extends TranslatableBehavior
             return $query;
         }
 
-        $query->leftJoin($joinTableWithAlias, function($join) use ($locale, $index, $indexTableAlias) {
+        $query->leftJoin($joinTableWithAlias, function ($join) use ($locale, $index, $indexTableAlias) {
             $join
                 ->on(Db::raw(DbDongle::cast($this->model->getQualifiedKeyName(), 'TEXT')), '=', $indexTableAlias . '.model_id')
                 ->where($indexTableAlias . '.model_type', '=', $this->getClass())
@@ -155,7 +168,7 @@ class TranslatableModel extends TranslatableBehavior
          * Model doesn't exist yet, defer this logic in memory
          */
         if (!$this->model->exists) {
-            $this->model->bindEventOnce('model.afterCreate', function() use ($locale) {
+            $this->model->bindEventOnce('model.afterCreate', function () use ($locale) {
                 $this->storeTranslatableData($locale);
             });
 
