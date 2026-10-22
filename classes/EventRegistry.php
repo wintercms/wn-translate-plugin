@@ -132,7 +132,7 @@ class EventRegistry
         // not map to the model's translatable attributes. The fieldset widget is the
         // exception, grouping fields visually without a scope of its own; the property
         // check keeps this working on core releases that predate Form::$sharesModelScope.
-        $sharesModelScope = property_exists($widget, 'sharesModelScope') && $widget->sharesModelScope;
+        $sharesModelScope = $widget->propertyExists('sharesModelScope') && $widget->sharesModelScope;
 
         if (!$model->hasTranslatableAttributes() || ($widget->isNested && !$sharesModelScope)) {
             return;
