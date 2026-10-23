@@ -47,6 +47,16 @@ abstract class TranslatableBehavior extends ExtensionBase
     protected $translatableOriginals = [];
 
     /**
+     * @var array Cached result of the model's getTranslatableAttributes().
+     */
+    protected $translatableAttributeNames = [];
+
+    /**
+     * @var array|null The model's translatable property the cached names were built from.
+     */
+    protected $translatableAttributeNamesSource;
+
+    /**
      * {@inheritDoc}
      */
     protected $requiredProperties = ['translatable'];
@@ -141,6 +151,7 @@ abstract class TranslatableBehavior extends ExtensionBase
 
     /**
      * Checks if an attribute should be translated or not.
+     * The result of getTranslatableAttributes() is cached until the model's $translatable property changes.
      * @param  string  $key
      * @return boolean
      */
@@ -150,7 +161,16 @@ abstract class TranslatableBehavior extends ExtensionBase
             return false;
         }
 
-        return in_array($key, $this->model->getTranslatableAttributes());
+        // This runs on every attribute read, and calling through the model goes via __call(),
+        // which is ~100x slower than a direct call. Cache the result until $translatable changes.
+        $translatable = $this->model->translatable;
+
+        if ($this->translatableAttributeNamesSource !== $translatable) {
+            $this->translatableAttributeNames = $this->model->getTranslatableAttributes();
+            $this->translatableAttributeNamesSource = $translatable;
+        }
+
+        return in_array($key, $this->translatableAttributeNames);
     }
 
     /**

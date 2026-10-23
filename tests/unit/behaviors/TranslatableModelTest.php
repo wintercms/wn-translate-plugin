@@ -305,4 +305,29 @@ class TranslatableModelTest extends \Winter\Translate\Tests\TranslatePluginTestC
         $country->addTranslatableAttributes(['attr1', 'attr2']);
         $this->assertEquals($country->getTranslatableAttributes(), ['attr1', 'attr2']);
     }
+
+    public function testIsTranslatableFollowsTranslatableChanges()
+    {
+        $country = new CountryModel;
+        $country->translateContext('fr');
+
+        $this->assertTrue($country->isTranslatable('name'));
+        $this->assertFalse($country->isTranslatable('code'));
+
+        $country->addTranslatableAttributes('code');
+
+        $this->assertTrue($country->isTranslatable('code'));
+    }
+
+    public function testIsTranslatableUsesDynamicGetter()
+    {
+        $country = new CountryModel;
+        $country->addDynamicMethod('getTranslatableAttributes', function () {
+            return ['code'];
+        });
+        $country->translateContext('fr');
+
+        $this->assertTrue($country->isTranslatable('code'));
+        $this->assertFalse($country->isTranslatable('name'));
+    }
 }
